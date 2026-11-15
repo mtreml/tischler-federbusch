@@ -26,9 +26,22 @@ CI invokes the same script — the documented setup and the chain are verified t
 - `media-originals/` is a **local-only symlink** to the drop folder
   (`/home/atreo/code/tischler-federbusch/media-originals`) and is not in git. It is the
   sole copy of the client's originals — the thing a backup has to cover.
-- The media pipeline (`@mtreml/portfolio-core/pipeline`, WP-03) reads `media-originals/`
-  and writes the derived variants into `media/`, which `npm run media:link` links as
-  `public/media`. Both are generated and ignored — **no media files in git, ever**.
+- `npm run media:generate` reads it via the core pipeline
+  (`@mtreml/portfolio-core/pipeline`) and writes the derived variants into
+  `media/<key>/media` — the landing master re-encoded to 1920 (audio and container
+  metadata stripped, CRF measured in `src/config/media.config.ts`), its poster from the
+  master's own opening frame, and the Works image on the width ladder. What the build
+  declares is one list: `src/lib/media/declared.ts`.
+- `npm run media:link` (already in `predev` and `prebuild`) links `public/media` at the
+  key's library; `postbuild` runs `npm run export:media`, which counts `out/media`
+  against the library and repairs the difference. **No media files in git, ever** —
+  with one deliberate exception: the manifest *is* committed
+  (`.media/manifest.json`, beside the key file `.media/key`), because a clean clone has
+  no originals to read and the manifest is what keeps it building and exporting.
+- `npm run media:meta:check` (in the gate chain) is the proof the strip held: no
+  EXIF/XMP/IPTC on any rendition, no identifying container keys on the master, and no
+  audio track in it. `npm run media:bucket:serve` serves the library as a bucket on
+  127.0.0.1:4173.
 
 ## The gate chain
 

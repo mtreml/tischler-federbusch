@@ -33,7 +33,13 @@ next-env.d.ts
 # Derived — `npm run media:generate` (WP-03) rebuilds the whole tree from the originals.
 
 /media/
-.media/
+# The manifest is committed: a clean clone has no originals to read, and the committed
+# manifest is what keeps one building and exporting byte-identically. The key file makes
+# the key a fact of the commit rather than of the checkout (a tag checkout has no branch
+# to resolve it from). Everything else under .media/ stays out.
+.media/*
+!.media/key
+!.media/manifest.json
 
 # ─── The originals ──────────────────────────────────────────────────────────────
 # `media-originals/…` — the user's drop folder, bridged into the repository by a local-only

@@ -39,8 +39,9 @@
     "meta:check": "tsx scripts/check-metadata.ts",
     "media:meta:check": "tsx scripts/check-media-metadata.ts",
     "serve": "tsx scripts/serve.ts",
-    "prebuild": "npm run config:validate:strict",
+    "prebuild": "npm run --silent config:validate:strict && npm run --silent media:link",
     "build": "next build",
+    "postbuild": "npm run --silent export:media",
     "ci": "tsx scripts/ci.ts"
   },
   "overrides": {

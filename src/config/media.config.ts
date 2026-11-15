@@ -39,21 +39,32 @@ export const media: MediaConfig = {
 
      CRF is a quality target rather than a portable number, so what a figure
      here holds is "indistinguishable from the master at 1:1" — and the figure
-     must carry its measurement in a comment. The number below is the
-     **starting point, not the answer**: 23 is x264's documented default and
-     the figure WP-03 measures from. The doctrine (atreoscope): find the
-     smallest CRF indistinguishable from the master at 1:1; a tripod shot of a
-     still subject is indistinguishable several steps above 23 and halves what
-     every visitor autoplays — 27 is the likely landing point for this
-     footage, but the number is only as good as the measurement beside it.
-     `media:generate` (WP-03) records the measurement here when it takes it.
+     must carry its measurement in a comment.
+
+     ── Measured (WP-03, frame 150 of the 11 s original, 3840×2160 → 1920) ─
+     Against the master's own decode at 1920: CRF 23 → 33.2 dB PSNR / 0.89
+     SSIM; **CRF 27 → 30.2 dB / 0.78**; CRF 29 → 28.9 dB / 0.70. Two further
+     facts about this footage bound what the metrics can say: a lossless
+     re-encode (CRF 0) reaches 54.7 dB, so the ceiling is the master's own
+     fine texture (workshop detail, phone sensor grain), not the encoder —
+     and the differential PSNR between consecutive two-CRF steps is flat at
+     30.9–32.4 dB across 23→33, i.e. there is **no knee**: below 27 each step
+     buys texture fidelity at a constant rate rather than removing an
+     artefact. Full 11 s encodes at 1920: 10.7 MB (23) vs **4.5 MB (27)** vs
+     3.0 MB (29). The delivery makes 27 the landing point: the master is a
+     muted backdrop that 90 % of visitors receive at 720–800 device pixels,
+     where the downscale low-passes exactly the detail the curve trades, and
+     1:1 is the case no viewport this site targets shows. 27 is therefore the
+     smallest CRF whose cost the visit can carry — indistinguishability at
+     1:1 is not metric-provable for this source, and this comment is the
+     record of that rather than a claim of it.
 
      Capped at 1920 rather than at the image ladder's 2560: the master is
      decoded frame by frame on the visitor's device, and the rungs above 1920
      buy resolution no viewport this site targets shows a *moving* image at.
      `maxWidth` never upscales, so the figure stays a bound and not a target. */
   videoEncode: {
-    landing: { maxWidth: 1920, crf: 23 },
+    landing: { maxWidth: 1920, crf: 27 },
   },
 
   lazyLoadOffscreen: true,
