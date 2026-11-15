@@ -10,6 +10,8 @@
 @import '../config/fonts.css';
 /* The landing, its chrome and the name's travel (WP-05). */
 @import './landing.css';
+/* The menu button and its two-line morph (WP-06a). */
+@import './menu.css';
 
 body {
   margin: 0;

@@ -1,0 +1,69 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE MENU BUTTON (WP-06a)
+
+   Two horizontal lines, one transform, one direction at a time. The closed
+   state is the rest geometry — two lines stacked with the token gap — and
+   the open state translates each line to the pair's vertical centre and
+   rotates it to a diagonal: +45° on the top, −45° on the bottom. The ±45°
+   are fixed geometry of an X, not design values, so they live here; every
+   length, the duration and the curve are tokens.
+
+   One `transition` on `transform` covers both directions: the open state
+   merely sets the other end of the same transform, and closing runs the
+   identical transition back. There is no second keyframe, no cross-fade —
+   the two spans are the same two elements in both states.
+
+   The tap target is the button's padding, not the lines: the box pads out
+   to `--spacing-touch-target` (WCAG 2.5.8) and the lines are the smaller
+   visual inside it.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.menu-button {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--menu-btn-gap);
+  /* Pad the box to exactly the touch target: the visual is two lines plus
+     the gap between them, and the remainder is split evenly over the four
+     sides. */
+  padding: calc(
+    (var(--spacing-touch-target) - 2 * var(--menu-btn-line-thickness) - var(--menu-btn-gap)) / 2
+  );
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.menu-button__line {
+  display: block;
+  width: var(--menu-btn-line-length);
+  height: var(--menu-btn-line-thickness);
+  background-color: var(--color-ink);
+  /* The one shared morph: a single transform transition, running in
+     whatever direction the state moves. */
+  transform-origin: center;
+  transition: transform var(--duration-menu) var(--ease-quiet);
+}
+
+/* ── The open state: the X ────────────────────────────────────────────────────
+   Each line translates by half the line-plus-gap distance — exactly the
+   offset from its own centre to the pair's centre — and rotates to its
+   diagonal. The angles are the X's own geometry, fixed by the shape, not
+   tuned by the design. */
+.menu-button[aria-expanded='true'] .menu-button__line--top {
+  transform: translateY(calc((var(--menu-btn-line-thickness) + var(--menu-btn-gap)) / 2))
+    rotate(45deg);
+}
+
+.menu-button[aria-expanded='true'] .menu-button__line--bottom {
+  transform: translateY(calc((var(--menu-btn-line-thickness) + var(--menu-btn-gap)) / -2))
+    rotate(-45deg);
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────────
+   Same pattern as `landing.css`: the state swap still happens and both
+   states stay legible, nothing moves. The transform is instant. */
+@media (prefers-reduced-motion: reduce) {
+  .menu-button__line {
+    transition: none;
+  }
+}

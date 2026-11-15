@@ -166,6 +166,16 @@
   --logo-landing-width-md: 5rem;
   --logo-landing-width-lg: 6rem;
 
+  /* ── The menu button geometry ────────────────────────────────────────────────
+     The hamburger: two horizontal lines that transform into the X (WP-06a).
+     Three design values — the line's length, its thickness, and the gap the
+     two lines rest at — the button's own CSS turns them into the closed and
+     the open state. The X's ±45° are fixed geometry, not a design decision,
+     and stay in the CSS file rather than here. */
+  --menu-btn-line-length: 1.25rem;
+  --menu-btn-line-thickness: 0.125rem;
+  --menu-btn-gap: 0.375rem;
+
   /* ── Breakpoints ─────────────────────────────────────────────────────────────
      Two steps only: the site has three named widths to care about — the
      phone (below `md`), the tablet and up (`md`), and the desktop (`lg`) —

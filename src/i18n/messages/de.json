@@ -2,6 +2,10 @@
   "common": {
     "skipToContent": "Zum Inhalt springen"
   },
+  "menu": {
+    "openLabel": "Menü öffnen",
+    "closeLabel": "Menü schließen"
+  },
   "rootRedirect": {
     "title": "Lukas Federbusch - Tischlermeister",
     "description": "Weiterleitung zur Website",
