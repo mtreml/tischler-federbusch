@@ -1,0 +1,20 @@
+# Generated — not authored, so not formatted.
+.next/
+out/
+node_modules/
+public/media/
+# The media library — binary variants only. Nothing here is authored, and globbing it costs
+# the format gate seconds for no possible finding.
+media/
+.media/
+coverage/
+test-results/
+playwright-report/
+package-lock.json
+next-env.d.ts
+
+# Written by `npm run fonts:subset` (WP-04) — emitted by a script rather than authored.
+public/fonts/subset-manifest.json
+
+# Throwaway probes written while debugging — scratch, not authored source.
+*.tmp.*

@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE ONE BACKGROUND COLOR
+
+   The site's background is always warm white, and this custom property is the one place
+   it is defined (decision: `#FAF7F1`, ink `#1D1D1B`). WP-04 moves it into the token file
+   the typography and brand assets share; until then every surface reads this variable.
+   ══════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --color-background: #faf7f1;
+  --color-ink: #1d1d1b;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-ink);
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The skip link: present in the tab order, off-screen until focused. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background-color: var(--color-background);
+  color: var(--color-ink);
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+}

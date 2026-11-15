@@ -1,0 +1,21 @@
+{
+  "common": {
+    "skipToContent": "Zum Inhalt springen"
+  },
+  "rootRedirect": {
+    "title": "Lukas Federbusch — Tischlerei Lienz",
+    "description": "Weiterleitung zur Website",
+    "link": "Weiter zur Website"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "description": "Diese Adresse existiert nicht.",
+    "toLanding": "Zur Startseite"
+  },
+  "landing": {
+    "placeholder": "Landing"
+  },
+  "impressumDatenschutz": {
+    "placeholder": "Impressum & Datenschutz"
+  }
+}

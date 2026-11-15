@@ -1,0 +1,190 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# CI
+#
+# **This workflow invokes the same bootstrap script a person invokes.** That is deliberate
+# and it is the only thing that keeps the script working: a setup step that stops working
+# fails a build instead of surfacing months later on whoever is least equipped to pay for
+# it. A parallel list of steps here would be documentation of a state that no longer
+# exists.
+#
+# So the gate-chain job has exactly one `run:` that does work: the bootstrap. Everything
+# above it is checkout and the runtime — which is what the bootstrap script must NOT
+# install for itself. The bootstrap also performs the one rewrite this repository's
+# dependency install needs — the token `insteadOf` for the private
+# @mtreml/portfolio-core git dependency, ahead of `npm ci`. The job token is scoped
+# to this repository alone and cannot read the sibling repository, so the credential
+# is the CORE_GIT_TOKEN repository secret; GITHUB_TOKEN,
+# mapped from github.token because the step environment no longer carries the variable,
+# stays the fallback.
+#
+# The `deploy` job below consumes the `deploy-vps` composite action from the core
+# repository AT THE SAME TAG the package is pinned to — `v1.0.0` in both places —
+# and deliberately does NOT rebuild. It uploads the exact tree the gate chain produced
+# and gated, because a second build is a second artifact: the thing verified and the
+# thing served would be different objects that are merely expected to match. The
+# action's version preflight fails on drift between the tag it is consumed at and the
+# installed package version.
+#
+# Ubuntu is the only leg, because it is the platform the server runs, and because the
+# sharp binaries, the Playwright browser download and the line-ending normalization are
+# only ever tested there.
+#
+# ── A cross-repo composite action ────────────────────────────────────────────────
+# The action is consumed by path from mtreml/portfolio-core at the pinned tag. If that
+# cross-repo consumption fails on private repositories, the fallback is to vendor a
+# copy of the deploy job in this repository (the scripts it runs still come from the
+# package) — the same tag discipline, one repository further from the source.
+# ══════════════════════════════════════════════════════════════════════════════
+
+name: ci
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy from a manual run (main only).'
+        type: boolean
+        required: false
+        default: false
+
+# A pushed fixup should cancel the run it supersedes rather than queue behind it.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate-chain:
+    name: gate chain
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # No `permissions:` key on purpose: the job token is only the fallback credential
+    # (checkout, and the bootstrap's GITHUB_TOKEN path), and its default minimum scope
+    # is all checkout needs. Declaring permissions would only narrow it further. The
+    # real dependency credential is the CORE_GIT_TOKEN repository secret — a token the
+    # account grants to both repositories, which no permissions key can express.
+
+    env:
+      # Both credentials are mapped explicitly: this runner's step environment no
+      # longer carries GITHUB_TOKEN, and repository secrets are no longer injected
+      # into the environment at all. The bootstrap reads the two variables by these
+      # names.
+      GITHUB_TOKEN: ${{ github.token }}
+      CORE_GIT_TOKEN: ${{ secrets.CORE_GIT_TOKEN }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Install the pinned runtime
+        uses: actions/setup-node@v5
+        with:
+          # Read from .nvmrc, so the runtime line is pinned in the repository and not
+          # restated here — two copies of one version is how they start to drift.
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      # ── The one step that does work ─────────────────────────────────────────
+      # The bootstrap reads the CORE_GIT_TOKEN repository secret (the job token is
+      # scoped to this repository alone and cannot read the sibling portfolio-core
+      # repository) and turns it into the git `insteadOf` rewrite before `npm ci`
+      # clones the pinned @mtreml/portfolio-core tag.
+      - name: Bootstrap and run the gate chain
+        run: sh scripts/bootstrap.sh
+
+      # ── The artifact the deploy job serves ──────────────────────────────────
+      # The export built by the gate chain's build gate and read by its e2e, a11y,
+      # cross, perf and artifact gates. Taken from a run that has already passed
+      # every gate: this is the only tree that reaches a VPS. `main` ships — this is
+      # a single-site repository, so the branch is a literal rather than a variable.
+      #
+      # This condition and the deploy job's must stay identical: an artifact
+      # uploaded from a branch the deploy job then declines is a silent no-op, and a
+      # deploy job with no artifact fails on the download with an error that names
+      # neither cause.
+      - name: Upload the static export
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true))
+        uses: actions/upload-artifact@v7
+        with:
+          name: static-export
+          path: out/
+          retention-days: 7
+          # The export contains no dotfiles today, but a future release adding one
+          # must not silently drop it from the deployed tree.
+          include-hidden-files: true
+          if-no-files-found: error
+
+      # ── Evidence, kept only when something failed ───────────────────────────
+      - name: Upload the end-to-end report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  # ══════════════════════════════════════════════════════════════════════════════
+  # DEPLOY
+  #
+  # Uploads the gated export to the VPS release tree under /srv/tischler-federbusch
+  # and verifies it on live responses. The mechanism is the deploy-vps composite
+  # action, consumed from the core repository at the pinned tag.
+  #
+  # Nothing here knows the domain, the host or the key: the credentials are the
+  # four DEPLOY_* secrets, and the deployment knobs are the repository variables
+  # VERIFY_BASE_URL and KEEP_RELEASES. Until those secrets exist, the action's
+  # preflight sees none of the four, reports "not configured yet", and exits 0 —
+  # the job runs green and deploys nothing, which is the state this repository is
+  # in until the deployment credentials are set up (WP-09 provisions the box).
+  # ══════════════════════════════════════════════════════════════════════════════
+  deploy:
+    name: deploy to the vps
+    # The gate chain, so a failure blocks a release rather than racing it.
+    needs: gate-chain
+    # Must stay identical to the "Upload the static export" condition above.
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.deploy == true))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # The job reads the repository and talks to one server. It needs nothing else.
+    permissions:
+      contents: read
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      # The action lives in the private core repository, and a cross-repository
+      # `uses:` cannot authenticate — the runner refuses to resolve it. The action
+      # is checked out at the same tag the
+      # package is pinned to, with the same credential the gate chain used for the
+      # package, and referenced by workspace-relative path instead.
+      - name: Check out the deploy action
+        uses: actions/checkout@v5
+        with:
+          repository: mtreml/portfolio-core
+          ref: v1.0.0
+          path: core-action
+          token: ${{ secrets.CORE_GIT_TOKEN }}
+
+      - name: Deploy the gated export
+        uses: ./core-action/.github/actions/deploy-vps
+        with:
+          deploy-host: ${{ secrets.DEPLOY_HOST }}
+          deploy-user: ${{ secrets.DEPLOY_USER }}
+          deploy-ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+          deploy-known-hosts: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          deploy-path: /srv/tischler-federbusch
+          verify-base-url: ${{ vars.VERIFY_BASE_URL || 'http://localhost:8080' }}
+          keep-releases: ${{ vars.KEEP_RELEASES || '5' }}
+          # The tag this action is running as. The preflight compares it against the
+          # installed @mtreml/portfolio-core version and fails on drift; the
+          # package pin in package.json is the same coordinate.
+          action-version: v1.0.0

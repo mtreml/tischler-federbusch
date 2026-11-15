@@ -1,0 +1,76 @@
+import { NextIntlClientProvider } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { hasLocale } from 'next-intl'
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
+
+import { routing } from '@/i18n/routing'
+
+import '@/styles/globals.css'
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   ROOT LAYOUT FOR EVERY LOCALIZED PAGE
+
+   A root layout under a dynamic segment, which Next 16 documents explicitly for this case
+   (`layout.md`: "The root layout can be under a dynamic segment, for example when implementing
+   internationalization with `app/[lang]/layout.js`"). That is what lets `<html lang>` be the
+   locale from the URL.
+
+   ── This is where the persistent chrome mounts ─────────────────────────────────
+   The menu overlay and the page-transition overlay (WP-06) will mount here — and nowhere
+   else. There is deliberately **no `template.tsx`** in this tree: that convention remounts
+   on every navigation, so the router unmounts the outgoing tree immediately and
+   `AnimatePresence` never gets to hold it. This layout is not remounted across navigation,
+   so the animation context survives and both halves of a transition run.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+export const metadata: Metadata = {
+  /* WP-01 placeholder; WP-02 contributes the real title/description/canonical set from
+     the central configuration. */
+  title: 'Lukas Federbusch — Tischlerei Lienz',
+}
+
+/**
+ * Every configured locale, so the export contains a complete document tree for each.
+ * A locale never generated simply does not exist in the output — the export is
+ * silently incomplete rather than loudly broken.
+ */
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
+
+export default async function LocaleLayout({
+  children,
+  params,
+}: {
+  children: ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+
+  /* The `[locale]` segment acts as a catch-all for unknown top-level paths, so an
+     unrecognised value reaches the not-found document rather than rendering an empty shell
+     in a locale that does not exist. */
+  if (!hasLocale(routing.locales, locale)) notFound()
+
+  /* Opts this subtree into static rendering. Without it next-intl treats the request as
+     dynamic, which a static export cannot satisfy. */
+  setRequestLocale(locale)
+
+  const t = await getTranslations({ locale })
+
+  return (
+    <html lang={locale}>
+      <body>
+        <NextIntlClientProvider locale={locale}>
+          <a className="skip-link" href="#main-content">
+            {t('common.skipToContent')}
+          </a>
+          {/* One `<main>` per document, so the skip link's target is unambiguous. */}
+          <main id="main-content">{children}</main>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  )
+}

@@ -1,0 +1,102 @@
+# There is one .gitignore, this file. Path-anchoring is load-bearing in places — see the notes on
+# the rules that carry one.
+
+# ─── Dependencies ───────────────────────────────────────────────────────────────
+node_modules/
+
+# ─── Build output ───────────────────────────────────────────────────────────────
+/.next/
+/out/
+/build
+*.tsbuildinfo
+next-env.d.ts
+
+# ─── Generated media variants ───────────────────────────────────────────────────
+# Written by `npm run media:generate` (WP-03) and — under the default filesystem source —
+# a link to the key's media library written by `npm run media:link`.
+#
+# NO TRAILING SLASH, and that is load-bearing rather than tidying. `/public/media/` matches
+# directories ONLY, so it would not ignore the link itself: a symlink could then be committed,
+# pointing at an absolute path on one machine. Everywhere else it dangles, and on Windows —
+# where git has core.symlinks=false — it is checked out as a regular FILE, at which point the
+# build's `mkdir public/media` fails with ENOTDIR. Without the slash this rule covers the
+# directory and the link alike.
+/public/media
+
+# ─── The media library ──────────────────────────────────────────────────────────
+# The derived variants every `/media/...` URL resolves to. Ignored, never committed —
+# the whole point of the media seam is that a clone stays cheap. It lives INSIDE the
+# repository anyway for two reasons: a path outside the root forces `turbopack.root` to be
+# widened to the parent directory (Turbopack rejects symlinks that resolve outside its root),
+# and `npm run media:link` can link `public/media` at it.
+#
+# Derived — `npm run media:generate` (WP-03) rebuilds the whole tree from the originals.
+
+/media/
+.media/
+
+# ─── The originals ──────────────────────────────────────────────────────────────
+# `media-originals/…` — the user's drop folder, bridged into the repository by a local-only
+# symlink (not committed). THE ONE THING HERE THAT IS NOT REPRODUCIBLE: it is the sole copy
+# of the client's originals, so it is what a backup has to cover.
+#
+# Ignored for the same reason the library is — a clone has to stay cheap. The
+# trailing-slash form covers the directory; the bare name covers the symlink.
+/media-originals/
+/media-originals
+
+# ─── Test output ────────────────────────────────────────────────────────────────
+/coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# ─── Secrets — none belong in this repository at all ────────────────────────────
+.env*
+*.pem
+
+# The deployment ssh key. A GUARD, not housekeeping: the key belongs in `~/.ssh` and nothing
+# here reads it, so nothing should ever create it in this tree. A private key in a git
+# history is not undone by deleting the file. The `*` covers the private key and the
+# `.pub` alike.
+/deploy_key*
+
+# ─── Guard rules ────────────────────────────────────────────────────────────────
+# The rules below are a **guard, not housekeeping**: the intake directories they name do not
+# exist yet, and these entries exist so that dropping media into that layout cannot quietly add
+# camera originals to a clone.
+#
+# ANCHORED with leading slashes, and that is load-bearing: a bare `fonts/` matches a directory
+# of that name at ANY depth and would swallow `public/fonts/` (WP-04's subsetted faces).
+/fonts/
+/logo/
+
+# ─── Editor / OS noise ──────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+.cache/
+.vercel/
+dist/
+
+# VS Code workspace settings (local to each developer)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# Throwaway probes written while debugging — scratch, and unanchored so one is ignored
+# wherever it is dropped. Paired with the same rule in .prettierignore.
+*.tmp.*
+
+# IDE-specific files
+*.swp
+*.swo
+*~
+.idea/
+*.iml
+.pnpm-debug.log*
