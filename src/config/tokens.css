@@ -96,6 +96,13 @@
      background only changes colour. */
   --duration-menu: 320ms;
   --duration-menu-items: 480ms;
+  /* The entries' rise on the menu's intro, per index (WP-06b3): entry i
+     travels `--menu-item-rise × (i + 1)` — the top entry the least, the
+     bottom the farthest. That distance gradient is the stagger; all entries
+     share the one `--duration-menu-items` timeline, so no per-entry delay is
+     owed. The motion library resolves this from the computed style rather
+     than re-declaring it — see the intro note in `menu.css`. */
+  --menu-item-rise: 1.25rem;
   /* The page transition: the overlay covers the old page, then reveals the
      new one. Cover and reveal are near-equal on purpose — the name holds
      still in the centre for the whole of it. */

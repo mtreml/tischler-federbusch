@@ -73,10 +73,17 @@
 
    The full-page overlay, in four nodes: the background-color layer, the name
    top left, the X top right, the entry list. This file carries layering and
-   the slots only — every value a token. The markup is final in this work
-   package; WP-06b3 adds the intro and the stagger (animation properties on
-   exactly these nodes, plus the reduced-motion collapse), and WP-06d replaces
-   the fallback navigation — neither touches the structure.
+   the slots — every value a token.
+
+   The intro and the stagger (WP-06b3) are driven by the motion library, which
+   resolves them from the tokens for its values (`--duration-menu`,
+   `--duration-menu-items` and `--ease-quiet` from WP-02, `--menu-item-rise`
+   from WP-06b3 — all declared in `src/config/tokens.css`); the resolution
+   lives in `Menu.tsx`. What this file owes the animation is the CSS side of
+   the same surface: no transition or animation of its own on any of these
+   nodes, and the reduced-motion block at the end, which collapses whatever
+   could still move on this side. The markup is final; WP-06d replaces the
+   fallback navigation without touching the structure.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 /* The panel: the whole viewport, above the header (z 40) and below the skip
@@ -88,8 +95,10 @@
   z-index: 50;
 }
 
-/* The background-color layer: opaque, the one `--color-background`, a colour
-   and not a blur (the spec). The node WP-06b3 fades in. */
+/* The background-color layer: opaque at rest, the one `--color-background`,
+   a colour and not a blur (the spec). The intro fades it in over
+   `--duration-menu` and the close fades it out — the motion library runs the
+   opacity on exactly this node (WP-06b3); no CSS transition here. */
 .menu__background {
   position: absolute;
   inset: 0;
@@ -136,7 +145,11 @@
 }
 
 /* The entries, stacked in configured order, toward the bottom of the page —
-   the place the stagger arrives from (WP-06b3). */
+   the place the stagger arrives from: on the intro each row fades in while
+   it rises from `--menu-item-rise × (index + 1)`, all on the one shared
+   `--duration-menu-items` timeline, and the close sinks them back (WP-06b3).
+   The motion library runs the transforms on the rows themselves; this file
+   owes the resting layout only. */
 .menu__entries {
   position: absolute;
   inset-inline: 0;
@@ -158,4 +171,20 @@
   color: var(--color-ink);
   text-decoration: none;
   text-align: center;
+}
+
+/* ── Reduced motion (WP-06b3) ───────────────────────────────────────────────
+   The intro and the close are the motion library's, and its gate
+   (`usePrefersReducedMotion` in `Menu.tsx`) is the mechanism: under the
+   preference every duration and every rise distance resolves to zero — a
+   skip, not a shortening — so the panel opens and closes instantly and
+   nothing moves. This block is the CSS side of the same collapse: whatever
+   this file styles on the panel surface may not move either, so the
+   preference holds on the paint side as well as the animation side. */
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menu * {
+    transition: none;
+    animation: none;
+  }
 }

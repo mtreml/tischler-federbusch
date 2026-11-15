@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
 import { describe, expect, it } from 'vitest'
 
@@ -89,14 +89,16 @@ describe('the dialog contract', () => {
     view.unmount()
   })
 
-  it('is unmounted again on close — instant, no animation in this package', () => {
+  it('is unmounted again on close', async () => {
     const view = renderClosed()
     openMenu(view)
     expect(panel(view)).not.toBeNull()
 
-    /* The panel's X closes: the one button inside the panel. */
+    /* The panel's X closes: the one button inside the panel. The exit runs
+       through the panel's `AnimatePresence` (WP-06b3), so the removal is a
+       beat, not a synchronous unmount. */
     fireEvent.click(within(panel(view)).getByRole('button'))
-    expect(screen.queryByRole('dialog')).toBeNull()
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), { timeout: 1000 })
     view.unmount()
   })
 })
@@ -189,7 +191,7 @@ describe('the transition hooks', () => {
 describe('the fallback actions (replaced by WP-06d)', () => {
   /* On the landing (the jsdom URL set to the localized one), the fallbacks
      close the menu first — the navigation itself is a plain browser move. */
-  it('name link: closes the menu before navigating home', () => {
+  it('name link: closes the menu before navigating home', async () => {
     window.history.replaceState({}, '', '/de/')
     const view = renderClosed()
     openMenu(view)
@@ -199,17 +201,20 @@ describe('the fallback actions (replaced by WP-06d)', () => {
     expect(nameLink).not.toBeNull()
     if (nameLink === null) return
     fireEvent.click(nameLink)
-    expect(screen.queryByRole('dialog')).toBeNull()
+    /* The exit runs through the panel's `AnimatePresence` (WP-06b3): the
+       removal is a beat, not a synchronous unmount. */
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), { timeout: 1000 })
     view.unmount()
   })
 
-  it('Arbeiten: closes the menu before jumping to the anchor', () => {
+  it('Arbeiten: closes the menu before jumping to the anchor', async () => {
     window.history.replaceState({}, '', '/de/')
     const view = renderClosed()
     openMenu(view)
 
     fireEvent.click(screen.getByRole('link', { name: 'Arbeiten' }))
-    expect(screen.queryByRole('dialog')).toBeNull()
+    /* The exit runs through the panel's `AnimatePresence` (WP-06b3). */
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), { timeout: 1000 })
     view.unmount()
   })
 })
