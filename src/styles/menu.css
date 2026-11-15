@@ -67,3 +67,95 @@
     transition: none;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE MENU PANEL (WP-06b2)
+
+   The full-page overlay, in four nodes: the background-color layer, the name
+   top left, the X top right, the entry list. This file carries layering and
+   the slots only — every value a token. The markup is final in this work
+   package; WP-06b3 adds the intro and the stagger (animation properties on
+   exactly these nodes, plus the reduced-motion collapse), and WP-06d replaces
+   the fallback navigation — neither touches the structure.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* The panel: the whole viewport, above the header (z 40) and below the skip
+   link (z 100). The page below is unreachable — the background layer covers
+   it and the scroll is locked by the provider. */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+/* The background-color layer: opaque, the one `--color-background`, a colour
+   and not a blur (the spec). The node WP-06b3 fades in. */
+.menu__background {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-background);
+}
+
+/* The name, top left, at exactly the name-home geometry — the same token
+   pair the header slot and the name's travel read (WP-05), so the name is
+   byte-identical on the page and in the menu and never moves on open/close.
+   The width family is the shared `--name-width*`; the height stays derived
+   from the viewBox, as on the landing. */
+.menu__name {
+  position: absolute;
+  top: var(--name-header-top);
+  left: var(--name-header-left);
+  display: block;
+}
+
+.menu__name-image {
+  display: block;
+  width: var(--name-width);
+  height: auto;
+}
+
+@media (min-width: var(--breakpoint-md)) {
+  .menu__name-image {
+    width: var(--name-width-md);
+  }
+}
+
+@media (min-width: var(--breakpoint-lg)) {
+  .menu__name-image {
+    width: var(--name-width-lg);
+  }
+}
+
+/* The X, top right: the same corner the header's hamburger rests in, so the
+   two instances of the one component occupy the same box in sequence. */
+.menu__close {
+  position: absolute;
+  top: var(--name-header-top);
+  right: var(--spacing-gutter);
+  display: block;
+}
+
+/* The entries, stacked in configured order, toward the bottom of the page —
+   the place the stagger arrives from (WP-06b3). */
+.menu__entries {
+  position: absolute;
+  inset-inline: 0;
+  bottom: var(--spacing-section);
+  display: flex;
+  flex-direction: column;
+}
+
+/* One row: at least the touch target tall, centred, quiet type on the
+   background — the ink, never a second colour. */
+.menu__entry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--spacing-touch-target);
+  padding-inline: var(--spacing-gutter);
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+  text-decoration: none;
+  text-align: center;
+}

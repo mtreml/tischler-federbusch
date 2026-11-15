@@ -136,9 +136,20 @@
   inset-block: 0 auto;
   inset-inline: 0;
   z-index: 40;
-  /* The bar carries no control yet (the hamburger is WP-06): until it lands,
-     the header must not intercept the film below it. */
+  /* The bar itself never intercepts the film below it: only the actions area
+     re-enables pointer events for the control it carries. */
   pointer-events: none;
+}
+
+/* The one control the bar carries: the hamburger (WP-06a), top right, at the
+   name's own top coordinate so the bar's two corners share a line. It sits
+   exactly where the menu's X does (`menu.css`) — one component, the two
+   states in sequence. */
+.header__actions {
+  position: absolute;
+  top: var(--name-header-top);
+  right: var(--spacing-gutter);
+  pointer-events: auto;
 }
 
 /* The warm background, as a layer whose opacity is the name's travel progress

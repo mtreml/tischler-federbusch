@@ -5,7 +5,9 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
+import { Menu } from '@/components/layout/Menu'
 import { routing } from '@/i18n/routing'
+import { MenuProvider } from '@/lib/menu'
 
 import '@/styles/globals.css'
 
@@ -18,11 +20,13 @@ import '@/styles/globals.css'
    locale from the URL.
 
    ── This is where the persistent chrome mounts ─────────────────────────────────
-   The menu overlay and the page-transition overlay (WP-06) will mount here — and nowhere
-   else. There is deliberately **no `template.tsx`** in this tree: that convention remounts
-   on every navigation, so the router unmounts the outgoing tree immediately and
-   `AnimatePresence` never gets to hold it. This layout is not remounted across navigation,
-   so the animation context survives and both halves of a transition run.
+   The menu (WP-06) mounts here — and nowhere else: the `MenuProvider` owns the
+   state and the panel renders after `<main>`. The page-transition overlay (WP-06d)
+   joins beside it. There is deliberately **no `template.tsx`** in this tree: that
+   convention remounts on every navigation, so the router unmounts the outgoing tree
+   immediately and `AnimatePresence` never gets to hold it. This layout is not
+   remounted across navigation, so the animation context survives and both halves of a
+   transition run.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 export const metadata: Metadata = {
@@ -68,11 +72,16 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body>
         <NextIntlClientProvider locale={locale}>
-          <a className="skip-link" href="#main-content">
-            {t('common.skipToContent')}
-          </a>
-          {/* One `<main>` per document, so the skip link's target is unambiguous. */}
-          <main id="main-content">{children}</main>
+          <MenuProvider>
+            <a className="skip-link" href="#main-content">
+              {t('common.skipToContent')}
+            </a>
+            {/* One `<main>` per document, so the skip link's target is unambiguous. */}
+            <main id="main-content">{children}</main>
+            {/* The menu panel: after `<main>`, in the persistent layout, so its
+                exit animations can run (no `template.tsx`). */}
+            <Menu />
+          </MenuProvider>
         </NextIntlClientProvider>
       </body>
     </html>

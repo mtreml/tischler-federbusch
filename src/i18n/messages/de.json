@@ -4,7 +4,8 @@
   },
   "menu": {
     "openLabel": "Menü öffnen",
-    "closeLabel": "Menü schließen"
+    "closeLabel": "Menü schließen",
+    "dialogLabel": "Menü"
   },
   "rootRedirect": {
     "title": "Lukas Federbusch - Tischlermeister",

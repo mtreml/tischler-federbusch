@@ -1,6 +1,9 @@
 'use client'
 
+import { MENU_PANEL_ID, useMenu } from '@/lib/menu'
 import { useLandingProgress } from '@/lib/landing-scroll'
+
+import { MenuButton } from './MenuButton'
 
 /* ══════════════════════════════════════════════════════════════════════════════
    THE HEADER (WP-05)
@@ -21,9 +24,10 @@ import { useLandingProgress } from '@/lib/landing-scroll'
    and the opacity is what animates.
 
    ── What it carries ─────────────────────────────────────────────────────────
-   The hamburger, top right — which is WP-06's, so this file is the bar and
-   the mount point, not the control: `pointer-events: none` until the button
-   lands, because a bar with no control must not intercept the film below it.
+   The hamburger, top right — the `MenuButton` (WP-06a) wired to the menu's
+   state (WP-06b): one press, one toggle. The bar itself keeps
+   `pointer-events: none`, so it never intercepts the film below it — only
+   the actions area re-enables pointer events (the CSS in `landing.css`).
    The name's home position top left is **not** here: it is the name-scroll
    instance (WP-05) and the menu's (WP-06), both reading the WP-02 tokens —
    the header reserves the slot, the name occupies it.
@@ -31,11 +35,18 @@ import { useLandingProgress } from '@/lib/landing-scroll'
 
 export function Header() {
   const progress = useLandingProgress()
+  const menu = useMenu()
 
   return (
     <header className="header">
       <div className="header__background" style={{ opacity: progress }} aria-hidden="true" />
-      {/* The hamburger (WP-06) mounts here, top right. */}
+      <div className="header__actions">
+        <MenuButton
+          open={menu.isOpen}
+          onToggle={() => (menu.isOpen ? menu.close() : menu.open())}
+          controlsId={MENU_PANEL_ID}
+        />
+      </div>
     </header>
   )
 }
