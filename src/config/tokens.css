@@ -1,0 +1,155 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — the one file a design review reads.
+
+   Every colour, type-scale step, spacing step, breakpoint, motion duration and
+   easing curve used anywhere is declared here, so reviewing the design is a
+   short list of numbers rather than a hunt through components. No component
+   may carry a colour, font size, spacing value, breakpoint or duration literal.
+
+   Tailwind v4 resolves every `@theme` entry to a CSS custom property and
+   generates the matching utility, which is what makes the token the single
+   source rather than a parallel copy of one.
+
+   ── Where the boundary with site.config.ts runs ────────────────────────────────
+   Tokens are values CSS consumes. The landing intro duration is also a
+   *JavaScript* value — `site.landing.introDurationMs` — because the animation
+   is driven by the motion library, not by a CSS transition. `--duration-intro`
+   below is the same 1500 ms for the CSS-side rules (the reduced-motion
+   fallback and any non-JS treatment), and the two stay in step by review
+   rather than by import: one is data, one is paint.
+
+   The style brief is the constraint every value answers to: minimalistic,
+   calm, quiet, warm, natural, organic — and mobile-first, because 90 % of the
+   visitors are phones in portrait.
+   ══════════════════════════════════════════════════════════════════════════════ */
+@theme {
+  /* ── Colour ──────────────────────────────────────────────────────────────────
+     A deliberately small set. The design is warm-white-surfaced and
+     image-forward, so colour carries structure, never meaning.
+
+     The background is defined here and **only** here — the page, the menu
+     overlay and the transition overlay all read this one property, and the
+     configuration gate fails a build that defines it a second time. */
+  --color-background: #faf7f1;
+
+  /* Ink, from the logo sources. One ink and two derived muted steps, each
+     lightened toward the background by mixing rather than by opacity, so the
+     steps hold their hue on any surface the background does. */
+  --color-ink: #1d1d1b;
+  /* ~7:1 on the background — secondary text that must stay readable. */
+  --color-ink-muted: #625d55;
+  /* ~4.6:1 on the background — the quietest step the page uses (footer credit). */
+  --color-ink-faint: #8a8378;
+
+  /* A single hairline, for the one rule the footer may carry. */
+  --color-rule: #e6e0d4;
+
+  /* ── The name geometry ────────────────────────────────────────────────────────
+     ONE token set, read by four surfaces: the header, the menu overlay, the
+     landing scroll animation and the transition overlay. The name keeps the
+     same size and the same top-left position on every one of them — that
+     sameness is the point of the set, and the decoupling between WP-05 (the
+     landing) and WP-06 (the menu): each reads these and neither knows the
+     other.
+
+     The aspect comes from name.svg's own viewBox — 334.89453 × 86.875 pt —
+     so the width is the one figure a layout decides and the height is derived
+     rather than a second decision. */
+  --name-aspect: 3.8548;
+  /* Mobile-first: the name is small on a phone and grows with the viewport.
+     Width-capped rather than height-capped, so a narrow portrait screen keeps
+     a single line. */
+  --name-width: 9.5rem;
+  --name-width-md: 12rem;
+  --name-width-lg: 14rem;
+
+  /* The header position: where the name rests top-left, on the page and in
+     the menu alike. The landing scroll animation ends exactly here, and the
+     menu overlay places it exactly here — both read the pair. */
+  --name-header-top: 1.25rem;
+  --name-header-left: var(--spacing-gutter);
+
+  /* The landing position: dead-centre of the first screenful, before the
+     scroll carries the name up to the header position. `translate(-50%,
+     -50%)` is the renderer's business; these are the coordinates. */
+  --name-landing-top: 50%;
+  --name-landing-left: 50%;
+
+  /* ── Motion ──────────────────────────────────────────────────────────────────
+     One quiet easing family — nothing springy, per the style brief. A single
+     curve with a long, soft settle: the movements are slow enough that an
+     overshoot would read as a bounce, and a bounce is the opposite of this
+     site. Every duration below is long enough to be seen as a movement and
+     short enough that navigation is never delayed by it.
+
+     Reduced motion is not configurable: under the preference, every one of
+     these collapses to the instant below and the overlays change nothing
+     that moves. */
+  --ease-quiet: cubic-bezier(0.3, 0, 0.2, 1);
+  --duration-instant: 0ms;
+  /* The menu: background fade-in, and the items' travel from below into
+     place. The items run on the longer figure — they move a distance, the
+     background only changes colour. */
+  --duration-menu: 320ms;
+  --duration-menu-items: 480ms;
+  /* The page transition: the overlay covers the old page, then reveals the
+     new one. Cover and reveal are near-equal on purpose — the name holds
+     still in the centre for the whole of it. */
+  --duration-transition-cover: 360ms;
+  --duration-transition-reveal: 420ms;
+  /* The landing intro: video deblur and logo/name fade-in, at the same rate.
+     The JavaScript side of the same figure is `site.landing.introDurationMs`
+     (1500 ms); see the boundary note above the theme block. */
+  --duration-intro: 1500ms;
+
+  /* ── Type scale ──────────────────────────────────────────────────────────────
+     A quiet modular scale, mobile-first. The base is the phone: body text at
+     one rem on a portrait screen, the display steps generous but unhurried —
+     this page has one heading and a tagline, and neither shouts. */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.4;
+  --leading-normal: 1.65;
+
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em;
+
+  /* ── Spacing ─────────────────────────────────────────────────────────────────
+     Generous, because the style is quiet: this page has little content, and
+     the space between it is what reads as calm. Tailwind derives its numeric
+     utilities from `--spacing`; the named steps are for layout structure. */
+  --spacing: 0.25rem;
+
+  /* The page gutter, per viewport step. Mobile-first: the base is the phone,
+     the upper steps give a tablet and a laptop their room. */
+  --spacing-gutter: 1.25rem;
+  --spacing-gutter-md: 2rem;
+  --spacing-gutter-lg: 3rem;
+
+  /* The vertical breath between the landing, the works section and the
+     footer. A phone screen is short, so a section is measured in whole
+     screenfuls' worth of space rather than in the rem counts a desktop
+     layout would use. */
+  --spacing-section: 5rem;
+  --spacing-section-md: 7rem;
+  --spacing-section-lg: 9rem;
+
+  /* The smallest comfortable touch target. The menu entries and the
+     hamburger all float above it. */
+  --spacing-touch-target: 2.75rem;
+
+  /* ── Breakpoints ─────────────────────────────────────────────────────────────
+     Two steps only: the site has three named widths to care about — the
+     phone (below `md`), the tablet and up (`md`), and the desktop (`lg`) —
+     and a breakpoint nobody switches on is a number a reviewer has to
+     explain away. */
+  --breakpoint-md: 48rem; /* 768px */
+  --breakpoint-lg: 64rem; /* 1024px */
+}

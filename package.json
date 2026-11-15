@@ -2,7 +2,7 @@
   "name": "tischler-federbusch",
   "version": "0.1.0",
   "private": true,
-  "description": "Single-page site for Lukas Federbusch, Tischlerei in Lienz. The atreoscope stack minus its content model: configuration plus static views, gated and statically exported.",
+  "description": "Single-page site for Lukas Federbusch - Tischlermeister. Configuration plus static views, gated and statically exported.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=22.0.0"

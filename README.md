@@ -1,10 +1,10 @@
 # tischler-federbusch
 
-Single-page site for **Lukas Federbusch, Tischlerei in Lienz** — `tischler-federbusch.at`.
+Single-page site for **Lukas Federbusch - Tischlermeister** — `tischler-federbusch.at`.
 One scroll page under `/de/` (landing → Arbeiten → footer) plus `/de/impressum-datenschutz/`.
 German only; `de` is the one configured locale.
 
-Built on the atreoscope stack **minus its content model**: Next 16 static export
+Built on Next 16 static export
 (`output: 'export'`, `trailingSlash: true`), React 19, `next-intl` (locale prefix `/de/`),
 `motion`, Tailwind 4, and the shared package `@mtreml/portfolio-core` pinned at
 `git+https://github.com/mtreml/portfolio-core.git#v1.0.0` (the `deploy-vps` action is

@@ -28,7 +28,7 @@ import '@/styles/globals.css'
 export const metadata: Metadata = {
   /* WP-01 placeholder; WP-02 contributes the real title/description/canonical set from
      the central configuration. */
-  title: 'Lukas Federbusch — Tischlerei Lienz',
+  title: 'Lukas Federbusch - Tischlermeister',
 }
 
 /**
