@@ -20,6 +20,8 @@
      • the cross-key rules — the phone display form against its `tel:` target,
        the locale set against the route segments, the hosting sentence against
        its provider and country, the menu against the anchors it names;
+     • the config ↔ declared-media cross-check — every configured media path
+       (`landing.video`, `seo.ogImage`) resolves in `declaredMedia()`;
      • the token file's one invariant — exactly one background definition.
    ══════════════════════════════════════════════════════════════════════════════ */
 import { readFileSync } from 'node:fs'
@@ -29,6 +31,7 @@ import { legal } from '@/config/legal.config'
 import { media } from '@/config/media.config'
 import { site } from '@/config/site.config'
 import { formatReport, validateConfiguration, type Environment } from '@/lib/config/validate'
+import { declaredMedia } from '@/lib/media/declared'
 
 const strict = process.argv.includes('--production')
 const environment: Environment = strict ? 'production' : 'development'
@@ -37,7 +40,18 @@ const environment: Environment = strict ? 'production' : 'development'
    the validator also stays importable from anywhere that has no filesystem. */
 const tokenSource = readFileSync(join(process.cwd(), 'src', 'config', 'tokens.css'), 'utf8')
 
-const report = validateConfiguration({ site, legal, media, environment, tokenSource })
+/* The declared set, walked here for the same reason: the validator takes it as
+   data, so a unit test can supply its own. */
+const declaredMediaPaths = declaredMedia(process.cwd()).map((entry) => entry.logicalPath)
+
+const report = validateConfiguration({
+  site,
+  legal,
+  media,
+  environment,
+  tokenSource,
+  declaredMediaPaths,
+})
 
 process.stdout.write(`${formatReport(report)}\n`)
 

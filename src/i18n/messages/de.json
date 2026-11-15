@@ -12,9 +12,6 @@
     "description": "Diese Adresse existiert nicht.",
     "toLanding": "Zur Startseite"
   },
-  "landing": {
-    "placeholder": "Landing"
-  },
   "impressumDatenschutz": {
     "placeholder": "Impressum & Datenschutz"
   }

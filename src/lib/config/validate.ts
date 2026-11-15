@@ -20,7 +20,9 @@ import { siteSchema, type SiteConfig } from './schema/site.schema'
      malformed      wrong shape or format — an error in every environment,
                     because it is wrong rather than incomplete.
      contradiction  two values cannot both hold — an error in every environment,
-                    because waiting does not fix it.
+                    because waiting does not fix it. The config ↔ declared-media
+                    cross-check below is one: a configured path the pipeline never
+                    generates for cannot be fixed by waiting.
      unfilled       a required value is empty — a warning in development, an
                     error in production.
    ══════════════════════════════════════════════════════════════════════════════ */
@@ -54,6 +56,14 @@ export interface Inputs {
    * when the text is present rather than reporting the file as missing.
    */
   tokenSource?: string
+  /**
+   * The logical paths `declaredMedia()` carries, supplied by the caller for the
+   * same reason: a unit test that walked the drop folder would pass on one
+   * machine and fail on a runner. When present, every configured media path
+   * (`landing.video`, `seo.ogImage`) must resolve in this set — the WP-02 latent
+   * bug, closed in WP-05.
+   */
+  declaredMediaPaths?: readonly string[]
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -315,6 +325,52 @@ function checkMedia(media: MediaConfig, f: FindingCollector): void {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
+   Config ↔ declared media
+
+   The configured media paths are served paths, and the pipeline only ever
+   serves what `declaredMedia()` declares. A value the two disagree on ships as
+   a black video or a broken og image — visible to every visitor, named to
+   nobody. So the pair is checked as a whole: each configured path must sit
+   under `media.basePath` and name a declared logical path, in every
+   environment, because it is a contradiction rather than an absence.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/** A served path as its declared logical path: `/media/landing/…` → `landing/…`. */
+function toDeclaredPath(value: string, basePath: string): string | undefined {
+  const prefix = `${basePath}/`
+  return value.startsWith(prefix) ? value.slice(prefix.length) : undefined
+}
+
+function checkConfiguredMedia(
+  site: SiteConfig,
+  media: MediaConfig,
+  declared: readonly string[],
+  f: FindingCollector,
+): void {
+  const declaredSet = new Set(declared)
+  const configured: ReadonlyArray<readonly [key: string, value: string]> = [
+    ['landing.video', site.landing.video],
+    ['seo.ogImage', site.seo.ogImage],
+  ]
+  for (const [key, value] of configured) {
+    const logical = toDeclaredPath(value, media.basePath)
+    if (logical === undefined) {
+      f.contradiction(
+        key,
+        `is "${value}", which does not sit under media.basePath "${media.basePath}" — ` +
+          'the declared media cannot be matched against it',
+      )
+    } else if (!declaredSet.has(logical)) {
+      f.contradiction(
+        key,
+        `is "${value}", which the declared media set does not carry — ` +
+          'the page would render a path nothing is generated for',
+      )
+    }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
    The token file's one invariant
    ───────────────────────────────────────────────────────────────────────── */
 
@@ -364,6 +420,12 @@ export function validateConfiguration(inputs: Inputs): ValidationReport {
   checkSite(inputs.site, f)
   checkLegal(inputs.legal, f)
   checkMedia(inputs.media, f)
+
+  /* Only when the caller supplies the declared set: a unit test without it is
+     still a full validation of everything else, and the gate always supplies it. */
+  if (inputs.declaredMediaPaths !== undefined) {
+    checkConfiguredMedia(inputs.site, inputs.media, inputs.declaredMediaPaths, f)
+  }
 
   /* The single severity matrix. Nothing above knows which environment it runs
      in; the kind alone decides. */

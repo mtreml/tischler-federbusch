@@ -1,23 +1,26 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { setRequestLocale } from 'next-intl/server'
+
+import { Header } from '@/components/layout/Header'
+import LandingView from '@/views/LandingView'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   LANDING PAGE — WP-01 PLACEHOLDER
+   THE LANDING PAGE — ONE SCROLL
 
-   The real landing (WP-05) is a full-viewport muted looping video with the logo+name
-   lockup centered over it, and the scroll-driven animation that carries the name up into
-   its header position. Nothing of that exists yet — this placeholder exists so the route,
-   the locale layout and the export are real before any design content lands.
+   The site is a single page: the full-viewport landing, then the works
+   section and the footer (WP-07) below it in the same document — "Arbeiten"
+   is the only menu anchor, and it scrolls rather than navigates. The header
+   floats over the whole of it; the menu and the transition overlay mount in
+   the `[locale]` layout (WP-06) and nowhere else.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations({ locale })
-
   return (
-    <section className="landing">
-      <h1>{t('landing.placeholder')}</h1>
-    </section>
+    <>
+      <Header />
+      <LandingView params={params} />
+    </>
   )
 }

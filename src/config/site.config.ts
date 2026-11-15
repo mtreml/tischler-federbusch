@@ -93,9 +93,13 @@ export const site: SiteConfig = {
      The autoplaying, looping master. The encode strips the audio (WP-03), which
      is why a muted video still owes its text alternative. */
   landing: {
-    /* Logical path of the encoded master under `media.basePath`; WP-03 encodes
-       media-originals/…/VID_20261114_082951.mp4 (11 s, 4K) to it. */
-    video: '/media/landing/master.mp4',
+    /* Logical path of the encoded master under `media.basePath`. The pipeline
+       keeps the original's logical path — the encoded file is the declared
+       master itself, only a content-hash suffix apart (WP-03), which is why
+       this value is the original's path and not a `master.mp4` that nothing is
+       ever served at. The `validate-config` cross-check (WP-05) resolves this
+       against `declaredMedia()`, so the two cannot disagree again. */
+    video: '/media/landing/VID_20261114_082951.mp4',
     /* The intro — video deblur plus logo/name fade-in, at the same rate — in
        one figure. 1.5 s, after which the video plays on repeat. */
     introDurationMs: 1500,

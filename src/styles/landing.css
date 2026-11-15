@@ -1,0 +1,154 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE LANDING, ITS CHROME AND THE NAME'S TRAVEL (WP-05)
+
+   Every value here is a token; this file carries layout structure only. The
+   z ladder of the one page: the film is the backdrop, the lockup floats
+   above it, the header above the lockup, and the skip link (globals) above
+   all of it.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.landing {
+  position: relative;
+  min-block-size: 100svh;
+  /* The deblur bleeds past the film's edges while it runs; clipping keeps
+     that from growing the document. */
+  overflow: clip;
+}
+
+/* ── The stage ────────────────────────────────────────────────────────────────
+   The header floats over the film (transparent, open question 19), so the
+   stage is the full first screenful — `100svh`, the mobile URL-bar-correct
+   unit, with no subtraction of a bar that does not occupy a row. The video
+   is absolute inside it; the lockup is placed against it. */
+.landing__stage {
+  position: relative;
+  block-size: 100svh;
+}
+
+/* ── The film ─────────────────────────────────────────────────────────────────
+   The backdrop: the whole stage, the configured fit, centered. The intro's
+   deblur is a transition on this property — see the intro note below. */
+.landing__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-position: center;
+  transition: filter var(--duration-intro) var(--ease-quiet);
+}
+
+/* ── The lockup ───────────────────────────────────────────────────────────────
+   The mark stacked on the wordmark, centered as a column at the landing
+   position — the `--name-landing-*` pair anchors the whole lockup, so the
+   name is its lower half (the token note says which is which). The name
+   inside is in flow: the scroll animation translates it, and nothing here
+   moves on scroll, which is what keeps the CLS at zero. */
+.landing__lockup {
+  position: absolute;
+  top: var(--name-landing-top);
+  left: var(--name-landing-left);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lockup);
+  transition: opacity var(--duration-intro) var(--ease-quiet);
+}
+
+.landing__logo {
+  width: var(--logo-landing-width);
+  height: auto;
+}
+
+/* The name's box. The width is the one figure the layout decides — the token
+   family the header slot, the menu and the transition overlay read as well —
+   and the height stays derived from the viewBox. */
+.landing__name-scroll {
+  display: block;
+}
+
+.landing__name {
+  display: block;
+  width: var(--name-width);
+  height: auto;
+}
+
+@media (min-width: var(--breakpoint-md)) {
+  .landing__logo {
+    width: var(--logo-landing-width-md);
+  }
+
+  .landing__name {
+    width: var(--name-width-md);
+  }
+}
+
+@media (min-width: var(--breakpoint-lg)) {
+  .landing__logo {
+    width: var(--logo-landing-width-lg);
+  }
+
+  .landing__name {
+    width: var(--name-width-lg);
+  }
+}
+
+/* ── The intro ────────────────────────────────────────────────────────────────
+   Pending state: the film blurs, the lockup is absent. The stage flips
+   `data-intro` to `done` on the second animation frame (the effect in
+   `LandingStage`), and both properties ease to their rest state over
+   `--duration-intro` on `--ease-quiet` — one shared timeline, one quiet
+   easing, which is the whole of the 1.5 s. `play()` is scheduled on the same
+   beat from the JavaScript side (`site.landing.introDurationMs`). */
+.landing__stage[data-intro='pending'] .landing__video {
+  filter: blur(var(--intro-blur));
+}
+
+.landing__stage[data-intro='pending'] .landing__lockup {
+  opacity: 0;
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────────
+   The pending state is the final state: no blur, no fade, and — from the
+   JavaScript side — playback starts at once rather than after the intro.
+   What the preference removes is the movement of the intro, not the film. */
+@media (prefers-reduced-motion: reduce) {
+  .landing__video,
+  .landing__lockup {
+    transition: none;
+  }
+
+  .landing__stage[data-intro='pending'] .landing__video {
+    filter: none;
+  }
+
+  .landing__stage[data-intro='pending'] .landing__lockup {
+    opacity: 1;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE HEADER
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.header {
+  position: fixed;
+  inset-block: 0 auto;
+  inset-inline: 0;
+  z-index: 40;
+  /* The bar carries no control yet (the hamburger is WP-06): until it lands,
+     the header must not intercept the film below it. */
+  pointer-events: none;
+}
+
+/* The warm background, as a layer whose opacity is the name's travel progress
+   (the store in `src/lib/landing-scroll.ts`): transparent over the landing
+   fold, fully `--color-background` the moment the name lands in its slot.
+   Opacity only — the layer itself never moves. */
+.header__background {
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-background);
+  opacity: 0;
+  will-change: opacity;
+}

@@ -1,4 +1,5 @@
 import type { MediaConfig } from '@/lib/config/schema/media.schema'
+import { videoDeliveryRegistry, type ImplementedVideoProvider } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
    MEDIA CONFIGURATION
@@ -69,3 +70,17 @@ export const media: MediaConfig = {
 
   lazyLoadOffscreen: true,
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE RENDER-SIDE VIDEO DELIVERY
+
+   The same registry the pipeline writes from, keyed by the provider above. The
+   render side (the landing, WP-05) names the master's *logical* path and lets
+   the adapter resolve it through the committed manifest into the served file —
+   exactly the seam atreoscope's `MediaVideo` stands on. Declared as a literal
+   `satisfies` so a provider name with no implementation is a type error here
+   rather than a runtime failure on a visitor's page.
+   ══════════════════════════════════════════════════════════════════════════════ */
+const VIDEO_PROVIDER = 'local' satisfies ImplementedVideoProvider
+
+export const videoDelivery = videoDeliveryRegistry[VIDEO_PROVIDER]

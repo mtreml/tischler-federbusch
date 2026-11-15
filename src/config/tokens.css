@@ -71,7 +71,11 @@
 
   /* The landing position: dead-centre of the first screenful, before the
      scroll carries the name up to the header position. `translate(-50%,
-     -50%)` is the renderer's business; these are the coordinates. */
+     -50%)` is the renderer's business; these are the coordinates. They anchor
+     the whole lockup (the mark stacked above the name), so the name is the
+     lockup's lower half — the transition overlay (WP-06) reads the same pair.
+     The scroll animation itself measures the name's real position, so the two
+     never drift apart. */
   --name-landing-top: 50%;
   --name-landing-left: 50%;
 
@@ -101,6 +105,11 @@
      The JavaScript side of the same figure is `site.landing.introDurationMs`
      (1500 ms); see the boundary note above the theme block. */
   --duration-intro: 1500ms;
+
+  /* The intro's starting blur, on the video before it eases to zero. The one
+     figure the intro carries besides its duration: the deblur is the movement,
+     the figure is its amplitude. */
+  --intro-blur: 8px;
 
   /* ── Type scale ──────────────────────────────────────────────────────────────
      A quiet modular scale, mobile-first. The base is the phone: body text at
@@ -144,6 +153,18 @@
   /* The smallest comfortable touch target. The menu entries and the
      hamburger all float above it. */
   --spacing-touch-target: 2.75rem;
+
+  /* The gap between the mark and the name inside the landing lockup — the
+     one gap the lockup carries. */
+  --spacing-lockup: 1.25rem;
+
+  /* The mark's width on the landing. The mark keeps its own viewBox aspect
+     (110.961 × 245.703 pt), so the width is the one figure a layout decides
+     and the height is derived — the same rule the name geometry above runs
+     on. Mobile-first, as the name widths are. */
+  --logo-landing-width: 4.25rem;
+  --logo-landing-width-md: 5rem;
+  --logo-landing-width-lg: 6rem;
 
   /* ── Breakpoints ─────────────────────────────────────────────────────────────
      Two steps only: the site has three named widths to care about — the

@@ -2,8 +2,11 @@ import { join } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
+import { legal } from '@/config/legal.config'
 import { media } from '@/config/media.config'
+import { site } from '@/config/site.config'
 import { declaredMedia, type DeclaredMedia } from '@/lib/media/declared'
+import { validateConfiguration } from '@/lib/config/validate'
 import { posterPathFor } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
@@ -99,5 +102,78 @@ describe('the declared media set', () => {
   it('declares the landing master exactly once and the poster exactly once', () => {
     const paths = declared.map((entry: DeclaredMedia) => entry.logicalPath)
     expect(new Set(paths).size).toBe(paths.length)
+  })
+})
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   CONFIG ↔ DECLARED MEDIA (the cross-check WP-05 closes)
+
+   The WP-02 latent bug: `site.landing.video` named a path the pipeline never
+   generated for, and nothing said. The check lives in `validate.ts`; this
+   suite pins it — the committed configuration must resolve, and a value the
+   declared set does not carry must fail **by name**, in every environment,
+   because the two disagreeing is a contradiction rather than an absence.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+describe('the config ↔ declared media cross-check', () => {
+  const declaredPaths = declared.map((entry) => entry.logicalPath)
+
+  it('resolves every configured media path in the declared set', () => {
+    const report = validateConfiguration({
+      site,
+      legal,
+      media,
+      environment: 'production',
+      declaredMediaPaths: declaredPaths,
+    })
+    expect(report.ok).toBe(true)
+  })
+
+  it('fails by name when landing.video names no declared media', () => {
+    const broken = {
+      ...site,
+      landing: { ...site.landing, video: '/media/landing/master.mp4' },
+    }
+    const report = validateConfiguration({
+      site: broken,
+      legal,
+      media,
+      environment: 'production',
+      declaredMediaPaths: declaredPaths,
+    })
+    expect(report.ok).toBe(false)
+    expect(report.errors.map((finding) => finding.key)).toContain('landing.video')
+  })
+
+  it('fails by name when seo.ogImage names no declared media', () => {
+    const broken = {
+      ...site,
+      seo: { ...site.seo, ogImage: '/media/arbeiten/works.jpg' },
+    }
+    const report = validateConfiguration({
+      site: broken,
+      legal,
+      media,
+      environment: 'production',
+      declaredMediaPaths: declaredPaths,
+    })
+    expect(report.ok).toBe(false)
+    expect(report.errors.map((finding) => finding.key)).toContain('seo.ogImage')
+  })
+
+  it('fails by name when a configured path does not sit under media.basePath', () => {
+    const broken = {
+      ...site,
+      landing: { ...site.landing, video: '/assets/landing/VID_20261114_082951.mp4' },
+    }
+    const report = validateConfiguration({
+      site: broken,
+      legal,
+      media,
+      environment: 'production',
+      declaredMediaPaths: declaredPaths,
+    })
+    expect(report.ok).toBe(false)
+    expect(report.errors.map((finding) => finding.key)).toContain('landing.video')
   })
 })

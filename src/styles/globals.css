@@ -8,6 +8,8 @@
    file (WP-04) — imported here so the declaration, the tokens and the base
    rules come from the same stylesheet bundle. */
 @import '../config/fonts.css';
+/* The landing, its chrome and the name's travel (WP-05). */
+@import './landing.css';
 
 body {
   margin: 0;

@@ -26,6 +26,7 @@
     "export:media": "portfolio-export-media",
     "media:bucket:serve": "portfolio-serve-bucket",
     "fonts:subset": "tsx scripts/subset-fonts.ts",
+    "favicons:build": "tsx scripts/build-favicons.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint",
     "format": "prettier --write .",
