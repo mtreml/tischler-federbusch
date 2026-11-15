@@ -35,7 +35,7 @@ CI invokes the same script — the documented setup and the chain are verified t
 - `npm run media:link` (already in `predev` and `prebuild`) links `public/media` at the
   key's library; `postbuild` runs `npm run export:media`, which counts `out/media`
   against the library and repairs the difference. **No media files in git, ever** —
-  with one deliberate exception: the manifest *is* committed
+  with one deliberate exception: the manifest _is_ committed
   (`.media/manifest.json`, beside the key file `.media/key`), because a clean clone has
   no originals to read and the manifest is what keeps it building and exporting.
 - `npm run media:meta:check` (in the gate chain) is the proof the strip held: no

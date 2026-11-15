@@ -1,0 +1,28 @@
+{
+  "$comment": "Written by npm run fonts:subset. Read by tests/unit/fonts.test.ts. Do not edit by hand: re-run the script.",
+  "source": "font-sources/FontsFree-Net-Biome-W04-Light.ttf",
+  "sourceSha256": "ad9ebf7686be9203d46966247624aaf9d4df154b19f4e0ccf5900e4070cbf040",
+  "output": "biome-light-subset.woff2",
+  "coveredRanges": [
+    [
+      "U+20",
+      "U+7E"
+    ],
+    [
+      "U+A0",
+      "U+FF"
+    ],
+    [
+      "U+100",
+      "U+17F"
+    ],
+    [
+      "U+2010",
+      "U+2027"
+    ],
+    [
+      "U+20AC",
+      "U+20AC"
+    ]
+  ]
+}

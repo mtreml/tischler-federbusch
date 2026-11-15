@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   /* WP-01 placeholder; WP-02 contributes the real title/description/canonical set from
      the central configuration. */
   title: 'Lukas Federbusch - Tischlermeister',
+  /* The tab icon is a square version of the `logo.svg` mark (WP-04), committed beside
+     it in `public/`. */
+  icons: { icon: '/tab-icon.svg' },
 }
 
 /**

@@ -4,20 +4,15 @@
    included, the background among them — and it is imported here so Tailwind's
    theme and the raw custom properties come from the same place. */
 @import '../config/tokens.css';
+/* The face and the one font-family stack live in the font-face declaration
+   file (WP-04) — imported here so the declaration, the tokens and the base
+   rules come from the same stylesheet bundle. */
+@import '../config/fonts.css';
 
 body {
   margin: 0;
   background-color: var(--color-background);
   color: var(--color-ink);
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
