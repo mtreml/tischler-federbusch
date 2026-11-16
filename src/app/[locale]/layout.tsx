@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
 import { Menu } from '@/components/layout/Menu'
+import { TransitionOverlay } from '@/components/layout/TransitionOverlay'
 import { routing } from '@/i18n/routing'
 import { MenuProvider } from '@/lib/menu'
 
@@ -20,9 +21,11 @@ import '@/styles/globals.css'
    locale from the URL.
 
    ── This is where the persistent chrome mounts ─────────────────────────────────
-   The menu (WP-06) mounts here — and nowhere else: the `MenuProvider` owns the
-   state and the panel renders after `<main>`. The page-transition overlay (WP-06d)
-   joins beside it. There is deliberately **no `template.tsx`** in this tree: that
+   The menu (WP-06) and the page-transition overlay (WP-06c) mount here — and
+   nowhere else: the `MenuProvider` owns the state, the panel renders after
+   `<main>`, and the overlay joins beside it, still inside the provider (its
+   imperative entry is the sequence owner's seam, and the sequence owner reads
+   `useMenu()`). There is deliberately **no `template.tsx`** in this tree: that
    convention remounts on every navigation, so the router unmounts the outgoing tree
    immediately and `AnimatePresence` never gets to hold it. This layout is not
    remounted across navigation, so the animation context survives and both halves of a
@@ -81,6 +84,10 @@ export default async function LocaleLayout({
             {/* The menu panel: after `<main>`, in the persistent layout, so its
                 exit animations can run (no `template.tsx`). */}
             <Menu />
+            {/* The page-transition overlay (WP-06c): beside the menu, in the
+                same persistent layout, so the cover and the reveal can run
+                (no `template.tsx`). */}
+            <TransitionOverlay />
           </MenuProvider>
         </NextIntlClientProvider>
       </body>

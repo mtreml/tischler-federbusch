@@ -12,6 +12,8 @@
 @import './landing.css';
 /* The menu button and its two-line morph (WP-06a). */
 @import './menu.css';
+/* The page-transition overlay and its spinner (WP-06c). */
+@import './transition.css';
 
 body {
   margin: 0;

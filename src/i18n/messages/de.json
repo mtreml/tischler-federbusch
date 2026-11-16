@@ -1,6 +1,7 @@
 {
   "common": {
-    "skipToContent": "Zum Inhalt springen"
+    "skipToContent": "Zum Inhalt springen",
+    "loading": "Wird geladen"
   },
   "menu": {
     "openLabel": "Menü öffnen",

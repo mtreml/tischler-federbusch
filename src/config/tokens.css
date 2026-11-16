@@ -162,8 +162,15 @@
   --spacing-touch-target: 2.75rem;
 
   /* The gap between the mark and the name inside the landing lockup — the
-     one gap the lockup carries. */
+     one gap the lockup carries. The transition overlay's spinner rests the
+     same gap above the lockup, so the figure is the lockup's, not the
+     spinner's. */
   --spacing-lockup: 1.25rem;
+
+  /* The transition spinner's diameter — the one figure the spinner's layout
+     decides (the ring's border is fixed geometry of a ring, like the X's
+     angles are of an X). */
+  --spinner-size: 2rem;
 
   /* The mark's width on the landing. The mark keeps its own viewBox aspect
      (110.961 × 245.703 pt), so the width is the one figure a layout decides
