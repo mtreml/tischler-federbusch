@@ -123,11 +123,39 @@
   opacity: 0;
 }
 
-/* The warm background: opacity is the name's travel progress (`src/lib/landing-scroll.ts`); opacity only. */
+/* The white bar: 0/1 from the shared store (`src/lib/landing-scroll.ts`) — the works section's top crossing the
+   viewport top; instant, no fade. */
 .header__background {
   position: absolute;
   inset: 0;
   background-color: var(--color-background);
   opacity: 0;
-  will-change: opacity;
+}
+
+/* The page variant's own name: the header slot, horizontally centered — the landing's sticky name rests in the
+   same slot, so the two are the same position. */
+.header__name {
+  position: absolute;
+  top: var(--name-header-top);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header__name-image {
+  display: block;
+  width: var(--name-width);
+  height: auto;
+  user-select: none;
+}
+
+@media (min-width: var(--breakpoint-md)) {
+  .header__name-image {
+    width: var(--name-width-md);
+  }
+}
+
+@media (min-width: var(--breakpoint-lg)) {
+  .header__name-image {
+    width: var(--name-width-lg);
+  }
 }

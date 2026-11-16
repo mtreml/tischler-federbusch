@@ -21,10 +21,9 @@ import { applyTitleTemplate, resolveCanonicalUrl, resolveContact } from '@/lib/c
    name, address, telephone and email live in `site.contact`, exactly as in
    the menu, so the page and the menu cannot disagree.
 
-   The header mounts here, as-is (the spec's "the hamburger is always
-   shown"): on a fresh load `useLandingProgress()` rests at the snapshot 0,
-   and the header's background layer is the same colour as this page's
-   background, so nothing about it betrays its landing provenance.
+   The header mounts here in its `page` variant (the spec's "the hamburger is
+   always shown"): an always-opaque bar with its own centered name — this
+   document has no landing, so there is no sticky name to supply it.
 
    Metadata: this document supplies only its own title (through the
    one template), description and canonical — the canonical via
@@ -66,8 +65,8 @@ export default async function ImpressumDatenschutzPage({
 
   return (
     <>
-      {/* The header, as-is: the hamburger is always shown, on every document. */}
-      <Header />
+      {/* The header's page variant: opaque bar, centered name, hamburger — on every scroll position. */}
+      <Header variant="page" />
       <section className="legal">
         <h1 className="legal__heading">{t('heading')}</h1>
         <p className="legal__last-changed">

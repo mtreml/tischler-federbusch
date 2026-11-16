@@ -24,7 +24,6 @@ export interface LandingStageProps {
 
 export function LandingStage({ video, label, objectFit, introDurationMs, introDone }: LandingStageProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const logoRef = useRef<HTMLImageElement>(null)
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
@@ -49,10 +48,10 @@ export function LandingStage({ video, label, objectFit, introDurationMs, introDo
         label={label}
         objectFit={objectFit}
       />
-      {/* Decorative: the wordmark is the name; the name inside is the one the scroll animation travels. */}
+      {/* Decorative: the wordmark is the name; the name inside is the one that sticks to the header slot. */}
       <div className="landing__lockup" aria-hidden="true">
-        <Logo ref={logoRef} className="landing__logo" />
-        <NameScroll logoRef={logoRef}>
+        <Logo className="landing__logo" />
+        <NameScroll>
           <Name className="landing__name" />
         </NameScroll>
       </div>

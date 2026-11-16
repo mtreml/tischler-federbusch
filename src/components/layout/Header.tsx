@@ -1,27 +1,39 @@
 'use client'
 
+import { Name } from '@/components/brand/Name'
 import { MENU_PANEL_ID, useMenu } from '@/lib/menu'
-import { useLandingProgress } from '@/lib/landing-scroll'
+import { useBarVisible } from '@/lib/landing-scroll'
 
 import { MenuButton } from './MenuButton'
 
 // Fixed, transparent over the landing fold — the video runs across the full first screenful, so there is no solid bar.
-// The background's opacity is the name-travel progress, read from the shared store (one progress, two readers, `src/lib/landing-scroll.ts`);
-// the bar keeps `pointer-events: none`. `introPending` mirrors the stage's `data-intro`: mark, name and button arrive together.
-
+// The background is 0/1 from the shared store (`src/lib/landing-scroll.ts`): the white bar appears the frame the
+// works section reaches the viewport top and stays — the bar keeps `pointer-events: none`. `introPending` mirrors
+// the stage's `data-intro`: name and button arrive together.
+// The `page` variant (impressum) is always opaque and carries its own centered name — there is no landing there.
 
 interface HeaderProps {
+  variant?: 'landing' | 'page'
   /** The landing intro's pending state, from `LandingIntro`; off everywhere else. */
   introPending?: boolean
 }
 
-export function Header({ introPending = false }: HeaderProps) {
-  const progress = useLandingProgress()
+export function Header({ variant = 'landing', introPending = false }: HeaderProps) {
+  const barVisible = useBarVisible()
   const menu = useMenu()
 
   return (
     <header className="header" data-intro={introPending ? 'pending' : undefined}>
-      <div className="header__background" style={{ opacity: progress }} aria-hidden="true" />
+      <div
+        className="header__background"
+        style={{ opacity: variant === 'page' || barVisible ? 1 : 0 }}
+        aria-hidden="true"
+      />
+      {variant === 'page' ? (
+        <div className="header__name" aria-hidden="true">
+          <Name className="header__name-image" />
+        </div>
+      ) : null}
       <div className="header__actions">
         <MenuButton
           open={menu.isOpen}

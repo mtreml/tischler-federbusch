@@ -2,29 +2,29 @@
 
 import { useSyncExternalStore } from 'react'
 
-// One progress, two readers: the name's travel and the header's background fade are the same movement.
-// The name scroll is the writer (it measures mark and name); the header is the reader. Linear, not curved; reduced motion: a step at s1.
+// One boolean, two readers: the name's stick and the white bar's appearance are the same scroll.
+// The name scroll is the writer (it measures the name and the works section's top); the header is the reader.
+// Instant, not a fade: the bar appears the frame the white part reaches the viewport top.
 
-export function clamp01(value: number): number {
-  return Math.min(1, Math.max(0, value))
+/** The name's y translate at scroll `s`: it scrolls with the page until its top edge reaches the header slot. */
+export function stickOffset(s: number, sStick: number): number {
+  return Math.max(0, s - sStick)
 }
 
-export function travelProgress(s: number, s0: number, s1: number, reduced: boolean): number {
-  if (reduced) return s >= s1 ? 1 : 0
-  if (s <= s0) return 0
-  if (s1 <= s0) return 1
-  return clamp01((s - s0) / (s1 - s0))
+/** The bar is visible from the frame the works section's top reaches the viewport top, and stays. */
+export function barVisibleAt(s: number, worksTop: number): boolean {
+  return s >= worksTop
 }
 
 // Module-level store (not lifted state): the writer and readers live in different branches of the tree.
 type Listener = () => void
 
-let progress = 0
+let barVisible = false
 const listeners = new Set<Listener>()
 
-export function setLandingProgress(value: number): void {
-  if (value === progress) return
-  progress = value
+export function setBarVisible(value: boolean): void {
+  if (value === barVisible) return
+  barVisible = value
   for (const listener of listeners) listener()
 }
 
@@ -35,14 +35,14 @@ function subscribe(listener: Listener): () => void {
   }
 }
 
-function getSnapshot(): number {
-  return progress
+function getSnapshot(): boolean {
+  return barVisible
 }
 
-function getServerSnapshot(): number {
-  return 0
+function getServerSnapshot(): boolean {
+  return false
 }
 
-export function useLandingProgress(): number {
+export function useBarVisible(): boolean {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }

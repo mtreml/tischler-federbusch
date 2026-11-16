@@ -1,19 +1,21 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 
-import { setLandingProgress, travelProgress } from '@/lib/landing-scroll'
-import { usePrefersReducedMotion } from '@/lib/reduced-motion'
+import { site } from '@/config/site.config'
+import { barVisibleAt, setBarVisible, stickOffset } from '@/lib/landing-scroll'
 
-// The name's travel: transform-driven, no layout shift. The mark triggers it (s0), it ends at s1 and the name stays pinned in the header slot.
-// Final position/size read the base tokens, so the menu's and the overlay's name slots never move when the menu toggles.
+// The name's stick: transform-driven, no layout shift. The name scrolls up with the page and, the frame its
+// natural top edge reaches `--name-header-top`, pins there — no horizontal travel, it stays centered, so the
+// pinned name is the bar's centered name. The same handler writes the bar's visibility: the white bar appears
+// when the works section reaches the viewport top and stays. Final position/size read the base tokens, so the
+// menu's and the overlay's name slots never move when the menu toggles.
 
-interface TravelMetrics {
-  s0: number
-  s1: number
-  dx: number
-  /** Constant part of the y translate; `+ s` is added per update, pinning the name to the header slot after the travel. */
-  dyBase: number
+interface StickMetrics {
+  /** The scrollY at which the name's natural top edge reaches the header slot. */
+  sStick: number
+  /** The works section's document top; the bar is visible at and below it. */
+  worksTop: number | null
 }
 
 function cssLengthPx(value: string): number {
@@ -26,42 +28,35 @@ function cssLengthPx(value: string): number {
 }
 
 export interface NameScrollProps {
-  logoRef: RefObject<HTMLImageElement | null>
   children: ReactNode
 }
 
-export function NameScroll({ logoRef, children }: NameScrollProps) {
+export function NameScroll({ children }: NameScrollProps) {
   const nameRef = useRef<HTMLSpanElement>(null)
-  const [metrics, setMetrics] = useState<TravelMetrics | null>(null)
-  const reducedMotion = usePrefersReducedMotion()
+  const [metrics, setMetrics] = useState<StickMetrics | null>(null)
 
   const measure = useCallback(() => {
     const nameEl = nameRef.current
-    const logoEl = logoRef.current
-    if (nameEl === null || logoEl === null) return
+    if (nameEl === null) return
 
     const scroll = window.scrollY
-    // Clear the transform for the read: a re-measure mid-travel must read the resting position.
+    // Clear the transform for the read: a re-measure mid-stick must read the resting position.
     const previous = nameEl.style.transform
     nameEl.style.transform = 'none'
     const nameRect = nameEl.getBoundingClientRect()
-    const logoRect = logoEl.getBoundingClientRect()
+    const worksEl = document.getElementById(site.routes.anchors.arbeiten!)
+    const worksRect = worksEl?.getBoundingClientRect()
     nameEl.style.transform = previous
 
-    const rootStyle = getComputedStyle(document.documentElement)
-    const gutter = cssLengthPx(rootStyle.getPropertyValue('--spacing-gutter'))
-    const headerTop = cssLengthPx(rootStyle.getPropertyValue('--name-header-top'))
-
-    const nameCxDoc = nameRect.left + nameRect.width / 2
-    const nameCyDoc = scroll + nameRect.top + nameRect.height / 2
+    const headerTop = cssLengthPx(
+      getComputedStyle(document.documentElement).getPropertyValue('--name-header-top') ?? '',
+    )
 
     setMetrics({
-      s0: scroll + logoRect.bottom,
-      s1: scroll + nameRect.top,
-      dx: gutter + nameRect.width / 2 - nameCxDoc,
-      dyBase: headerTop + nameRect.height / 2 - nameCyDoc,
+      sStick: scroll + nameRect.top - headerTop,
+      worksTop: worksRect === undefined ? null : scroll + worksRect.top,
     })
-  }, [logoRef])
+  }, [])
 
   useEffect(() => {
     measure()
@@ -78,15 +73,15 @@ export function NameScroll({ logoRef, children }: NameScrollProps) {
     const update = () => {
       ticking = false
       const s = window.scrollY
-      const p = travelProgress(s, metrics.s0, metrics.s1, reducedMotion)
-      if (p === 0) {
+      const ty = stickOffset(s, metrics.sStick)
+      if (ty === 0) {
         nameEl.style.transform = ''
         nameEl.style.willChange = 'auto'
       } else {
-        nameEl.style.transform = `translate(${metrics.dx * p}px, ${(metrics.dyBase + s) * p}px)`
-        nameEl.style.willChange = p < 1 ? 'transform' : 'auto'
+        nameEl.style.transform = `translateY(${ty}px)`
+        nameEl.style.willChange = 'transform'
       }
-      setLandingProgress(p)
+      setBarVisible(metrics.worksTop !== null && barVisibleAt(s, metrics.worksTop))
     }
 
     const onScroll = () => {
@@ -103,7 +98,7 @@ export function NameScroll({ logoRef, children }: NameScrollProps) {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', update)
     }
-  }, [metrics, reducedMotion])
+  }, [metrics])
 
   return (
     <span ref={nameRef} className="landing__name-scroll">

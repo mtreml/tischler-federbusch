@@ -53,11 +53,13 @@
   background-color: var(--color-background);
 }
 
-/* The name reads the same tokens the header slot does, so it never moves on open/close. */
+/* The name reads the same tokens the header slot does and sits where the bar's name rests (centered),
+   so it never moves on open/close. */
 .menu__name {
   position: absolute;
   top: var(--name-header-top);
-  left: var(--name-header-left);
+  left: 50%;
+  transform: translateX(-50%);
   display: block;
 }
 
