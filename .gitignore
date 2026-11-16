@@ -50,6 +50,8 @@ next-env.d.ts
 # trailing-slash form covers the directory; the bare name covers the symlink.
 /media-originals/
 /media-originals
+/media-raw/
+/media-raw
 
 # ─── Test output ────────────────────────────────────────────────────────────────
 /coverage
