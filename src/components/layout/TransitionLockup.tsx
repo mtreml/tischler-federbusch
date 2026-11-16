@@ -2,7 +2,7 @@ import { Logo } from '@/components/brand/Logo'
 import { Name } from '@/components/brand/Name'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE TRANSITION LOCKUP (WP-06c)
+   THE TRANSITION LOCKUP
 
    The mark stacked on the wordmark — the same pair the landing lockup
    renders — for the transition overlay. The overlay places this component

@@ -3,9 +3,9 @@ import type { Ref } from 'react'
 import type { ResolvedVideo } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE LANDING VIDEO (WP-05)
+   THE LANDING VIDEO
 
-   The muted, looping, audio-stripped master (WP-03) as a plain `<video>`:
+   The muted, looping, audio-stripped master as a plain `<video>`:
    everything it owes is an attribute, and the attributes are the doctrine —
 
      • **no user controls, no audio.** The encode has no audio track and the
@@ -38,7 +38,7 @@ import type { ResolvedVideo } from '@mtreml/portfolio-core/media'
    ══════════════════════════════════════════════════════════════════════════════ */
 
 export interface LandingVideoProps {
-  /** Resolved through the media manifest by the render side (WP-03 seam). */
+  /** Resolved through the media manifest by the render side (the media seam). */
   sources: ResolvedVideo['sources']
   /** The master's own opening frame, `posterPathFor`-derived. `undefined` only when the
    *  manifest lacks it — a clean clone has the committed manifest, so this is the

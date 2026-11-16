@@ -14,7 +14,7 @@ import {
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE PAGE TRANSITION OVERLAY (WP-06c)
+   THE PAGE TRANSITION OVERLAY
 
    Cover, then reveal: the overlay animates in over the outgoing page, and
    once it is opaque the route/anchor swap happens beneath it — invisible —
@@ -26,7 +26,7 @@ import { usePrefersReducedMotion } from '@/lib/reduced-motion'
    One animation per transition, in two halves, both resolved from the
    tokens (`--duration-transition-cover` / `--duration-transition-reveal`,
    `--ease-quiet`, `--color-background` — declared in `tokens.css`, read from
-   the computed style exactly as `Menu` (WP-06b3) reads its own):
+   the computed style exactly as `Menu` reads its own):
 
      • COVER  — opacity 0 → 1 over the cover duration. `onAnimationComplete`
        fires for both halves; only the cover's definition resolves to a fully
@@ -40,7 +40,7 @@ import { usePrefersReducedMotion } from '@/lib/reduced-motion'
        the cover's retirement live there.
 
    The action itself is the swappable handler from `src/lib/transition.ts`:
-   the overlay owns the timing, the sequence owner (WP-06d) owns what the
+   the overlay owns the timing, the sequence owner owns what the
    cover completion does, and the seam is what makes the ordering
    unit-testable in jsdom (the tests drive the beats rather than waiting for
    frames the harness would still animate in real time).
@@ -176,7 +176,7 @@ export function TransitionOverlay() {
     return true
   }, [])
 
-  /* The imperative entry: the sequence owner (WP-06d) calls
+  /* The imperative entry: the sequence owner calls
      `beginTransition`, this component answers. Unmounted or reduced motion
      → no subscriber, the call degrades — the registration effect is the
      whole of the seam. */

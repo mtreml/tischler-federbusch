@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE CONTENT SECTIONS (WP-07a) AND THE FOOTER AND THE LEGAL PAGE (WP-07b)
+   THE CONTENT SECTIONS AND THE FOOTER AND THE LEGAL PAGE
 
    The works section, below the landing in the one-scroll document; the footer
    closes the document, and the legal page reads from the same sheet. Every
@@ -79,7 +79,7 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE FOOTER (WP-07b)
+   THE FOOTER
 
    The last element of the one-scroll document: one line on `md` and up,
    stacked on the phone. The one hairline the footer may carry — the token
@@ -125,7 +125,7 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE LEGAL PAGE (WP-07b)
+   THE LEGAL PAGE
 
    A plain static document: the h1, "Zuletzt geändert:", the three numbered
    sections. The header floats over the top of it (transparent at progress 0,

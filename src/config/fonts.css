@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE FACE — the one file the font is declared in (WP-04).
+   THE FACE — the one file the font is declared in.
 
    One face for the whole site: **Biome W04 Light**, self-hosted and subset.
    Nothing loads a font from anywhere else — no provider request, no second
@@ -15,7 +15,7 @@
    says it is. Neither file is produced by the build.
 
    The wordmark is not a run of text in this face: it is the `name.svg` vector
-   (WP-04), so the face owes it nothing and the subset owes it no glyphs.
+  , so the face owes it nothing and the subset owes it no glyphs.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 @font-face {

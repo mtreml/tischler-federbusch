@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU BUTTON (WP-06a)
+   THE MENU BUTTON
 
    Two horizontal lines, one transform, one direction at a time. The closed
    state is the rest geometry — two lines stacked with the token gap — and
@@ -69,20 +69,20 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU PANEL (WP-06b2)
+   THE MENU PANEL
 
    The full-page overlay, in four nodes: the background-color layer, the name
    top left, the X top right, the entry list. This file carries layering and
    the slots — every value a token.
 
-   The intro and the stagger (WP-06b3) are driven by the motion library, which
+   The intro and the stagger are driven by the motion library, which
    resolves them from the tokens for its values (`--duration-menu`,
-   `--duration-menu-items` and `--ease-quiet` from WP-02, `--menu-item-rise`
-   from WP-06b3 — all declared in `src/config/tokens.css`); the resolution
+   `--duration-menu-items` and `--ease-quiet` from the base set, `--menu-item-rise`
+   from the menu intro — all declared in `src/config/tokens.css`); the resolution
    lives in `Menu.tsx`. What this file owes the animation is the CSS side of
    the same surface: no transition or animation of its own on any of these
    nodes, and the reduced-motion block at the end, which collapses whatever
-   could still move on this side. The markup is final; WP-06d replaces the
+   could still move on this side. The markup is final; the sequence owner replaces the
    fallback navigation without touching the structure.
    ══════════════════════════════════════════════════════════════════════════════ */
 
@@ -98,7 +98,7 @@
 /* The background-color layer: opaque at rest, the one `--color-background`,
    a colour and not a blur (the spec). The intro fades it in over
    `--duration-menu` and the close fades it out — the motion library runs the
-   opacity on exactly this node (WP-06b3); no CSS transition here. */
+   opacity on exactly this node; no CSS transition here. */
 .menu__background {
   position: absolute;
   inset: 0;
@@ -106,7 +106,7 @@
 }
 
 /* The name, top left, at exactly the name-home geometry — the same token
-   pair the header slot and the name's travel read (WP-05), so the name is
+   pair the header slot and the name's travel read, so the name is
    byte-identical on the page and in the menu and never moves on open/close.
    The width family is the shared `--name-width*`; the height stays derived
    from the viewBox, as on the landing. */
@@ -147,7 +147,7 @@
 /* The entries, stacked in configured order, toward the bottom of the page —
    the place the stagger arrives from: on the intro each row fades in while
    it rises from `--menu-item-rise × (index + 1)`, all on the one shared
-   `--duration-menu-items` timeline, and the close sinks them back (WP-06b3).
+   `--duration-menu-items` timeline, and the close sinks them back.
    The motion library runs the transforms on the rows themselves; this file
    owes the resting layout only. */
 .menu__entries {
@@ -173,7 +173,7 @@
   text-align: center;
 }
 
-/* ── Reduced motion (WP-06b3) ───────────────────────────────────────────────
+/* ── Reduced motion ───────────────────────────────────────────────
    The intro and the close are the motion library's, and its gate
    (`usePrefersReducedMotion` in `Menu.tsx`) is the mechanism: under the
    preference every duration and every rise distance resolves to zero — a

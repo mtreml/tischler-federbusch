@@ -142,7 +142,7 @@ jobs:
   # VERIFY_BASE_URL and KEEP_RELEASES. Until those secrets exist, the action's
   # preflight sees none of the four, reports "not configured yet", and exits 0 —
   # the job runs green and deploys nothing, which is the state this repository is
-  # in until the deployment credentials are set up (WP-09 provisions the box).
+  # in until the deployment credentials are set up (deployment provisions the box).
   # ══════════════════════════════════════════════════════════════════════════════
   deploy:
     name: deploy to the vps

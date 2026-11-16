@@ -60,7 +60,7 @@ export const siteSchema = z.object({
     tagline: z.string(),
     /**
      * The bare registered domain, for reference. It is not a URL: the bare domain
-     * 301s to the www one at the server level (WP-09), and every URL this site
+     * 301s to the www one at the server level, and every URL this site
      * emits is built from `canonicalOrigin`.
      */
     domain: z.string(),
@@ -95,8 +95,8 @@ export const siteSchema = z.object({
   }),
 
   /* ── Contact ───────────────────────────────────────────────────────────────────
-     THE ONE PLACE CONTACT DETAILS EXIST. The menu (WP-06), the footer (WP-07) and
-     the legal page (WP-07) all read them here, so they cannot disagree. */
+     THE ONE PLACE CONTACT DETAILS EXIST. The menu, the footer and
+     the legal page all read them here, so they cannot disagree. */
   contact: z.object({
     name: z.string(),
     addressLines: z.array(z.string()),
@@ -111,7 +111,7 @@ export const siteSchema = z.object({
   /* ── Footer ────────────────────────────────────────────────────────────────────
      The copyright holder is not a key: it resolves to `contact.name` at render
      time, so clearing the contact name clears it with it. The legal link is a
-     plain link with plain navigation — no transition overlay (WP-06). */
+     plain link with plain navigation — no transition overlay. */
   footer: z.object({
     legalLabel: z.string(),
     /** Renders as "Website von {credit}". */
@@ -127,12 +127,12 @@ export const siteSchema = z.object({
     titleTemplate: z.string(),
     defaultDescription: z.string(),
     structuredDataType: z.enum(['Person', 'Organization']),
-    /** The Works image (WP-03), as a logical asset path under `media.basePath`. */
+    /** The Works image, as a logical asset path under `media.basePath`. */
     ogImage: checkedString(isAssetPath, 'must be a rooted asset path'),
   }),
 
   /* ── Landing ───────────────────────────────────────────────────────────────────
-     The autoplaying, looping, audio-stripped master (WP-03 encodes it; the
+     The autoplaying, looping, audio-stripped master (the pipeline encodes it; the
      encode strips the audio, which is why the text alternative is owed). */
   landing: z.object({
     /** Logical path of the landing master under `media.basePath`. */
@@ -145,12 +145,12 @@ export const siteSchema = z.object({
   }),
 
   /* ── Works ────────────────────────────────────────────────────────────────────
-     The works section (WP-07a): one responsive image and its text
+     The works section: one responsive image and its text
      alternative. `works.image` names the same file as `seo.ogImage` — the
      cross-check that keeps the pair honest lives in `../validate`, because
      it is a relation between two keys rather than a shape of one. */
   works: z.object({
-    /** The responsive Works image (WP-03), as a logical asset path under `media.basePath`. */
+    /** The responsive Works image, as a logical asset path under `media.basePath`. */
     image: checkedString(isAssetPath, 'must be a rooted asset path'),
     /** The text alternative of the image, as it renders. */
     imageAlt: z.string(),

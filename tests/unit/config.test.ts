@@ -11,7 +11,7 @@ import { siteSchema, type SiteConfig } from '@/lib/config/schema/site.schema'
 import { validateConfiguration } from '@/lib/config/validate'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE CENTRAL CONFIGURATION (WP-02)
+   THE CENTRAL CONFIGURATION
 
    Two invariants the site cannot survive losing:
 
@@ -55,7 +55,7 @@ describe('the production gate', () => {
   })
 })
 
-describe('the works group (WP-07a)', () => {
+describe('the works group', () => {
   it('names the same works image as seo.ogImage', () => {
     expect(site.works.image).toBe(site.seo.ogImage)
   })

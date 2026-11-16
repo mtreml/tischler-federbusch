@@ -13,7 +13,7 @@ playwright-report/
 package-lock.json
 next-env.d.ts
 
-# Written by `npm run fonts:subset` (WP-04) — emitted by a script rather than authored.
+# Written by `npm run fonts:subset` — emitted by a script rather than authored.
 public/fonts/subset-manifest.json
 
 # Throwaway probes written while debugging — scratch, not authored source.

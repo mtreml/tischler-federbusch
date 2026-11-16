@@ -9,7 +9,7 @@ import messages from '@/i18n/messages/de.json'
 import { setPrefersReducedMotion } from './match-media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE PAGE TRANSITION OVERLAY (WP-06c)
+   THE PAGE TRANSITION OVERLAY
 
    The spec's "Page transition", asserted on the state the overlay exposes —
    the `data-transition-*` attributes, the inline opacity the motion library

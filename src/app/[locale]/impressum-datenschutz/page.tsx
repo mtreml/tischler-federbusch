@@ -8,9 +8,9 @@ import { pathFor } from '@/i18n/paths'
 import { applyTitleTemplate, resolveCanonicalUrl, resolveContact } from '@/lib/config/resolve'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   IMPRESSUM & DATENSCHUTZ (WP-07b) — the only separate page on the site
+   IMPRESSUM & DATENSCHUTZ — the only separate page on the site
 
-   Replaces the WP-01 placeholder. The legal *prose* is German configuration
+   Replaces the original placeholder. The legal *prose* is German configuration
    data (`legal.config.ts`) rendered verbatim; the structural labels (the
    heading, "Zuletzt geändert:", the section titles, the rights' closing
    sentence) come from the locale messages — the established split. No
@@ -26,7 +26,7 @@ import { applyTitleTemplate, resolveCanonicalUrl, resolveContact } from '@/lib/c
    and the header's background layer is the same colour as this page's
    background, so nothing about it betrays its landing provenance.
 
-   Metadata (WP-07b): this document supplies only its own title (through the
+   Metadata: this document supplies only its own title (through the
    one template), description and canonical — the canonical via
    `resolveCanonicalUrl(pathFor(...))`, the trailing-slash helper a plain
    static host requires — and inherits the layout's OpenGraph set.

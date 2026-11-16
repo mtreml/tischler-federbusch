@@ -15,29 +15,29 @@ import { useTransitionSequence } from '@/lib/transition-sequence'
 import type { TransitionTarget } from '@/lib/transition'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU PANEL (WP-06b2)
+   THE MENU PANEL
 
    The full-page overlay: the background-color layer, the name top left at
    exactly the name-home geometry, the X top right, the three entries stacked
    in `site.navigation.items` order — the menu renders this list and nothing
    else. The state (open/close, Escape, the scroll lock, the focus management)
-   is the provider's (`src/lib/menu.tsx`, WP-06b1); this component is the
+   is the provider's (`src/lib/menu.tsx`); this component is the
    surface: it renders, and it reports.
 
    ── Why `AnimatePresence` ────────────────────────────────────────────────────
    The panel mounts in the persistent `[locale]` layout — never a `template.tsx`
    (see the layout's header comment) — so the layout is not remounted across
    navigation and `AnimatePresence` can hold the outgoing panel while the exit
-   animations run — which is exactly what the close half of the intro (WP-06b3)
+   animations run — which is exactly what the close half of the intro
    runs on. Without the hold, the panel would unmount the frame it closes and
    the reverse animation would never be seen.
 
    ── The name is a link at the name-home geometry ─────────────────────────────
    The name reads the same `--name-header-*` / `--name-width*` tokens the
-   header slot does (WP-05), so the name on the page and the name in the menu
+   header slot does, so the name on the page and the name in the menu
    are byte-identical: opening or closing the menu never moves the name.
 
-   ── The transition triggers (WP-06d) ─────────────────────────────────────────
+   ── The transition triggers ─────────────────────────────────────────
    The two, and only two, `data-transition` elements — the name link
    (`"landing"`) and the anchor entry (`"arbeiten"`) — are the entry points
    of the sequence owned by `useTransitionSequence` (`src/lib/transition-sequence.ts`):
@@ -72,13 +72,13 @@ function menuEntryLabel(item: (typeof site.navigation.items)[number]): string {
   return contact.email
 }
 
-/* ── The motion, resolved from the tokens (WP-06b3) ─────────────────────────
+/* ── The motion, resolved from the tokens ─────────────────────────
    The intro and the stagger are driven by the motion library, so their values
    reach the component as numbers — but they may not be literals either (the
    token doctrine). The tokens stay the single source: `--duration-menu`,
-   `--duration-menu-items` and `--ease-quiet` (WP-02) plus `--menu-item-rise`
-   (WP-06b3), declared in `src/config/tokens.css`, are resolved from the
-   computed style — the seam `NameScroll` (WP-05) already runs for the name
+   `--duration-menu-items` and `--ease-quiet` plus `--menu-item-rise`
+  , declared in `src/config/tokens.css`, are resolved from the
+   computed style — the seam `NameScroll` already runs for the name
    geometry. What the resolution drives:
 
      • the background and the name fade over `--duration-menu` — the name with
@@ -167,7 +167,7 @@ function useMenuMotion(): MenuMotion | null {
 
 /* The name keeps next-intl's `Link` — the localized href it owes — with the
    motion props on top. `motion.create` wraps the component rather than
-   replacing the anchor, so the markup 06b2 settled stays byte-identical. */
+   replacing the anchor, so the settled markup stays byte-identical. */
 const MotionNameLink = motion.create(Link)
 
 export function Menu() {
@@ -176,7 +176,7 @@ export function Menu() {
   const contact = resolveContact()
 
   /* The one sequence with the one owner: the menu closes at t0, the action
-     runs on the overlay's beat, the focus returns at the end (WP-06d1). */
+     runs on the overlay's beat, the focus returns at the end. */
   const { transitionTo } = useTransitionSequence()
 
   /* The motion, resolved from the tokens and gated on the preference (see the
@@ -292,7 +292,7 @@ export function Menu() {
             <MenuButton open onToggle={() => close()} controlsId={MENU_PANEL_ID} />
           </div>
           {/* The entries, in configured order — the list and nothing else,
-              each row carrying its share of the rise (WP-06b3). */}
+              each row carrying its share of the rise. */}
           <nav className="menu__entries">
             {site.navigation.items.map((item, index) => renderEntry(item, index))}
           </nav>

@@ -1,12 +1,12 @@
 import type { CSSProperties, Ref } from 'react'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MARK — THE ONE PLACE ITS PRESENTATION LIVES (WP-05)
+   THE MARK — THE ONE PLACE ITS PRESENTATION LIVES
 
-   A thin wrapper over the committed `public/logo.svg` (WP-04): one file, one
+   A thin wrapper over the committed `public/logo.svg`: one file, one
    ink (`#1d1d1b`, from the logo sources), so no `currentColor` handling is
    owed and an `<img>` is the whole of the component. The landing lockup, the
-   name-scroll's lockup half and WP-06's menu name / transition lockup all
+   name-scroll's lockup half and the menu name / transition lockup all
    consume this component and the raw file never, so the mark's presentation
    cannot be re-declared in a second place.
 

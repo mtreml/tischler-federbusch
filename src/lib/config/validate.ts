@@ -60,8 +60,8 @@ export interface Inputs {
    * The logical paths `declaredMedia()` carries, supplied by the caller for the
    * same reason: a unit test that walked the drop folder would pass on one
    * machine and fail on a runner. When present, every configured media path
-   * (`landing.video`, `seo.ogImage`) must resolve in this set — the WP-02 latent
-   * bug, closed in WP-05.
+   * (`landing.video`, `seo.ogImage`) must resolve in this set — guarding
+   * against a latent misconfiguration.
    */
   declaredMediaPaths?: readonly string[]
 }

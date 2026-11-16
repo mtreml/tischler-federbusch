@@ -15,9 +15,9 @@
                        titles, the canonical URL, the sitemap, the crawler policy) is a
                        property of the EMITTED document.
 
-   There are no mode-variant gates: this site has no modes. The gates of work packages not
-   yet landed (the media pipeline's, the real link/meta/perf implementations) take their
-   place in this list as those packages land; the order here is the fixed one.
+   There are no mode-variant gates: this site has no modes. The gates for parts not yet
+   landed (the media pipeline's, the real link/meta/perf implementations) take their
+   place in this list as those parts land; the order here is the fixed one.
 
    `npm run ci` is the only thing that decides whether a push is good.
    ══════════════════════════════════════════════════════════════════════════════ */

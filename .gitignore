@@ -12,7 +12,7 @@ node_modules/
 next-env.d.ts
 
 # ─── Generated media variants ───────────────────────────────────────────────────
-# Written by `npm run media:generate` (WP-03) and — under the default filesystem source —
+# Written by `npm run media:generate` and — under the default filesystem source —
 # a link to the key's media library written by `npm run media:link`.
 #
 # NO TRAILING SLASH, and that is load-bearing rather than tidying. `/public/media/` matches
@@ -30,7 +30,7 @@ next-env.d.ts
 # widened to the parent directory (Turbopack rejects symlinks that resolve outside its root),
 # and `npm run media:link` can link `public/media` at it.
 #
-# Derived — `npm run media:generate` (WP-03) rebuilds the whole tree from the originals.
+# Derived — `npm run media:generate` rebuilds the whole tree from the originals.
 
 /media/
 # The manifest is committed: a clean clone has no originals to read, and the committed
@@ -76,7 +76,7 @@ next-env.d.ts
 # camera originals to a clone.
 #
 # ANCHORED with leading slashes, and that is load-bearing: a bare `fonts/` matches a directory
-# of that name at ANY depth and would swallow `public/fonts/` (WP-04's subsetted faces).
+# of that name at ANY depth and would swallow `public/fonts/` (the subsetted faces).
 /fonts/
 /logo/
 

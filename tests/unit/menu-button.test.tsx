@@ -6,9 +6,9 @@ import { MenuButton } from '@/components/layout/MenuButton'
 import messages from '@/i18n/messages/de.json'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU BUTTON (WP-06a)
+   THE MENU BUTTON
 
-   The invariants the control carries before anything is mounted (WP-06b):
+   The invariants the control carries before anything is mounted:
 
      • The disclosure contract: `aria-expanded`, `aria-controls` and the
        `aria-label` flip together with the state, and the label always names

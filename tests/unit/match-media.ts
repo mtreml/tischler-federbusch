@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE `matchMedia` STUB (WP-06b3)
+   THE `matchMedia` STUB
 
    jsdom ships no `window.matchMedia`, and `usePrefersReducedMotion`
    (`src/lib/reduced-motion.ts`) reads it — every animated surface that the

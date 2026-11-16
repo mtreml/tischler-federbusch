@@ -8,7 +8,7 @@ import { checkedString, isAssetPath } from './shared'
    `media.source` and `media.videoProvider` **are** the switches for where the
    assets are resolved from. The enums list the names the pipeline knows about;
    only `local` is implemented for this site, and selecting anything else is a
-   configuration the media pipeline (WP-03) does not honour.
+   configuration the media pipeline does not honour.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 export const MEDIA_SOURCES = ['local', 'objectStorage', 'external'] as const
@@ -45,7 +45,7 @@ export const mediaSchema = z.object({
 
   /**
    * The width ladder, fixed once here rather than per call site. The Works image
-   * is the only responsive image the site carries (WP-03), and it is
+   * is the only responsive image the site carries, and it is
    * mobile-first: the lower rungs are the ones 90 % of the visitors actually use.
    */
   imageWidths: z.array(z.number().int().positive()),

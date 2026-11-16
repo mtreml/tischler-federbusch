@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from 'react'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE REDUCED-MOTION PREFERENCE (ported from the reference, WP-05)
+   THE REDUCED-MOTION PREFERENCE (ported from the reference)
 
    "Respecting the reduced-motion preference is **not configurable** and applies regardless
    of every key in the motion group" (Motion). So there is one hook, every animated

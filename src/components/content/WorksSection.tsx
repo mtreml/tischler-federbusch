@@ -5,14 +5,14 @@ import { ParallaxImage } from '@/components/content/ParallaxImage'
 import { FULL_BLEED_SIZES, toLogicalPath } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE WORKS SECTION (WP-07a) — the landing page, below the fold
+   THE WORKS SECTION — the landing page, below the fold
 
    The one-scroll document's second act: the heading, the tagline and the
    responsive Works image, in the same document as the landing — "Arbeiten"
    is the menu's one anchor, and it scrolls to this section rather than
    navigating. Everything this section carries is resolved from the central
    configuration at render, and the static export keeps prerendering it:
-   the server half resolves the image here (the WP-03 seam), and the only
+   the server half resolves the image here (the media seam), and the only
    client piece is the parallax on top of an otherwise plain `<picture>`.
 
    The heading is an `<h2>`: the landing owns the one `<h1>` (the visually

@@ -9,7 +9,7 @@ import { Logo } from '@/components/brand/Logo'
 import { Name } from '@/components/brand/Name'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE BRAND LOCKUP AND THE FAVICON SET (WP-05)
+   THE BRAND LOCKUP AND THE FAVICON SET
 
    The invariants the wrappers exist to hold:
 
@@ -66,8 +66,8 @@ describe('the apple-touch icon', () => {
        is read off the source rather than rendered: the `icons` entry and the
        file it names must agree. */
     const layout = readFileSync(join(process.cwd(), 'src', 'app', '[locale]', 'layout.tsx'), 'utf8')
-    /* Both entries, named: the SVG the layout has carried since WP-04, and the
-       PNG this WP adds. Tolerant of formatting, strict on the two hrefs. */
+    /* Both entries, named: the SVG the layout has carried, and the PNG it adds.
+       Tolerant of formatting, strict on the two hrefs. */
     expect(layout).toMatch(/icon:\s*'\/tab-icon\.svg'/)
     expect(layout).toMatch(/apple:\s*'\/apple-touch-icon\.png'/)
   })

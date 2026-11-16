@@ -5,7 +5,7 @@ import { ParallaxImage, type ParallaxImageProps } from '@/components/content/Par
 import { setPrefersReducedMotion } from './match-media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE PARALLAX IMAGE (WP-07a)
+   THE PARALLAX IMAGE
 
    The invariants the pointer parallax owes:
 

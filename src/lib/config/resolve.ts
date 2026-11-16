@@ -24,8 +24,8 @@ export function localized(value: Record<string, string>, locale: string): string
 }
 
 /**
- * The contact block, as the menu (WP-06), the footer (WP-07) and the legal
- * page (WP-07) render it. The hrefs are built here — `tel:` and `mailto:` —
+ * The contact block, as the menu, the footer and the legal
+ * page render it. The hrefs are built here — `tel:` and `mailto:` —
  * so a call site cannot assemble one from the raw value and miss the scheme.
  * Every field reads from `site.contact` and nowhere else.
  */
@@ -61,7 +61,7 @@ export function resolveCanonicalUrl(path: string): string {
 }
 
 /**
- * The works section's heading (WP-07a): the label of the menu entry that points
+ * The works section's heading: the label of the menu entry that points
  * at the `routes.anchors.arbeiten` target. The word is declared exactly once —
  * in `navigation.items`, where the menu reads it — and the section reads the
  * same key here rather than re-declaring it. Throws when no menu entry carries

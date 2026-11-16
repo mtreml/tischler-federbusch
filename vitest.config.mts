@@ -2,10 +2,10 @@ import react from '@vitejs/plugin-react'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitest/config'
 
-/* The unit gate. WP-01 covers the i18n seam — the pathname map and the
-   trailing-slash helper — the one place a wrong path 404s on a plain static host.
-   The suites for the central configuration (WP-02), the media declarations (WP-03)
-   and the face (WP-04) have landed; the views' (WP-05–07) join as those packages do. */
+/* The unit gate. The i18n seam — the pathname map and the
+   trailing-slash helper — is the one place a wrong path 404s on a plain static host.
+   The suites for the central configuration, the media declarations
+   and the face have landed; the views' suites join as those surfaces land. */
 export default defineConfig({
   plugins: [react()],
   resolve: {

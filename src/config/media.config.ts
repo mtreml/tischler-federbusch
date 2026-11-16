@@ -10,7 +10,7 @@ import {
    MEDIA CONFIGURATION
 
    This site carries exactly one video (the autoplaying landing master) and one
-   responsive image (the Works image, WP-03). The pipeline reads this file;
+   responsive image (the Works image). The pipeline reads this file;
    nothing about it is an environment variable, and nothing reaches a
    third-party origin.
    ══════════════════════════════════════════════════════════════════════════════ */
@@ -20,7 +20,7 @@ export const media: MediaConfig = {
      Every logical `/media/…` path resolves to a **same-origin** path served out
      of `public/media`, which is a link the pipeline writes (`media:link`); the
      media itself is not in git. Switching providers later is one edit here —
-     until then `local` is the only value the pipeline (WP-03) honours. */
+     until then `local` is the only value the pipeline honours. */
   source: 'local',
   videoProvider: 'local',
 
@@ -47,7 +47,7 @@ export const media: MediaConfig = {
      here holds is "indistinguishable from the master at 1:1" — and the figure
      must carry its measurement in a comment.
 
-     ── Measured (WP-03, frame 150 of the 11 s original, 3840×2160 → 1920) ─
+     ── Measured (frame 150 of the 11 s original, 3840×2160 → 1920) ─
      Against the master's own decode at 1920: CRF 23 → 33.2 dB PSNR / 0.89
      SSIM; **CRF 27 → 30.2 dB / 0.78**; CRF 29 → 28.9 dB / 0.70. Two further
      facts about this footage bound what the metrics can say: a lossless
@@ -80,10 +80,10 @@ export const media: MediaConfig = {
    THE RENDER-SIDE VIDEO DELIVERY
 
    The same registry the pipeline writes from, keyed by the provider above. The
-   render side (the landing, WP-05) names the master's *logical* path and lets
-   the adapter resolve it through the committed manifest into the served file —
-   exactly the seam atreoscope's `MediaVideo` stands on. Declared as a literal
-   `satisfies` so a provider name with no implementation is a type error here
+   render side (the landing) names the master's *logical* path and lets
+   the adapter resolve it through the committed manifest into the served file.
+   Declared as a literal `satisfies` so a provider name with no implementation
+   is a type error here
    rather than a runtime failure on a visitor's page.
    ══════════════════════════════════════════════════════════════════════════════ */
 const VIDEO_PROVIDER = 'local' satisfies ImplementedVideoProvider
@@ -94,7 +94,7 @@ export const videoDelivery = videoDeliveryRegistry[VIDEO_PROVIDER]
    THE RENDER-SIDE IMAGE DELIVERY
 
    The image analogue of the video delivery above, for the one responsive
-   image the site carries (the Works image, WP-07a). The same registry the
+   image the site carries (the Works image). The same registry the
    pipeline writes from, keyed by the source above: the render side names the
    *logical* path and the adapter resolves it through the committed manifest
    into the served renditions. Declared as a literal `satisfies`, for the

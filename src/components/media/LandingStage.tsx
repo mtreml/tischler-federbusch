@@ -10,7 +10,7 @@ import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import type { ResolvedVideo } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE LANDING STAGE (WP-05)
+   THE LANDING STAGE
 
    The full-viewport area: the video as backdrop, the lockup (mark stacked on
    the wordmark) centered over it, and the 1.5 s intro that deblurs the first
@@ -36,7 +36,7 @@ import type { ResolvedVideo } from '@mtreml/portfolio-core/media'
 
    ── Once per load ────────────────────────────────────────────────────────────
    The stage is persistent in the page (there is no `template.tsx` in this
-   tree), so a menu round-trip back to the landing (WP-06) does not remount
+   tree), so a menu round-trip back to the landing does not remount
    it and does not replay the intro: the attribute is already `done`.
 
    ── Reduced motion ───────────────────────────────────────────────────────────

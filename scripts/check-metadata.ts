@@ -1,9 +1,9 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   METADATA CHECK — WP-01 STUB, real implementation in WP-08.
+   METADATA CHECK — a stub; the real implementation lands later.
 
    Every property it will assert — a title per document, the canonical URL, the
    sitemap, the crawler policy — is a property of the EMITTED document, which is why
-   the gate sits after the build. WP-08 implements the assertions; the stub keeps
+   the gate sits after the build. The real implementation adds the assertions; the stub keeps
    the gate in the chain at its fixed position so the order never moves.
    ══════════════════════════════════════════════════════════════════════════════ */
 import { existsSync } from 'node:fs'
@@ -23,5 +23,5 @@ for (const path of required) {
 }
 
 console.log(
-  'meta:check: OK (WP-01 stub — the export carries the expected documents; the metadata assertions land in WP-08)',
+  'meta:check: OK (stub — the export carries the expected documents; the metadata assertions land later)',
 )

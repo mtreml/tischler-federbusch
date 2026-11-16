@@ -15,12 +15,12 @@ import {
 } from '@/lib/transition'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE TRANSITION SEQUENCE — ONE SEQUENCE, ONE OWNER (WP-06d1)
+   THE TRANSITION SEQUENCE — ONE SEQUENCE, ONE OWNER
 
    The menu and the overlay are one sequence owned by this hook, called from
    `Menu.tsx` — the one component inside the `MenuProvider` that has the
-   triggers. The overlay keeps owning the *timing* (cover → reveal,
-   WP-06c); this module owns *what happens*: the close at t0, the action on
+   triggers. The overlay keeps owning the *timing* (cover → reveal);
+   this module owns *what happens*: the close at t0, the action on
    the overlay's beat, the focus return at the end.
 
    ── The one entry ────────────────────────────────────────────────────────────
@@ -41,17 +41,17 @@ import {
 
      1. t0 — `close({ deferFocusReturn: true })`: the menu state is closed at
         t0, its exit runs under the cover, and the focus return is deferred
-        to the sequence's end (06b1's contract).
+        to the sequence's end (the menu state's contract).
      2. Cover start — `beginTransition({ from, to, onRevealComplete })` with
         `from` the raw `window.location.pathname` read at click time. The
         overlay owns the timing; the action runs on its beat through the
         swappable handler installed in a mount effect. `onCoverOpaque` stays
-        free — 06c's suite pins it.
+        free — the overlay's suite pins it.
      3. Action beat — the route change and/or the instant anchor scroll.
         Nothing navigates before this beat (the overlay guarantees it).
      4. Reveal complete — `onRevealComplete` → `returnFocus()`.
 
-   The action is one closure (the WP-06c action table), swapped in for
+   The action is one closure (the action table), swapped in for
    `transition.ts`'s no-op default for the component's life:
 
      | target     | on the landing        | on another page                          |
@@ -65,8 +65,9 @@ import {
    is the raw `useUrlPathname()` changing (an effect). The scrolls are
    instant (`behavior: 'auto'`); on the landing they run in a
    `requestAnimationFrame` after the close effect has released the scroll
-   lock — the defer 06b2's fallbacks already ran. `#arbeiten` does not exist
-   until WP-07; the lookup degrades to a no-op and the cover still reveals.
+   lock — the defer the fallbacks already ran. `#arbeiten` does not exist
+   until the works section is present; the lookup degrades to a no-op and the
+   cover still reveals.
 
    ── The degraded branch ──────────────────────────────────────────────────────
    Reduced motion, or `beginTransition` reporting no subscriber: the overlay
@@ -82,7 +83,7 @@ function scrollToTarget(target: TransitionTarget): void {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     return
   }
-  /* The works section (WP-07a); the optional chain stays the degradation:
+  /* The works section; the optional chain stays the degradation:
      no element, no scroll, the cover still reveals. */
   document.getElementById(target)?.scrollIntoView({ behavior: 'auto' })
 }
@@ -102,7 +103,7 @@ export function useTransitionSequence(): {
   const pathname = useUrlPathname()
 
   /* The landing, as the export writes it — `pathFor` carries the trailing
-     slash, the same read 06b2's fallbacks ran. */
+     slash, the same read the fallbacks ran. */
   const landingPath = pathFor({ href: '/', locale })
 
   /* Where the current transition started from — the raw pathname read at
@@ -115,7 +116,7 @@ export function useTransitionSequence(): {
      itself be a render. */
   const commitScrollRef = useRef<TransitionTarget | null>(null)
 
-  /* The action the overlay runs on its beat — the WP-06c action table as
+  /* The action the overlay runs on its beat — the action table as
      one closure. */
   const action = useCallback<TransitionAction>(
     (target) => {
@@ -149,7 +150,7 @@ export function useTransitionSequence(): {
 
   /* The swappable action: swapped in for the no-op default for the life of
      the component, restored on unmount — the tests restore it in
-     `afterEach`, as 06c's suite does. */
+     `afterEach`, as the overlay's suite does. */
   useEffect(() => {
     setTransitionAction(action)
     return () => setTransitionAction(null)
@@ -163,7 +164,7 @@ export function useTransitionSequence(): {
       fromRef.current = window.location.pathname
 
       /* t0 — the menu state closes now, under the cover; the focus return
-         is deferred to the sequence's end (06b1). */
+         is deferred to the sequence's end. */
       close({ deferFocusReturn: true })
 
       const began = beginTransition({

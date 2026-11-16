@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from 'react'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE NAME TRAVEL — ONE PROGRESS, TWO READERS (WP-05)
+   THE NAME TRAVEL — ONE PROGRESS, TWO READERS
 
    The name's scroll animation and the header's background fade are the same
    movement seen from two places: the name starts its travel when the mark

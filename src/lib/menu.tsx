@@ -12,18 +12,18 @@ import {
 } from 'react'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU STATE (WP-06b1)
+   THE MENU STATE
 
    Everything that is a *consequence of the menu being open* lives here — and
    nowhere else: open/close, Escape, the body scroll lock, and the focus
-   management (initial focus, the tab trap, the return). The panel (WP-06b2)
-   and the button (WP-06a) stay dumb: they render and report, this module
+   management (initial focus, the tab trap, the return). The panel
+   and the button stay dumb: they render and report, this module
    owns the state and every side effect that follows from it.
 
    ── What this module renders ────────────────────────────────────────────────
    Nothing. `MenuProvider` renders its children only — a context, not a
    surface. Its only DOM writes are the inline scroll-lock style on
-   `<html>` and the focus moves. It is mounted by WP-06b2 in the `[locale]`
+   `<html>` and the focus moves. It is mounted in the `[locale]`
    layout; this file ships unmounted and is covered by unit tests on a
    minimal harness.
 
@@ -32,12 +32,12 @@ import {
    without being handed refs, so both are resolved by selector:
 
      • `MENU_PANEL_ID` — the panel's id, exported here as the **single source**
-       of the string. It is the value 06a's tests already pin on
-       `aria-controls`; 06b2 renders the panel with this id and the
+       of the string. It is the value the button's tests already pin on
+       `aria-controls`; the panel renders with this id and the
        `MenuButton`s with `controlsId={MENU_PANEL_ID}`.
      • The panel: `document.getElementById(MENU_PANEL_ID)`.
      • The initial-focus X: `panel.querySelector('button[aria-controls=…]')` —
-       scoped to the panel, because 06b2's panel renders a *second*
+       scoped to the panel, because the panel renders a *second*
        `MenuButton` and only the panel's instance may receive initial focus.
      • The trigger (focus return): `document.querySelector(
        'button[aria-controls=…]')` — evaluated **after** close, when the panel
@@ -47,11 +47,11 @@ import {
        provider is mounted in the layout and covers it): the focus return
        degrades to a no-op. No exception, nothing else affected.
 
-   ── The contract 06d relies on ──────────────────────────────────────────────
+   ── The contract the transition sequence relies on ─────────────────────────
    `close(options?)` takes one option:
 
      • `close({ deferFocusReturn: true })` — the plain closes (X, Escape)
-       return focus to the trigger immediately; 06d passes `deferFocusReturn`
+       return focus to the trigger immediately; the sequence passes `deferFocusReturn`
        when the page transition takes over focus at t0, and performs the
        return itself at the sequence's end by calling `returnFocus()`.
 
@@ -69,7 +69,7 @@ import {
 
 /**
  * The menu panel's id — the single source of the string, matching the
- * `aria-controls` value the `MenuButton` (WP-06a) is tested against.
+ * `aria-controls` value the `MenuButton` is tested against.
  */
 export const MENU_PANEL_ID = 'site-menu'
 
@@ -79,7 +79,7 @@ export const MENU_PANEL_ID = 'site-menu'
 export interface CloseOptions {
   /**
    * When true, the close does **not** return focus to the trigger. The caller
-   * performs the return itself — 06d's transition sequence takes focus over at
+   * performs the return itself — the transition sequence takes focus over at
    * t0 and calls `returnFocus()` at its end.
    */
   deferFocusReturn?: boolean
@@ -94,7 +94,7 @@ interface MenuContextValue {
   close: (options?: CloseOptions) => void
   /**
    * Returns focus to the header's trigger button. The close calls this itself
-   * unless `deferFocusReturn` was passed; 06d calls it at the sequence's end.
+   * unless `deferFocusReturn` was passed; the sequence calls it at its end.
    * A no-op when no trigger is mounted (e.g. the legal page).
    */
   returnFocus: () => void

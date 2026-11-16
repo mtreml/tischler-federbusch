@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation'
 import { resolveCopyrightHolder } from '@/lib/config/resolve'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE FOOTER (WP-07b) — the last element of the one-scroll landing document
+   THE FOOTER — the last element of the one-scroll landing document
 
    One line on `md` and up, stacked on the phone: the copyright, the legal
    entry and the credit. Every value resolves from the central configuration

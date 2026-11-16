@@ -54,8 +54,8 @@ config:validate → typecheck → lint → format → unit → build → e2e →
 
 The generic middle is taken from `@mtreml/portfolio-core/gates`; this site adds
 `config:validate` ahead of everything and `links:check` / `meta:check` after the build,
-because both read the export rather than the source. Gates for work packages not yet
-landed are added to the chain as those packages land; the order is fixed.
+because both read the export rather than the source. Gates for parts not yet
+landed are added to the chain as those parts land; the order is fixed.
 
 Day to day:
 
@@ -67,7 +67,7 @@ npm run serve       # serve out/ host-accurately on 127.0.0.1:4317
 
 ## Deployment
 
-Deployment is WP-09: the `deploy-vps` composite action from the core repository uploads the
+Deployment: the `deploy-vps` composite action from the core repository uploads the
 **gated** `out/` (built by the gate chain, never rebuilt) to the VPS release tree under
 `/srv/tischler-federbusch`. The box is provisioned as a fresh multi-site machine (one Caddy,
 every site additive); until the DNS for `tischler-federbusch.at` / `www.` points at it, the

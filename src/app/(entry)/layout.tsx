@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   /* Neither document beneath this layout should be indexed: `/` is a redirect to the
      canonical entry point, and the not-found page is excluded from the sitemap. */
   robots: { index: false, follow: true },
-  /* The tab icon is a square version of the `logo.svg` mark (WP-04), committed beside
+  /* The tab icon is a square version of the `logo.svg` mark, committed beside
      it in `public/`. */
   icons: { icon: '/tab-icon.svg' },
 }

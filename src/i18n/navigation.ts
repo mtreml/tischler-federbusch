@@ -24,7 +24,7 @@ export const { Link, redirect, usePathname, useRouter, getPathname } = createNav
    `usePathname` above is next-intl's, and it returns the **internal** pathname —
    `/impressum-datenschutz`, not `/de/impressum-datenschutz/`. That is the right answer for
    building a link and the wrong one for reading *where the visitor actually is*: the page
-   transition (WP-06) reads the finished, localized URL off the anchor the visitor clicked,
+   transition reads the finished, localized URL off the anchor the visitor clicked,
    and re-localizing it would be wrong.
 
    So the raw ones are exported under names that say which they are. They are only ever

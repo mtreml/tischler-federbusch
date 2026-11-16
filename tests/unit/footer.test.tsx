@@ -30,7 +30,7 @@ vi.mock('next-intl/server', async () => {
 })
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE FOOTER (WP-07b)
+   THE FOOTER
 
    The line at the end of the one-scroll document, pinned to the contract a
    visitor's browser sees:

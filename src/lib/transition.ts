@@ -1,7 +1,7 @@
 'use client'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE PAGE TRANSITION — ACTION SEAM AND IMPERATIVE ENTRY (WP-06c)
+   THE PAGE TRANSITION — ACTION SEAM AND IMPERATIVE ENTRY
 
    One module, two seams, both in the `history-traversal.ts` pattern (a
    module-level subscription rather than props drilled through the tree),
@@ -14,9 +14,9 @@
    `TransitionOverlay`); what happens once the cover is opaque — the route
    change and/or the `#arbeiten` scroll — is a **swappable handler**. This
    file holds it: a module-level function the overlay calls at cover
-   completion, and `setTransitionAction` the sequence owner (WP-06d) swaps
-   out for the sequence's own action. WP-06c's own unit tests pin the
-   default; 06d starts from the acceptance state and swaps the handler
+   completion, and `setTransitionAction` the sequence owner swaps
+   out for the sequence's own action. The overlay's own unit tests pin the
+   default; the sequence owner starts from the acceptance state and swaps the handler
    rather than refactoring the overlay mid-stream.
 
    ── The imperative entry ─────────────────────────────────────────────────────
@@ -27,13 +27,13 @@
    reduced motion → no subscriber, the call degrades to a no-op.
    ══════════════════════════════════════════════════════════════════════════════ */
 
-/** The two, and only two, destinations a transition may run to (WP-06). */
+/** The two, and only two, destinations a transition may run to. */
 export type TransitionTarget = 'arbeiten' | 'landing'
 
 /**
  * What the overlay does once the cover is opaque: the route change and/or
  * the anchor scroll. The default below performs exactly that, the plain way
- * — the sequence owner (WP-06d) swaps its own handler in.
+ * — the sequence owner swaps its own handler in.
  */
 export type TransitionAction = (target: TransitionTarget) => void
 
@@ -43,7 +43,7 @@ export type TransitionAction = (target: TransitionTarget) => void
  * caller's plain fallback is the same decision, made on the caller's side.
  *
  * @returns whether a subscriber ran the transition — `false` on the no-op
- *          path, which is how the sequence owner (WP-06d) reaches its
+ *          path, which is how the sequence owner reaches its
  *          degraded branch
  * @param options.from             the address the transition starts from — instrumentation
  * @param options.to               the target (`'arbeiten'` or `'landing'`)
@@ -66,7 +66,7 @@ let action: TransitionAction = noopAction
 
 /**
  * Replaces the handler the overlay runs at cover completion. The sequence
- * owner (WP-06d) swaps the sequence's action in; the tests pin the swap.
+ * owner swaps the sequence's action in; the tests pin the swap.
  * Pass `null` to restore the no-op default.
  */
 export function setTransitionAction(handler: TransitionAction | null): void {

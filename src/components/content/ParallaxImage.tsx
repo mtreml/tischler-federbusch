@@ -7,7 +7,7 @@ import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import type { ImageSourceSet } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE PARALLAX IMAGE (WP-07a)
+   THE PARALLAX IMAGE
 
    The small client piece of the works section: a pointer-move parallax over
    the Works image. `pointermove` on the frame maps the cursor's offset from

@@ -38,7 +38,7 @@ vi.mock('next-intl/server', async () => {
 })
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE LEGAL PAGE (WP-07b)
+   THE LEGAL PAGE
 
    The view reads config, not literals — the invariants the suite pins:
 

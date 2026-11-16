@@ -3,9 +3,9 @@ import { expect, test } from '@playwright/test'
 /* ══════════════════════════════════════════════════════════════════════════════
    GATE 6 — THE ROUTES, ON THE EXPORT AS SERVED
 
-   WP-01 proves the skeleton end to end: the two documents exist, the root path
-   reaches them, and an unmatched path gets a genuine 404. The design assertions
-   (the landing, the menu, the transition) join this gate as WP-05 and WP-06 land.
+   This gate proves the skeleton end to end: the two documents exist, the root
+   path reaches them, and an unmatched path gets a genuine 404. The design
+   assertions (the landing, the menu, the transition) join as those surfaces land.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 test('the landing renders at /de/', async ({ page }) => {
@@ -22,7 +22,7 @@ test('the landing renders at /de/', async ({ page }) => {
   const video = page.locator('video')
   await expect(video).toHaveAttribute('muted', '')
   await expect(video).not.toHaveAttribute('controls')
-  /* The WP-03 seam, end to end: the configured logical path resolved through the
+  /* The media seam, end to end: the configured logical path resolved through the
      manifest into the encoded variant, and the master's own opening frame as
      the poster — a resolved video with neither would be a poster-less black box. */
   await expect(video.locator('source')).toHaveCount(1)
@@ -55,8 +55,8 @@ test('the works section anchors below the landing in the one document', async ({
 
 test('the menu entry lands on the works section', async ({ page }) => {
   await page.goto('/de/')
-  /* `#arbeiten` is a real target since WP-07a: the sequence that degraded to
-     a no-op scroll before this WP now lands the section at the viewport top. */
+  /* `#arbeiten` is a real target: the sequence that used to degrade to
+     a no-op scroll now lands the section at the viewport top. */
   await page.getByRole('button', { name: 'Menü öffnen' }).click()
   const entry = page.getByRole('link', { name: 'Arbeiten' })
   await expect(entry).toBeVisible()
@@ -173,7 +173,7 @@ test('the legal page renders the configured text, with its header', async ({ pag
 })
 
 test('the documents carry their title, description and canonical', async ({ page }) => {
-  /* Smoke-level here — the full metadata assertions are the WP-08 gate. */
+  /* Smoke-level here — the full metadata assertions land with the metadata gate. */
   await page.goto('/de/')
   await expect(page).toHaveTitle('Handgemachte Möbel für Generationen. — Lukas Federbusch')
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(

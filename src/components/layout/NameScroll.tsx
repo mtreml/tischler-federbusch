@@ -6,7 +6,7 @@ import { setLandingProgress, travelProgress } from '@/lib/landing-scroll'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE NAME'S TRAVEL (WP-05)
+   THE NAME'S TRAVEL
 
    One `Name` instance, in flow inside the landing lockup, transform-driven —
    no layout shift, ever. It rests at the lockup's position and translates to
@@ -23,9 +23,9 @@ import { usePrefersReducedMotion } from '@/lib/reduced-motion'
        slot while the page scrolls on — which the mapping gets for free,
        because the slot's stage-relative position moves with the scroll and
        the clamped progress keeps tracking it.
-     • the final position and size read the WP-02 tokens (`--name-header-top`,
+     • the final position and size read the base tokens (`--name-header-top`,
        `--spacing-gutter`, the shared `--name-width`), so they are identical
-       to the menu's name slot (WP-06) and the transition overlay's: the four
+       to the menu's name slot and the transition overlay's: the four
        surfaces read one token set, and opening or closing the menu never
        moves the name.
 

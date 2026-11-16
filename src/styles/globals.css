@@ -5,17 +5,17 @@
    theme and the raw custom properties come from the same place. */
 @import '../config/tokens.css';
 /* The face and the one font-family stack live in the font-face declaration
-   file (WP-04) — imported here so the declaration, the tokens and the base
+   file — imported here so the declaration, the tokens and the base
    rules come from the same stylesheet bundle. */
 @import '../config/fonts.css';
-/* The landing, its chrome and the name's travel (WP-05). */
+/* The landing, its chrome and the name's travel. */
 @import './landing.css';
-/* The menu button and its two-line morph (WP-06a). */
+/* The menu button and its two-line morph. */
 @import './menu.css';
-/* The page-transition overlay and its spinner (WP-06c). */
+/* The page-transition overlay and its spinner. */
 @import './transition.css';
-/* The content sections: the works section (WP-07a), the footer and the legal
-   page (WP-07b). */
+/* The content sections: the works section, the footer and the legal
+   page. */
 @import './content.css';
 
 body {

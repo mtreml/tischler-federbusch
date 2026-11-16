@@ -4,7 +4,7 @@ import { locales, type AppPathname } from '@/i18n/routing'
 import { pathFor } from '@/i18n/paths'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   /sitemap.xml — WP-01 STUB, finalized in WP-08.
+   /sitemap.xml — a stub, to be finalized.
 
    The framework's file convention, which under `output: 'export'` writes a real
    `out/sitemap.xml` at build time rather than serving it from a route handler. It sits at

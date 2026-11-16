@@ -9,14 +9,14 @@
        npm run fonts:subset
 
    ── The face, and where its bytes come from ────────────────────────────────────
-   One face — Biome W04 Light, the site's only typeface (WP-04). Its source is
+   One face — Biome W04 Light, the site's only typeface. Its source is
    committed under `font-sources/` and pinned **by content hash** below: a local
    file swapped in place is exactly as silent as a moving upstream, and the pin
    is what makes the shipped subset traceable to the bytes it was cut from. A
    committed source is also what lets this step run without network access.
 
    ── The cut ────────────────────────────────────────────────────────────────────
-   The site sets **content** in this face (WP-07), so it takes the language
+   The site sets **content** in this face, so it takes the language
    coverage the configured locale needs — German: Basic Latin, Latin-1
    Supplement and Latin Extended-A — plus the dashes, quotes and the euro sign
    the copy may carry. The wordmark is the `name.svg` vector, not a run of text,

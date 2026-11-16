@@ -72,7 +72,7 @@ REQUIRED_NODE_MAJOR=${ENGINE_SPEC#>=}
 REQUIRED_NODE_MAJOR=${REQUIRED_NODE_MAJOR%%.*}
 
 # ffmpeg and ffprobe are prerequisites rather than optional: the media pipeline
-# (WP-03) re-encodes the landing video with them, and a machine that can run the
+# re-encodes the landing video with them, and a machine that can run the
 # gate chain but not the pipeline is not a machine this repo builds on.
 for tool in node npm git ffmpeg ffprobe; do
   if ! command -v "$tool" >/dev/null 2>&1; then
@@ -198,7 +198,7 @@ cat <<'REPORT'
   What you have: every dependency from the lockfile (including the pinned
   @mtreml/portfolio-core tag), the browsers, and every gate green. The media
   library in media/ is generated, not committed — `npm run media:generate`
-  (WP-03) rebuilds it from media-originals/ when those are present.
+  rebuilds it from media-originals/ when those are present.
 
   Next:
     npm run dev            develop

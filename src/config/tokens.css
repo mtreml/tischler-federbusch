@@ -49,8 +49,8 @@
      ONE token set, read by four surfaces: the header, the menu overlay, the
      landing scroll animation and the transition overlay. The name keeps the
      same size and the same top-left position on every one of them — that
-     sameness is the point of the set, and the decoupling between WP-05 (the
-     landing) and WP-06 (the menu): each reads these and neither knows the
+     sameness is the point of the set, and the decoupling between the
+     landing and the menu: each reads these and neither knows the
      other.
 
      The aspect comes from name.svg's own viewBox — 334.89453 × 86.875 pt —
@@ -74,7 +74,7 @@
      scroll carries the name up to the header position. `translate(-50%,
      -50%)` is the renderer's business; these are the coordinates. They anchor
      the whole lockup (the mark stacked above the name), so the name is the
-     lockup's lower half — the transition overlay (WP-06) reads the same pair.
+     lockup's lower half — the transition overlay reads the same pair.
      The scroll animation itself measures the name's real position, so the two
      never drift apart. */
   --name-landing-top: 50%;
@@ -97,7 +97,7 @@
      background only changes colour. */
   --duration-menu: 320ms;
   --duration-menu-items: 480ms;
-  /* The entries' rise on the menu's intro, per index (WP-06b3): entry i
+  /* The entries' rise on the menu's intro, per index: entry i
      travels `--menu-item-rise × (i + 1)` — the top entry the least, the
      bottom the farthest. That distance gradient is the stagger; all entries
      share the one `--duration-menu-items` timeline, so no per-entry delay is
@@ -168,7 +168,7 @@
      spinner's. */
   --spacing-lockup: 1.25rem;
 
-  /* The works image's hover parallax (WP-07a): the maximum translate the
+  /* The works image's hover parallax: the maximum translate the
      pointer's offset can drive on the image inside its frame. Transform only
      — the frame's box never moves, so the CLS stays zero. Small on purpose:
      the brief is calm, and a parallax that reads as a parallax would not be
@@ -190,7 +190,7 @@
   --logo-landing-width-lg: 6rem;
 
   /* ── The menu button geometry ────────────────────────────────────────────────
-     The hamburger: two horizontal lines that transform into the X (WP-06a).
+     The hamburger: two horizontal lines that transform into the X.
      Three design values — the line's length, its thickness, and the gap the
      two lines rest at — the button's own CSS turns them into the closed and
      the open state. The X's ±45° are fixed geometry, not a design decision,

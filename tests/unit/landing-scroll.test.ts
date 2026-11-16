@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { clamp01, travelProgress } from '@/lib/landing-scroll'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE NAME-TRAVEL MAPPING (WP-05)
+   THE NAME-TRAVEL MAPPING
 
    The pure half of the scroll animation: the offsets the layout measures
    arrive as data, and the mapping between them is the one thing a unit test

@@ -3,7 +3,7 @@ import type { LegalConfig } from '@/lib/config/schema/legal.schema'
 /* ══════════════════════════════════════════════════════════════════════════════
    LEGAL CONFIGURATION
 
-   The legal page is data, rendered by a static view (WP-07) — no
+   The legal page is data, rendered by a static view — no
    portfolio-core pattern re-used for it, per the spec.
 
    ── What this module does NOT hold ─────────────────────────────────────────────

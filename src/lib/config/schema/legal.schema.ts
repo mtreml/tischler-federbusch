@@ -5,7 +5,7 @@ import { checkedString, isAnchorId } from './shared'
 /* ══════════════════════════════════════════════════════════════════════════════
    LEGAL CONFIGURATION SCHEMA — mirrors `src/config/legal.config.ts`.
 
-   The legal page is data, rendered by a static view (WP-07). No portfolio-core
+   The legal page is data, rendered by a static view. No portfolio-core
    pattern is re-used for it, per the spec.
 
    ── What this module does NOT hold ─────────────────────────────────────────────

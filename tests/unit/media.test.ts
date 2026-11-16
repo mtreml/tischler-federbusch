@@ -10,7 +10,7 @@ import { validateConfiguration } from '@/lib/config/validate'
 import { posterPathFor } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE DECLARED MEDIA SET (WP-03)
+   THE DECLARED MEDIA SET
 
    The set is static and small — one master, its poster, one Works image — so the
    invariants are structural rather than statistical:
@@ -106,9 +106,9 @@ describe('the declared media set', () => {
 })
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   CONFIG ↔ DECLARED MEDIA (the cross-check WP-05 closes)
+   CONFIG ↔ DECLARED MEDIA (the cross-check the validation closes)
 
-   The WP-02 latent bug: `site.landing.video` named a path the pipeline never
+   A latent bug: `site.landing.video` named a path the pipeline never
    generated for, and nothing said. The check lives in `validate.ts`; this
    suite pins it — the committed configuration must resolve, and a value the
    declared set does not carry must fail **by name**, in every environment,

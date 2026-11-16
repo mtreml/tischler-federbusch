@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE LANDING, ITS CHROME AND THE NAME'S TRAVEL (WP-05)
+   THE LANDING, ITS CHROME AND THE NAME'S TRAVEL
 
    Every value here is a token; this file carries layout structure only. The
    z ladder of the one page: the film is the backdrop, the lockup floats
@@ -141,7 +141,7 @@
   pointer-events: none;
 }
 
-/* The one control the bar carries: the hamburger (WP-06a), top right, at the
+/* The one control the bar carries: the hamburger, top right, at the
    name's own top coordinate so the bar's two corners share a line. It sits
    exactly where the menu's X does (`menu.css`) — one component, the two
    states in sequence. */

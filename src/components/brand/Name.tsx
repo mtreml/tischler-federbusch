@@ -1,11 +1,11 @@
 import type { CSSProperties, Ref } from 'react'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE WORDMARK — THE ONE PLACE ITS PRESENTATION LIVES (WP-05)
+   THE WORDMARK — THE ONE PLACE ITS PRESENTATION LIVES
 
    The companion to `Logo`: a thin wrapper over the committed `public/name.svg`
-   (WP-04), one ink, `<img>`-based, decorative by default. Every surface that
-   shows the name — the landing lockup, the name-scroll instance, WP-06's menu
+  , one ink, `<img>`-based, decorative by default. Every surface that
+   shows the name — the landing lockup, the name-scroll instance, the menu
    and the transition lockup — renders this component and nothing else, so the
    wordmark's presentation lives in exactly one place.
 

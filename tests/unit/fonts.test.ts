@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE FACE (WP-04)
+   THE FACE
 
    The invariants this site cannot survive losing:
 

@@ -6,7 +6,7 @@ import { useLandingProgress } from '@/lib/landing-scroll'
 import { MenuButton } from './MenuButton'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE HEADER (WP-05)
+   THE HEADER
 
    Fixed, and **transparent over the landing fold**: the video runs across the
    full first screenful (decided — open question 19), so there is no solid bar
@@ -24,12 +24,12 @@ import { MenuButton } from './MenuButton'
    and the opacity is what animates.
 
    ── What it carries ─────────────────────────────────────────────────────────
-   The hamburger, top right — the `MenuButton` (WP-06a) wired to the menu's
-   state (WP-06b): one press, one toggle. The bar itself keeps
+   The hamburger, top right — the `MenuButton` wired to the menu's
+   state: one press, one toggle. The bar itself keeps
    `pointer-events: none`, so it never intercepts the film below it — only
    the actions area re-enables pointer events (the CSS in `landing.css`).
    The name's home position top left is **not** here: it is the name-scroll
-   instance (WP-05) and the menu's (WP-06), both reading the WP-02 tokens —
+   instance and the menu's, both reading the base tokens —
    the header reserves the slot, the name occupies it.
    ══════════════════════════════════════════════════════════════════════════════ */
 

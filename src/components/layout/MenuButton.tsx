@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU BUTTON (WP-06a)
+   THE MENU BUTTON
 
    The one button, two states: two horizontal lines that transform into an X.
    The morph is a transform on the lines themselves — not an SVG and not two
@@ -13,9 +13,9 @@ import { useTranslations } from 'next-intl'
 
    ── What this file is and is not ─────────────────────────────────────────────
    This is the control, not its state: the button is presentational and
-   receives `open` and `onToggle` from the menu (WP-06b), which owns the
-   state and the panel it toggles. It is also not mounted yet — 06b lands it
-   in the header. `controlsId` is the panel's id, from the same 06b, and
+   receives `open` and `onToggle` from the menu, which owns the
+   state and the panel it toggles. It is also not mounted yet — the menu lands it
+   in the header. `controlsId` is the panel's id, from the same module, and
    arrives with it.
 
    ── The semantics ────────────────────────────────────────────────────────────
@@ -27,11 +27,11 @@ import { useTranslations } from 'next-intl'
    ══════════════════════════════════════════════════════════════════════════════ */
 
 interface MenuButtonProps {
-  /** The menu's state, owned by the menu (WP-06b): `true` when the panel is open. */
+  /** The menu's state, owned by the menu: `true` when the panel is open. */
   open: boolean
-  /** The menu's toggle handler, owned by the menu (WP-06b). */
+  /** The menu's toggle handler, owned by the menu. */
   onToggle: () => void
-  /** The menu panel's id (WP-06b), named by `aria-controls`. */
+  /** The menu panel's id, named by `aria-controls`. */
   controlsId: string
   /** Optional extra class, joined after the component's own. */
   className?: string

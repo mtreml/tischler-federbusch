@@ -12,7 +12,7 @@ import { resolveContact } from '@/lib/config/resolve'
 import { MENU_PANEL_ID, MenuProvider } from '@/lib/menu'
 import messages from '@/i18n/messages/de.json'
 
-/* The sequence owner (WP-06d) reads the raw router and pathname, which need
+/* The sequence owner reads the raw router and pathname, which need
    the app router mounted — the suite asserts the panel's markup and hands
    the sequence out through a spy. */
 const mockTransitionTo = vi.fn()
@@ -21,10 +21,10 @@ vi.mock('@/lib/transition-sequence', () => ({
 }))
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU PANEL AND ITS MOUNTING (WP-06b2)
+   THE MENU PANEL AND ITS MOUNTING
 
-   The invariants the panel carries before any animation is on it (WP-06b3),
-   with the overlay sequence in place (WP-06d):
+   The invariants the panel carries before any animation is on it,
+   with the overlay sequence in place:
 
      • The dialog contract: `role="dialog"`, `aria-modal="true"`, the label —
        and the panel's `id` is the one string the `MenuButton`s' `aria-controls`
@@ -105,7 +105,7 @@ describe('the dialog contract', () => {
     expect(panel(view)).not.toBeNull()
 
     /* The panel's X closes: the one button inside the panel. The exit runs
-       through the panel's `AnimatePresence` (WP-06b3), so the removal is a
+       through the panel's `AnimatePresence`, so the removal is a
        beat, not a synchronous unmount. */
     fireEvent.click(within(panel(view)).getByRole('button'))
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), { timeout: 1000 })
@@ -198,7 +198,7 @@ describe('the transition hooks', () => {
   })
 })
 
-describe('the transition triggers (WP-06d)', () => {
+describe('the transition triggers', () => {
   /* The triggers' guarded `onClick` is the reduced-motion path: it hands the
      sequence the element's `data-transition` value, and a no-op when the
      capture interception has already taken the click. */

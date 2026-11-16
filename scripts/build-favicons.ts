@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE APPLE TOUCH ICON (WP-05)
+   THE APPLE TOUCH ICON
 
    The favicon set is the minimal one (decided — open question 17): the SVG
    tab icon (`public/tab-icon.svg`, already wired in the `[locale]` layout)

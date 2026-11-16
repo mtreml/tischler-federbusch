@@ -11,7 +11,7 @@ import {
 } from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE WORKS SECTION (WP-07a)
+   THE WORKS SECTION
 
    The section renders from the central configuration and the committed
    manifest seam: this suite pins the contract a visitor's browser sees —

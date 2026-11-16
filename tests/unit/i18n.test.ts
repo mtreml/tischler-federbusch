@@ -7,9 +7,9 @@ import { defaultLocale, locales, routing } from '@/i18n/routing'
    THE i18n SEAM
 
    The two things a wrong path 404s on a plain static host, and the one locale set
-   the site is configured with. Both stay as the WPs replace their inputs: WP-02
-   derives the locales from the central configuration, and every new route joins
-   the map rather than bypassing it.
+   the site is configured with. Both stay stable as later work replaces their
+   inputs: the locales are derived from the central configuration, and every new
+   route joins the map rather than bypassing it.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 describe('the locale set', () => {

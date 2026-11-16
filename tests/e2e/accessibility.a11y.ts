@@ -5,7 +5,7 @@ import { expect, test } from '@playwright/test'
    GATE 7 — ACCESSIBILITY, ON THE EXPORT AS SERVED
 
    The pages the skeleton has today. `prefers-reduced-motion` and the menu/transition
-   assertions (WP-06) join this gate as the surfaces land.
+   assertions join this gate as the surfaces land.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 const PAGES = ['/de/', '/de/impressum-datenschutz/']

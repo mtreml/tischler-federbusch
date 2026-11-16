@@ -7,7 +7,7 @@ import { posterPathFor } from '@mtreml/portfolio-core/media'
 
    One list, and it is the only place that knows where an original lives. The
    generation script (`scripts/generate-media.ts`) consumes it; so will the render
-   side once WP-05 and WP-07 mount the landing video and the Works image. Two
+   side once the landing and the works section mount the video and the Works image. Two
    separate walks of the same two assets would eventually disagree about which
    files matter, and the symptom would be a missing image on one page rather than
    a failure anyone could trace.
@@ -76,13 +76,13 @@ export function declaredMedia(root: string): DeclaredMedia[] {
        The 4K phone original (11 s, h264 + aac) re-encoded to one 1920-capped web
        master: audio stripped, container keys stripped, faststart — the encode is
        held to `media.videoEncode.landing` and its CRF carries its measurement in
-       that file. WP-05 renders it. */
+       that file. The landing renders it. */
     {
       logicalPath: master,
       originalPath: original(master),
       role: 'video',
       videoProfile: 'landing',
-      declaredBy: 'the landing master (rendered by the landing, WP-05)',
+      declaredBy: 'the landing master (rendered by the landing)',
       active: true,
     },
     /* ── Its poster, derived from the master's own opening frame ───────────────
@@ -107,13 +107,13 @@ export function declaredMedia(root: string): DeclaredMedia[] {
     },
     /* ── The Works image ───────────────────────────────────────────────────────
        The one `responsive` asset the site carries: full ladder × every
-       configured format, so the `<picture>` WP-07 renders has every rung a
+       configured format, so the `<picture>` the works section renders has every rung a
        viewport asks for. */
     {
       logicalPath: 'arbeiten/signal-2026-07-20-20-14-59-447_003.jpg',
       originalPath: original('arbeiten/signal-2026-07-20-20-14-59-447_003.jpg'),
       role: 'responsive',
-      declaredBy: 'the Works image (rendered by the Arbeiten section, WP-07)',
+      declaredBy: 'the Works image (rendered by the Arbeiten section)',
       active: true,
     },
   ]

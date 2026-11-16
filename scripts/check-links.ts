@@ -1,9 +1,9 @@
 /* ══════════════════════════════════════════════════════════════════════════════
-   LINK CHECK — WP-01 STUB, real implementation in WP-08.
+   LINK CHECK — a stub; the real implementation lands later.
 
    Reads the EXPORT, not the source: every internal href in every emitted document
    must resolve to a file the export actually writes, and the trailing-slash rule
-   must hold in the emitted markup. WP-08 implements that walk over `out/`; the stub
+   must hold in the emitted markup. The real implementation adds that walk over `out/`; the stub
    keeps the gate in the chain at its fixed position (after the build) so the order
    never moves.
    ══════════════════════════════════════════════════════════════════════════════ */
@@ -16,5 +16,5 @@ if (!existsSync(join(process.cwd(), 'out', 'de', 'index.html'))) {
 }
 
 console.log(
-  'links:check: OK (WP-01 stub — the exported tree is present; the href walk lands in WP-08)',
+  'links:check: OK (stub — the exported tree is present; the href walk lands later)',
 )

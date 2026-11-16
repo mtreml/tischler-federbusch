@@ -15,7 +15,7 @@ import { pathFor } from '@/i18n/paths'
         `<meta http-equiv="refresh">` **plus a real `<a>` link** so it works with scripting
         disabled, and a canonical link so search engines do not read it as a duplicate.
 
-     2. A SERVER-LEVEL REDIRECT, shipped with the web-server configuration (WP-09). That is
+     2. A SERVER-LEVEL REDIRECT, shipped with the web-server configuration. That is
         what actually serves visitors; this document is the fallback for hosts where a
         server redirect cannot be configured.
 
@@ -38,8 +38,8 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t('rootRedirect.description'),
     /* The redirect declares its target, so the entry point is not read as a duplicate of
        the default-locale landing page. Absolute: a relative canonical link keeps working
-       silently when the origin is wrong. (Finalized with the central configuration in
-       WP-02; the canonical host is the decided `https://www.tischler-federbusch.at`. */
+       silently when the origin is wrong. (Finalized with the central configuration;
+       the canonical host is the decided `https://www.tischler-federbusch.at`. */
     alternates: {
       canonical: `https://www.tischler-federbusch.at${target}`,
     },

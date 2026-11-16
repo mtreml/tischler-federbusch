@@ -9,7 +9,7 @@ import { MENU_PANEL_ID, MenuProvider } from '@/lib/menu'
 import messages from '@/i18n/messages/de.json'
 import { setPrefersReducedMotion } from './match-media'
 
-/* The sequence owner (WP-06d) reads the raw router and pathname, which need
+/* The sequence owner reads the raw router and pathname, which need
    the app router mounted — this suite asserts motion, not the sequence, so
    the hook is mocked. */
 vi.mock('@/lib/transition-sequence', () => ({
@@ -17,7 +17,7 @@ vi.mock('@/lib/transition-sequence', () => ({
 }))
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU INTRO AND CLOSE (WP-06b3)
+   THE MENU INTRO AND CLOSE
 
    The spec's "Menu intro animation", asserted on the transforms the motion
    library writes to the nodes — the values, not the class names:

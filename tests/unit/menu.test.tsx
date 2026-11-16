@@ -4,9 +4,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { MENU_PANEL_ID, MenuProvider, useMenu } from '@/lib/menu'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU STATE (WP-06b1)
+   THE MENU STATE
 
-   The provider ships unmounted — WP-06b2 wires it into the `[locale]` layout.
+   The provider ships unmounted — the menu panel wires it into the `[locale]` layout.
    These tests mount it around a minimal jsdom harness built to the resolution
    contract: a trigger stub (`<button aria-controls="site-menu">`, the header's
    `MenuButton` before the panel, in document order) and a panel stub
