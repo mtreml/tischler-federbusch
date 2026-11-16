@@ -19,6 +19,10 @@
   overflow: clip;
 }
 
+.works__frame + .works__frame {
+  margin-block-start: calc(var(--spacing) * 6);
+}
+
 .works__image {
   display: block;
   width: 100%;
@@ -37,7 +41,6 @@
     padding-inline: var(--spacing-gutter-md);
     padding-block: var(--spacing-section-md);
   }
-
 }
 
 @media (min-width: var(--breakpoint-lg)) {

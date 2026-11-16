@@ -57,9 +57,21 @@ export const site: SiteConfig = {
   },
 
   works: {
-    // The same file `seo.ogImage` names; validate-config keeps the pair honest.
-    image: '/media/arbeiten/signal-2026-07-20-20-14-59-447_003.jpg',
-    imageAlt: 'Handgefertigte Kommode von Lukas Federbusch',
+    // The works images in display order; `seo.ogImage` names one of them and validate-config keeps that honest.
+    images: [
+      {
+        image: '/media/arbeiten/signal-2026-07-20-20-14-59-447_003.jpg',
+        imageAlt: 'Handgefertigte Kommode von Lukas Federbusch',
+      },
+      {
+        image: '/media/arbeiten/9ezd7rz08i9h1.jpg',
+        imageAlt: 'Handgefertigtes Möbelstück von Lukas Federbusch',
+      },
+      {
+        image: '/media/arbeiten/yz50v4rlf8be1.jpg',
+        imageAlt: 'Handgefertigtes Möbelstück von Lukas Federbusch',
+      },
+    ],
   },
 
   navigation: {

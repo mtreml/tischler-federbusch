@@ -42,11 +42,25 @@ export function declaredMedia(root: string): DeclaredMedia[] {
       declaredBy: 'the landing master — poster, derived from its opening frame',
       active: true,
     },
-    {  // the one `responsive` asset: full ladder × every configured format
+    {  // the Works images, in display order: full ladder × every configured format
       logicalPath: 'arbeiten/signal-2026-07-20-20-14-59-447_003.jpg',
       originalPath: original('arbeiten/signal-2026-07-20-20-14-59-447_003.jpg'),
       role: 'responsive',
-      declaredBy: 'the Works image (rendered by the Arbeiten section)',
+      declaredBy: 'a Works image (rendered by the Arbeiten section)',
+      active: true,
+    },
+    {
+      logicalPath: 'arbeiten/9ezd7rz08i9h1.jpg',
+      originalPath: original('arbeiten/9ezd7rz08i9h1.jpg'),
+      role: 'responsive',
+      declaredBy: 'a Works image (rendered by the Arbeiten section)',
+      active: true,
+    },
+    {
+      logicalPath: 'arbeiten/yz50v4rlf8be1.jpg',
+      originalPath: original('arbeiten/yz50v4rlf8be1.jpg'),
+      role: 'responsive',
+      declaredBy: 'a Works image (rendered by the Arbeiten section)',
       active: true,
     },
   ]

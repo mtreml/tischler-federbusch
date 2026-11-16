@@ -129,6 +129,346 @@
           "bytes": 71988
         }
       ]
+    },
+    "arbeiten/9ezd7rz08i9h1.jpg": {
+      "hash": "49604b0e",
+      "width": 3664,
+      "height": 5496,
+      "role": "responsive",
+      "variants": [
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-320.avif",
+          "width": 320,
+          "format": "avif",
+          "bytes": 7331
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-480.avif",
+          "width": 480,
+          "format": "avif",
+          "bytes": 15939
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-640.avif",
+          "width": 640,
+          "format": "avif",
+          "bytes": 27129
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-800.avif",
+          "width": 800,
+          "format": "avif",
+          "bytes": 42949
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-960.avif",
+          "width": 960,
+          "format": "avif",
+          "bytes": 61080
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1280.avif",
+          "width": 1280,
+          "format": "avif",
+          "bytes": 109444
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1600.avif",
+          "width": 1600,
+          "format": "avif",
+          "bytes": 164885
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1920.avif",
+          "width": 1920,
+          "format": "avif",
+          "bytes": 234356
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-2560.avif",
+          "width": 2560,
+          "format": "avif",
+          "bytes": 406328
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-320.webp",
+          "width": 320,
+          "format": "webp",
+          "bytes": 8272
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-480.webp",
+          "width": 480,
+          "format": "webp",
+          "bytes": 17402
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-640.webp",
+          "width": 640,
+          "format": "webp",
+          "bytes": 29864
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-800.webp",
+          "width": 800,
+          "format": "webp",
+          "bytes": 47894
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-960.webp",
+          "width": 960,
+          "format": "webp",
+          "bytes": 68240
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1280.webp",
+          "width": 1280,
+          "format": "webp",
+          "bytes": 126530
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1600.webp",
+          "width": 1600,
+          "format": "webp",
+          "bytes": 197896
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1920.webp",
+          "width": 1920,
+          "format": "webp",
+          "bytes": 276572
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-2560.webp",
+          "width": 2560,
+          "format": "webp",
+          "bytes": 455952
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-320.jpeg",
+          "width": 320,
+          "format": "jpeg",
+          "bytes": 14944
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-480.jpeg",
+          "width": 480,
+          "format": "jpeg",
+          "bytes": 30545
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-640.jpeg",
+          "width": 640,
+          "format": "jpeg",
+          "bytes": 51753
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-800.jpeg",
+          "width": 800,
+          "format": "jpeg",
+          "bytes": 79892
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-960.jpeg",
+          "width": 960,
+          "format": "jpeg",
+          "bytes": 112930
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1280.jpeg",
+          "width": 1280,
+          "format": "jpeg",
+          "bytes": 200982
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1600.jpeg",
+          "width": 1600,
+          "format": "jpeg",
+          "bytes": 312145
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-1920.jpeg",
+          "width": 1920,
+          "format": "jpeg",
+          "bytes": 444297
+        },
+        {
+          "file": "arbeiten/9ezd7rz08i9h1-49604b0e-2560.jpeg",
+          "width": 2560,
+          "format": "jpeg",
+          "bytes": 769544
+        }
+      ]
+    },
+    "arbeiten/yz50v4rlf8be1.jpg": {
+      "hash": "cd80a563",
+      "width": 2604,
+      "height": 2602,
+      "role": "responsive",
+      "variants": [
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-320.avif",
+          "width": 320,
+          "format": "avif",
+          "bytes": 8024
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-480.avif",
+          "width": 480,
+          "format": "avif",
+          "bytes": 13167
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-640.avif",
+          "width": 640,
+          "format": "avif",
+          "bytes": 19229
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-800.avif",
+          "width": 800,
+          "format": "avif",
+          "bytes": 25925
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-960.avif",
+          "width": 960,
+          "format": "avif",
+          "bytes": 33630
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1280.avif",
+          "width": 1280,
+          "format": "avif",
+          "bytes": 53077
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1600.avif",
+          "width": 1600,
+          "format": "avif",
+          "bytes": 76542
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1920.avif",
+          "width": 1920,
+          "format": "avif",
+          "bytes": 107121
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-2560.avif",
+          "width": 2560,
+          "format": "avif",
+          "bytes": 185876
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-320.webp",
+          "width": 320,
+          "format": "webp",
+          "bytes": 10620
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-480.webp",
+          "width": 480,
+          "format": "webp",
+          "bytes": 17940
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-640.webp",
+          "width": 640,
+          "format": "webp",
+          "bytes": 27498
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-800.webp",
+          "width": 800,
+          "format": "webp",
+          "bytes": 37090
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-960.webp",
+          "width": 960,
+          "format": "webp",
+          "bytes": 49148
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1280.webp",
+          "width": 1280,
+          "format": "webp",
+          "bytes": 73686
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1600.webp",
+          "width": 1600,
+          "format": "webp",
+          "bytes": 103106
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1920.webp",
+          "width": 1920,
+          "format": "webp",
+          "bytes": 133212
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-2560.webp",
+          "width": 2560,
+          "format": "webp",
+          "bytes": 208156
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-320.jpeg",
+          "width": 320,
+          "format": "jpeg",
+          "bytes": 15344
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-480.jpeg",
+          "width": 480,
+          "format": "jpeg",
+          "bytes": 27995
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-640.jpeg",
+          "width": 640,
+          "format": "jpeg",
+          "bytes": 43594
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-800.jpeg",
+          "width": 800,
+          "format": "jpeg",
+          "bytes": 61286
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-960.jpeg",
+          "width": 960,
+          "format": "jpeg",
+          "bytes": 82271
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1280.jpeg",
+          "width": 1280,
+          "format": "jpeg",
+          "bytes": 129790
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1600.jpeg",
+          "width": 1600,
+          "format": "jpeg",
+          "bytes": 189195
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-1920.jpeg",
+          "width": 1920,
+          "format": "jpeg",
+          "bytes": 259126
+        },
+        {
+          "file": "arbeiten/yz50v4rlf8be1-cd80a563-2560.jpeg",
+          "width": 2560,
+          "format": "jpeg",
+          "bytes": 429464
+        }
+      ]
     }
   }
 }

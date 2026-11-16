@@ -167,18 +167,23 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   f.require('landing.video', site.landing.video)
   f.require('landing.videoLabel', site.landing.videoLabel)
 
-  f.require('works.image', site.works.image)
-  f.require('works.imageAlt', site.works.imageAlt)
-  if (
-    !isBlank(site.works.image) &&
-    !isBlank(site.seo.ogImage) &&
-    site.works.image !== site.seo.ogImage
-  ) {
-    f.contradiction(
-      'works.image',
-      `is "${site.works.image}", which seo.ogImage names as "${site.seo.ogImage}" — ` +
-        'both keys name the one works image',
-    )
+  if (f.require('works.images', site.works.images)) {
+    site.works.images.forEach((entry, index) => {
+      if (isBlank(entry.image)) {
+        f.unfilled(`works.images[${index}].image`, 'is required and is empty')
+      }
+      if (isBlank(entry.imageAlt)) {
+        f.unfilled(`works.images[${index}].imageAlt`, 'is required and is empty')
+      }
+    })
+    const imageSet = new Set(site.works.images.map((entry) => entry.image))
+    if (!isBlank(site.seo.ogImage) && !imageSet.has(site.seo.ogImage)) {
+      f.contradiction(
+        'seo.ogImage',
+        `names "${site.seo.ogImage}", which is not one of the works images — ` +
+          'the share image is a work the page shows',
+      )
+    }
   }
 
   if (f.require('navigation.items', site.navigation.items, 'is required — the menu is empty')) {
@@ -251,7 +256,10 @@ function checkConfiguredMedia(
   const configured: ReadonlyArray<readonly [key: string, value: string]> = [
     ['landing.video', site.landing.video],
     ['seo.ogImage', site.seo.ogImage],
-    ['works.image', site.works.image],
+    ...site.works.images.map((entry, index): [string, string] => [
+      `works.images[${index}].image`,
+      entry.image,
+    ]),
   ]
   for (const [key, value] of configured) {
     const logical = toDeclaredPath(value, media.basePath)

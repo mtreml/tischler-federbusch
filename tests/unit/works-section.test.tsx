@@ -18,10 +18,11 @@ import {
 
      • the section is the `#arbeiten` target the menu anchor and the
        transition sequence scroll to;
-     • the `<picture>` emits the configured source order (modern first), the
-       fallback `src` is the widest rung of the universally supported format,
-       and the intrinsic dimensions and the configured text alternative are
-       on the image — the box is reserved before the bytes arrive.
+     • one `<picture>` per configured works image, each emitting the
+       configured source order (modern first), the fallback `src` as the
+       widest rung of the universally supported format, and the intrinsic
+       dimensions and the configured text alternative on the image — the box
+       is reserved before the bytes arrive.
 
    The manifest is a fixture, not the committed file: a test that read the
    real one would assert whichever branch happens to be checked out.
@@ -33,40 +34,47 @@ const WIDTH = 661
 const HEIGHT = 435
 const SIZES = [320, 480, 640, WIDTH]
 
-/** The one entry the section resolves, as the pipeline would have written it. */
-function manifestFixture(): MediaManifest {
-  const variant = (width: number, format: 'avif' | 'webp' | 'jpeg') => ({
-    file: `${LOGICAL}-${HASH}-${width}.${format}`,
-    width,
+/** One entry per configured works image, as the pipeline would have written them. */
+function responsiveEntry(logical: string, hash: string, width: number, height: number) {
+  const variant = (variantWidth: number, format: 'avif' | 'webp' | 'jpeg') => ({
+    file: `${logical}-${hash}-${variantWidth}.${format}`,
+    width: variantWidth,
     format,
     bytes: 1,
   })
+  const widths = [320, 480, 640, width]
+  const variants = ['avif', 'webp', 'jpeg'].flatMap((format) =>
+    widths.map((variantWidth) => variant(variantWidth, format as 'avif' | 'webp' | 'jpeg')),
+  )
+  return {
+    hash,
+    width,
+    height,
+    role: 'responsive' as const,
+    variants,
+  }
+}
+
+function manifestFixture(): MediaManifest {
   return {
     version: MANIFEST_VERSION,
     basePath: media.basePath,
     imageWidths: SIZES,
     imageFormats: ['avif', 'webp', 'jpeg'],
     entries: {
-      [LOGICAL]: {
-        hash: HASH,
-        width: WIDTH,
-        height: HEIGHT,
-        role: 'responsive',
-        variants: [
-          variant(320, 'avif'),
-          variant(480, 'avif'),
-          variant(640, 'avif'),
-          variant(WIDTH, 'avif'),
-          variant(320, 'webp'),
-          variant(480, 'webp'),
-          variant(640, 'webp'),
-          variant(WIDTH, 'webp'),
-          variant(320, 'jpeg'),
-          variant(480, 'jpeg'),
-          variant(640, 'jpeg'),
-          variant(WIDTH, 'jpeg'),
-        ],
-      },
+      [LOGICAL]: responsiveEntry(LOGICAL, HASH, WIDTH, HEIGHT),
+      ['arbeiten/9ezd7rz08i9h1.jpg']: responsiveEntry(
+        'arbeiten/9ezd7rz08i9h1.jpg',
+        'aa11bb22',
+        3664,
+        5496,
+      ),
+      ['arbeiten/yz50v4rlf8be1.jpg']: responsiveEntry(
+        'arbeiten/yz50v4rlf8be1.jpg',
+        'cc33dd44',
+        2604,
+        2602,
+      ),
     },
   }
 }
@@ -94,18 +102,23 @@ describe('the section', () => {
   })
 })
 
-describe('the picture', () => {
-  function pictureParts() {
-    const image = screen.getByRole('img', { name: site.works.imageAlt })
+describe('the pictures', () => {
+  function pictureParts(alt: string) {
+    const image = screen.getByRole('img', { name: alt })
     const picture = image.closest('picture')
     if (picture === null) throw new Error('the image is not inside a picture')
     const sources = Array.from(picture.querySelectorAll('source'))
     return { image, sources }
   }
 
+  it('renders one picture per configured works image', () => {
+    render(<WorksSection />)
+    expect(screen.getAllByRole('img')).toHaveLength(site.works.images.length)
+  })
+
   it('emits the sources in the configured order, modern first', () => {
     render(<WorksSection />)
-    const { sources } = pictureParts()
+    const { sources } = pictureParts(site.works.images[0]?.imageAlt ?? '')
     expect(sources.map((source) => source.getAttribute('type'))).toEqual([
       'image/avif',
       'image/webp',
@@ -118,7 +131,7 @@ describe('the picture', () => {
 
   it('uses the widest rung of the universally supported format as the fallback src', () => {
     render(<WorksSection />)
-    const { image, sources } = pictureParts()
+    const { image, sources } = pictureParts(site.works.images[0]?.imageAlt ?? '')
     const jpeg = sources.at(-1)
     expect(jpeg?.getAttribute('type')).toBe('image/jpeg')
     expect(jpeg?.getAttribute('srcset')).toContain(`${LOGICAL}-${HASH}-${WIDTH}.jpeg`)
@@ -127,10 +140,10 @@ describe('the picture', () => {
 
   it('carries the intrinsic dimensions and the configured text alternative', () => {
     render(<WorksSection />)
-    const { image } = pictureParts()
+    const { image } = pictureParts(site.works.images[0]?.imageAlt ?? '')
     expect(image).toHaveAttribute('width', String(WIDTH))
     expect(image).toHaveAttribute('height', String(HEIGHT))
-    expect(image).toHaveAttribute('alt', site.works.imageAlt)
+    expect(image).toHaveAttribute('alt', site.works.images[0]?.imageAlt)
     expect(image).toHaveAttribute('loading', 'lazy')
     expect(image).toHaveAttribute('decoding', 'async')
   })

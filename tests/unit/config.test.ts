@@ -56,12 +56,12 @@ describe('the production gate', () => {
 })
 
 describe('the works group', () => {
-  it('names the same works image as seo.ogImage', () => {
-    expect(site.works.image).toBe(site.seo.ogImage)
+  it('names seo.ogImage among its images', () => {
+    expect(site.works.images.map((entry) => entry.image)).toContain(site.seo.ogImage)
   })
 
-  it('fails by name when works.image and seo.ogImage name different files', () => {
-    const broken = { ...site, works: { ...site.works, image: '/media/arbeiten/other.jpg' } }
+  it('fails by name when seo.ogImage names no works image', () => {
+    const broken = { ...site, seo: { ...site.seo, ogImage: '/media/arbeiten/other.jpg' } }
     const report = validateConfiguration({
       site: broken,
       legal,
@@ -69,11 +69,14 @@ describe('the works group', () => {
       environment: 'production',
     })
     expect(report.ok).toBe(false)
-    expect(report.errors.map((finding) => finding.key)).toContain('works.image')
+    expect(report.errors.map((finding) => finding.key)).toContain('seo.ogImage')
   })
 
-  it('fails by name when works.imageAlt is missing', () => {
-    const broken = { ...site, works: { ...site.works, imageAlt: '' } }
+  it('fails by name when a works imageAlt is missing', () => {
+    const images = site.works.images.map((entry, index) =>
+      index === 1 ? { ...entry, imageAlt: '' } : entry,
+    )
+    const broken = { ...site, works: { ...site.works, images } }
     const report = validateConfiguration({
       site: broken,
       legal,
@@ -81,7 +84,7 @@ describe('the works group', () => {
       environment: 'production',
     })
     expect(report.ok).toBe(false)
-    expect(report.errors.map((finding) => finding.key)).toContain('works.imageAlt')
+    expect(report.errors.map((finding) => finding.key)).toContain('works.images[1].imageAlt')
   })
 })
 

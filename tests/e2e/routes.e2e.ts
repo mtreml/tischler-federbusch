@@ -21,8 +21,10 @@ test('the works section anchors below the landing in the one document', async ({
   const section = page.locator('#arbeiten')
   await expect(section).toBeAttached()
   await expect(section.getByText('Handgemachte Möbel für Generationen.')).toBeAttached()
-  // Intrinsic dimensions reserve the box (CLS ≈ 0).
-  const image = section.locator('picture img')
+  // Intrinsic dimensions reserve the box (CLS ≈ 0): one picture per works image.
+  const images = section.locator('picture img')
+  await expect(images).toHaveCount(3)
+  const image = images.first()
   const firstSource = section.locator('picture source').first()
   await expect(firstSource).toHaveAttribute('type', 'image/avif')
   await expect(firstSource).toHaveAttribute(

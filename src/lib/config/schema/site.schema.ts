@@ -87,8 +87,14 @@ export const siteSchema = z.object({
   }),
 
   works: z.object({
-    image: checkedString(isAssetPath, 'must be a rooted asset path'),
-    imageAlt: z.string(),
+    images: z
+      .array(
+        z.object({
+          image: checkedString(isAssetPath, 'must be a rooted asset path'),
+          imageAlt: z.string(),
+        }),
+      )
+      .min(1),
   }),
 
   navigation: z.object({

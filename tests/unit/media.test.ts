@@ -12,8 +12,8 @@ import { posterPathFor } from '@mtreml/portfolio-core/media'
 /* ══════════════════════════════════════════════════════════════════════════════
    THE DECLARED MEDIA SET
 
-   The set is static and small — one master, its poster, one Works image — so the
-   invariants are structural rather than statistical:
+   The set is static and small — one master, its poster, three Works images — so
+   the invariants are structural rather than statistical:
 
      • A logical path is a served path with `media.basePath` removed: relative,
        well-formed, with an extension. A defect here surfaces as a variant the
@@ -34,11 +34,13 @@ const ROOT = process.cwd()
 const declared = declaredMedia(ROOT)
 
 describe('the declared media set', () => {
-  it('declares exactly the landing master, its poster, and the Works image', () => {
+  it('declares exactly the landing master, its poster, and the Works images', () => {
     expect(declared.map((entry) => entry.logicalPath)).toEqual([
       'landing/VID_20261114_082951.mp4',
       'landing/VID_20261114_082951-poster.jpg',
       'arbeiten/signal-2026-07-20-20-14-59-447_003.jpg',
+      'arbeiten/9ezd7rz08i9h1.jpg',
+      'arbeiten/yz50v4rlf8be1.jpg',
     ])
   })
 
@@ -74,12 +76,13 @@ describe('the declared media set', () => {
     expect(poster.targetWidth).toBe(1280)
   })
 
-  it('declares the Works image responsive, with no per-asset width', () => {
-    const works = declared[2] as DeclaredMedia
-    expect(works.role).toBe('responsive')
-    expect(works.targetWidth).toBeUndefined()
-    expect(works.videoProfile).toBeUndefined()
-    expect(works.active).toBe(true)
+  it('declares every Works image responsive, with no per-asset width', () => {
+    for (const works of declared.slice(2)) {
+      expect(works.role).toBe('responsive')
+      expect(works.targetWidth).toBeUndefined()
+      expect(works.videoProfile).toBeUndefined()
+      expect(works.active).toBe(true)
+    }
   })
 
   it('points every non-derived original at media-originals/<logical path>', () => {
