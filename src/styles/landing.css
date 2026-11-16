@@ -44,6 +44,8 @@
 .landing__logo {
   width: var(--logo-landing-width);
   height: auto;
+  /* The mark is a sign, not text: never selectable or drag-selectable. */
+  user-select: none;
 }
 
 /* The name's box: the shared `--name-width*` family, height derived from the viewBox. */
@@ -55,6 +57,8 @@
   display: block;
   width: var(--name-width);
   height: auto;
+  /* The wordmark is a sign, not text: never selectable or drag-selectable. */
+  user-select: none;
 }
 
 @media (min-width: var(--breakpoint-md)) {
@@ -90,7 +94,8 @@
 /* Reduced motion: the pending state is the final state — no blur, no fade, playback at once. */
 @media (prefers-reduced-motion: reduce) {
   .landing__video,
-  .landing__lockup {
+  .landing__lockup,
+  .header .menu-button {
     transition: none;
   }
 
@@ -99,6 +104,10 @@
   }
 
   .landing__stage[data-intro='pending'] .landing__lockup {
+    opacity: 1;
+  }
+
+  .header[data-intro='pending'] .menu-button {
     opacity: 1;
   }
 }
@@ -120,6 +129,16 @@
   top: var(--name-header-top);
   right: var(--spacing-gutter);
   pointer-events: auto;
+}
+
+/* The hamburger joins the intro: hidden while the lockup fades in, then eases in on the
+   same shared timeline — one figure, one curve, with the mark and the name. */
+.header .menu-button {
+  transition: opacity var(--duration-intro) var(--ease-quiet);
+}
+
+.header[data-intro='pending'] .menu-button {
+  opacity: 0;
 }
 
 /* The warm background: opacity is the name's travel progress (`src/lib/landing-scroll.ts`).

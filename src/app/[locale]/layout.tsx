@@ -11,7 +11,7 @@ import { site } from '@/config/site.config'
 import { pathFor } from '@/i18n/paths'
 import { routing } from '@/i18n/routing'
 import { MenuProvider } from '@/lib/menu'
-import { applyTitleTemplate, resolveCanonicalUrl } from '@/lib/config/resolve'
+import { resolveCanonicalUrl } from '@/lib/config/resolve'
 
 import '@/styles/globals.css'
 
@@ -36,9 +36,9 @@ import '@/styles/globals.css'
    ══════════════════════════════════════════════════════════════════════════════ */
 
 /* The document metadata, from the central configuration (replacing the
-   original placeholder). The layout carries the site-wide set: the title — the
-   identity's own line through the one template, so a page supplies only its
-   own half — the default description, the landing's canonical, and the
+   original placeholder). The layout carries the site-wide set: the title —
+   the site's own line, so a page without a title shows it — the default
+   description, the landing's canonical, and the
    OpenGraph set, whose image is the Works image (`seo.ogImage`). Pages
    override title/description/canonical for their own document (the legal
    page does) and inherit the OG set; `scripts/check-metadata.ts` stays a
@@ -50,7 +50,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
 
-  const title = applyTitleTemplate(site.identity.tagline)
+  const title = site.seo.title
   const canonical = resolveCanonicalUrl(pathFor({ href: '/', locale }))
   const ogImage = resolveCanonicalUrl(site.seo.ogImage)
 

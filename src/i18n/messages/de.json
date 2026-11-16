@@ -19,7 +19,7 @@
     "toLanding": "Zur Startseite"
   },
   "footer": {
-    "creditPrefix": "Website von"
+    "creditPrefix": "Made with care & love by"
   },
   "impressumDatenschutz": {
     "heading": "Impressum & Datenschutz",
@@ -27,11 +27,6 @@
     "lastChangedLabel": "Zuletzt geändert:",
     "impressum": "1. Impressum",
     "datenschutz": "2. Datenschutzerklärung",
-    "urheberrecht": "3. Urheberrecht",
-    "responsible": "Für den Inhalt verantwortlich:",
-    "retention": "Protokolldaten werden {days} Tage lang gespeichert.",
-    "rightsLabel": "Rechte der betroffenen Personen:",
-    "rightsExercisePrefix": "Diese Rechte können Sie über",
-    "rightsExerciseSuffix": "ausüben."
+    "urheberrecht": "3. Urheberrecht"
   }
 }

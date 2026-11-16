@@ -78,6 +78,8 @@
   display: block;
   width: var(--name-width);
   height: auto;
+  /* The wordmark is a sign, not text: never selectable or drag-selectable. */
+  user-select: none;
 }
 
 @media (min-width: var(--breakpoint-md)) {

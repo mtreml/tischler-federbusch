@@ -158,6 +158,8 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   f.require('footer.credit', site.footer.credit)
   f.require('footer.creditUrl', site.footer.creditUrl)
 
+  f.require('seo.title', site.seo.title)
+
   if (
     f.require('seo.titleTemplate', site.seo.titleTemplate) &&
     !site.seo.titleTemplate.includes('%s')
@@ -205,37 +207,7 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
 function checkLegal(legal: LegalConfig, f: FindingCollector): void {
   f.require('legal.lastChanged', legal.lastChanged)
 
-  f.require('legal.datenschutz.processedData', legal.datenschutz.processedData)
-
-  const { hosting } = legal.datenschutz
-  f.require('legal.datenschutz.hosting.provider', hosting.provider)
-  f.require('legal.datenschutz.hosting.country', hosting.country)
-  f.require('legal.datenschutz.hosting.note', hosting.note)
-
-  // hosting.note is the reader-facing copy of the fields — check it against them.
-  if (!isBlank(hosting.note)) {
-    if (!isBlank(hosting.provider) && !hosting.note.includes(hosting.provider)) {
-      f.contradiction(
-        'legal.datenschutz.hosting.note',
-        `does not name the configured provider "${hosting.provider}"`,
-      )
-    }
-    if (!isBlank(hosting.country) && !hosting.note.includes(hosting.country)) {
-      f.contradiction(
-        'legal.datenschutz.hosting.note',
-        `does not name the configured country "${hosting.country}"`,
-      )
-    }
-  }
-
-  if (f.require('legal.datenschutz.rights', legal.datenschutz.rights)) {
-    legal.datenschutz.rights.forEach((right, index) => {
-      const at = `legal.datenschutz.rights[${index}]`
-      if (isBlank(right.id)) f.unfilled(`${at}.id`)
-      if (isBlank(right.label)) f.unfilled(`${at}.label`)
-      if (isBlank(right.text)) f.unfilled(`${at}.text`)
-    })
-  }
+  f.require('legal.datenschutz.protocolText', legal.datenschutz.protocolText)
 
   f.require('legal.urheberrecht', legal.urheberrecht)
 }

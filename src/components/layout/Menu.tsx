@@ -98,8 +98,18 @@ function useMenuMotion(): MenuMotion | null {
 
 const MotionNameLink = motion.create(Link)
 
-export function Menu() {
+// The panel's X must not be a frozen prop: `AnimatePresence` keeps the removed panel mounted
+// with the last rendered element, but its subtree still re-renders on context changes. Reading
+// the state here (not at the panel's render) lets the X play the reverse morph while the panel
+// exits — it sits exactly over the header's button, so the two stay in lockstep and the
+// header's morph is never visible through the fading background.
+function PanelCloseButton() {
   const { isOpen, close } = useMenu()
+  return <MenuButton open={isOpen} onToggle={() => close()} controlsId={MENU_PANEL_ID} />
+}
+
+export function Menu() {
+  const { isOpen } = useMenu()
   const t = useTranslations('menu')
   const contact = resolveContact()
 
@@ -191,7 +201,7 @@ export function Menu() {
             <Name className="menu__name-image" />
           </MotionNameLink>
           <div className="menu__close">
-            <MenuButton open onToggle={() => close()} controlsId={MENU_PANEL_ID} />
+            <PanelCloseButton />
           </div>
           <nav className="menu__entries">
             {site.navigation.items.map((item, index) => renderEntry(item, index))}

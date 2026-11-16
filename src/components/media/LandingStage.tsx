@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { Logo } from '@/components/brand/Logo'
 import { Name } from '@/components/brand/Name'
@@ -18,14 +18,15 @@ import type { ResolvedVideo } from '@mtreml/portfolio-core/media'
    after which playback starts and runs on repeat.
 
    ── The intro, and why it is CSS-driven ──────────────────────────────────────
-   The stage starts with `data-intro="pending"`: the video carries
+   The stage carries `data-intro`: while `pending`, the video holds
    `filter: blur(var(--intro-blur))` and the lockup `opacity: 0` (see
-   `styles/landing.css`). The effect below flips the attribute on the second
-   animation frame — the first one paints the pending state, the second lets
-   the browser commit it, so the transition the flip starts is the one a
-   visitor sees rather than one they miss. Both properties transition on
-   `--duration-intro` with `--ease-quiet`, which is the shared timeline and
-   the shared easing: one figure, one curve, two properties.
+   `styles/landing.css`). The attribute flips to `done` on the second
+   animation frame, from the intro's owner (`LandingIntro`) — the first frame
+   paints the pending state, the second lets the browser commit it, so the
+   transition the flip starts is the one a visitor sees rather than one they
+   miss. Both properties transition on `--duration-intro` with `--ease-quiet`,
+   which is the shared timeline and the shared easing: one figure, one curve,
+   two properties.
 
    The JavaScript side is `site.landing.introDurationMs` (the same 1500 ms,
    kept in step by review — the boundary note in `tokens.css`): the timer
@@ -56,22 +57,16 @@ export interface LandingStageProps {
   objectFit: 'cover' | 'contain' | 'fill'
   /** `site.landing.introDurationMs` — the JS side of `--duration-intro`. */
   introDurationMs: number
+  /** The intro's state, owned by `LandingIntro` — shared with the header's hamburger. */
+  introDone: boolean
 }
 
-export function LandingStage({ video, label, objectFit, introDurationMs }: LandingStageProps) {
+export function LandingStage({ video, label, objectFit, introDurationMs, introDone }: LandingStageProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const logoRef = useRef<HTMLImageElement>(null)
   const reducedMotion = usePrefersReducedMotion()
-  const [introDone, setIntroDone] = useState(false)
 
   useEffect(() => {
-    /* The poster is what a no-script visitor keeps, so the pending state must
-       paint before it flips: frame one paints it, frame two commits it. */
-    let secondFrame = 0
-    const firstFrame = requestAnimationFrame(() => {
-      secondFrame = requestAnimationFrame(() => setIntroDone(true))
-    })
-
     /* `play()` on the beat the deblur lands. Reduced motion: at once. A
        rejected `play()` (a policy refusal, a device under load) is not a
        defect: the poster is the master's own opening frame, and the backdrop
@@ -84,11 +79,7 @@ export function LandingStage({ video, label, objectFit, introDurationMs }: Landi
       reducedMotion ? 0 : introDurationMs,
     )
 
-    return () => {
-      cancelAnimationFrame(firstFrame)
-      cancelAnimationFrame(secondFrame)
-      clearTimeout(playTimer)
-    }
+    return () => clearTimeout(playTimer)
   }, [reducedMotion, introDurationMs])
 
   return (

@@ -43,6 +43,7 @@ export const site: SiteConfig = {
   },
 
   seo: {
+    title: 'Federbusch | Tischlermeister',
     titleTemplate: '%s — Lukas Federbusch',
     defaultDescription: 'Handgemachte Möbel für Generationen — Lukas Federbusch, Lienz.',
     structuredDataType: 'Person',

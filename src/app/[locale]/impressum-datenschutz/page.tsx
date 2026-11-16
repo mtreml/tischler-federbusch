@@ -12,8 +12,8 @@ import { applyTitleTemplate, resolveCanonicalUrl, resolveContact } from '@/lib/c
 
    Replaces the original placeholder. The legal *prose* is German configuration
    data (`legal.config.ts`) rendered verbatim; the structural labels (the
-   heading, "Zuletzt geändert:", the section titles, the rights' closing
-   sentence) come from the locale messages — the established split. No
+   heading, "Zuletzt geändert:", the section titles) come from the locale
+   messages — the established split. No
    portfolio-core pattern is re-used for this view (spec): it is a plain
    static document that reads config and messages.
 
@@ -63,7 +63,6 @@ export default async function ImpressumDatenschutzPage({
 
   const t = await getTranslations('impressumDatenschutz')
   const contact = resolveContact()
-  const rights = legal.datenschutz.rights
 
   return (
     <>
@@ -86,7 +85,9 @@ export default async function ImpressumDatenschutzPage({
               </span>
             ))}
             <span className="legal__line">
-              <a href={contact.telHref}>{contact.phoneDisplay}</a> ·{' '}
+              <a href={contact.telHref}>{contact.phoneDisplay}</a>
+            </span>
+            <span className="legal__line">
               <a href={contact.mailtoHref}>{contact.email}</a>
             </span>
           </p>
@@ -94,28 +95,7 @@ export default async function ImpressumDatenschutzPage({
 
         <section className="legal__section">
           <h2>{t('datenschutz')}</h2>
-          {/* The responsible party resolves to `contact.name` — there is no
-              second copy of the name in the configuration. */}
-          <p>
-            {t('responsible')} {contact.name}
-          </p>
-          <p>{legal.datenschutz.processedData}</p>
-          <p>{legal.datenschutz.hosting.note}</p>
-          <p>{t('retention', { days: legal.datenschutz.retentionDays })}</p>
-          <p>{t('rightsLabel')}</p>
-          <ul className="legal__rights">
-            {rights.map((right) => (
-              <li key={right.id} id={right.id}>
-                <strong>{right.label}</strong> — {right.text}
-              </li>
-            ))}
-          </ul>
-          {/* The email renders from the resolved contact, not from the message
-              — the address lives in `contact.*` in exactly one place. */}
-          <p>
-            {t('rightsExercisePrefix')} <a href={contact.mailtoHref}>{contact.email}</a>{' '}
-            {t('rightsExerciseSuffix')}
-          </p>
+          <p className="legal__protocol">{legal.datenschutz.protocolText}</p>
         </section>
 
         <section className="legal__section">

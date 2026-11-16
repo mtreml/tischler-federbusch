@@ -78,6 +78,8 @@ export const siteSchema = z.object({
   }),
 
   seo: z.object({
+    /** The site's own title: the tab title of the landing document. */
+    title: z.string(),
     /** `%s` is replaced with the document's own title. */
     titleTemplate: z.string(),
     defaultDescription: z.string(),

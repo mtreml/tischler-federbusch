@@ -31,14 +31,25 @@ import { MenuButton } from './MenuButton'
    The name's home position top left is **not** here: it is the name-scroll
    instance and the menu's, both reading the base tokens —
    the header reserves the slot, the name occupies it.
+
+   ── The intro ────────────────────────────────────────────────────────────────
+   On the landing, `introPending` mirrors the stage's `data-intro="pending"`:
+   while the lockup fades in, the hamburger sits at `opacity: 0` and eases in
+   on the same `--duration-intro` / `--ease-quiet` beat (`src/styles/landing.css`),
+   so mark, name and button arrive together.
    ══════════════════════════════════════════════════════════════════════════════ */
 
-export function Header() {
+interface HeaderProps {
+  /** The landing intro's pending state, from `LandingIntro`; off everywhere else. */
+  introPending?: boolean
+}
+
+export function Header({ introPending = false }: HeaderProps) {
   const progress = useLandingProgress()
   const menu = useMenu()
 
   return (
-    <header className="header">
+    <header className="header" data-intro={introPending ? 'pending' : undefined}>
       <div className="header__background" style={{ opacity: progress }} aria-hidden="true" />
       <div className="header__actions">
         <MenuButton

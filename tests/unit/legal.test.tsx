@@ -13,9 +13,8 @@ import { MenuProvider } from '@/lib/menu'
    real `de.json`, stubs `setRequestLocale`, and renders through the server
    renderer, which is what awaits it — the same path the static export takes,
    so the assertions run on the emitted static HTML: the no-JS invariant,
-   unit-level. Interpolation resolves the way next-intl would; the exercise-via
-   sentence's email renders from the resolved contact, not from the message,
-   so the address stays in `contact.*` in exactly one place. */
+   unit-level. The contact email renders from the resolved contact, not from
+   the messages, so the address stays in `contact.*` in exactly one place. */
 vi.mock('next-intl/server', async () => {
   const { default: messages } = await import('@/i18n/messages/de.json')
   const table = messages as unknown as Record<string, Record<string, string>>
@@ -44,9 +43,8 @@ vi.mock('next-intl/server', async () => {
 
      • the heading structure: the one h1, the three numbered h2 sections in
        the spec's order;
-     • `lastChanged`, the processed-data paragraph, the hosting note and the
-       urheberrecht paragraph render verbatim from `legal.config.ts`;
-     • the five rights render in configured order, with their `id`s;
+     • `lastChanged`, the protocol block and the urheberrecht paragraph
+       render verbatim from `legal.config.ts`;
      • the contact values come from `contact.*` through `resolveContact()` —
        asserted by changing the configuration and watching the render follow.
    ══════════════════════════════════════════════════════════════════════════════ */
@@ -88,46 +86,23 @@ describe('the configured text', () => {
     )
   })
 
-  it('renders the verbatim paragraphs from the configuration', async () => {
+  it('renders the verbatim text from the configuration', async () => {
     const doc = await renderLegal()
     const body = doc.body.textContent
-    expect(body).toContain(legal.datenschutz.processedData)
-    expect(body).toContain(legal.datenschutz.hosting.note)
-    /* The retention line interpolates the configured days into the message. */
-    expect(body).toContain(
-      messages.impressumDatenschutz.retention.replace(
-        '{days}',
-        String(legal.datenschutz.retentionDays),
-      ),
+    /* The protocol block renders as one text node — its newlines are
+       preserved, not collapsed. */
+    expect(doc.querySelector('.legal__protocol')?.textContent).toBe(
+      legal.datenschutz.protocolText,
     )
     expect(body).toContain(legal.urheberrecht)
   })
 
-  it('renders the five rights in configured order, with their ids', async () => {
-    const doc = await renderLegal()
-
-    const items = Array.from(doc.querySelectorAll('.legal__rights li'))
-    expect(items).toHaveLength(legal.datenschutz.rights.length)
-    items.forEach((item, index) => {
-      const right = legal.datenschutz.rights[index]
-      expect(right).toBeDefined()
-      if (right === undefined) return
-      expect(item.id).toBe(right.id)
-      expect(item.textContent).toContain(right.label)
-      expect(item.textContent).toContain(right.text)
-    })
-  })
-
-  it('exercises the rights through the configured email, as a mailto link', async () => {
+  it('links the contact email, as a mailto', async () => {
     const doc = await renderLegal()
     const mailto = Array.from(doc.querySelectorAll('a[href^="mailto:"]'))
-    /* The impressum block and the exercise-via sentence — both the same one
-       address, resolved, never re-declared. */
-    expect(mailto).toHaveLength(2)
-    mailto.forEach((link) => {
-      expect(link.getAttribute('href')).toBe(`mailto:${site.contact.email}`)
-      expect(link.textContent).toBe(site.contact.email)
-    })
+    expect(mailto).toHaveLength(1)
+    expect(mailto[0]?.getAttribute('href')).toBe(`mailto:${site.contact.email}`)
+    expect(mailto[0]?.textContent).toBe(site.contact.email)
   })
 })
 
@@ -147,9 +122,7 @@ describe('the contact block', () => {
     const doc = await renderLegal()
     const body = doc.body.textContent
 
-    /* The name: the impressum block and the responsible sentence. */
     expect(body).toContain('Test Person')
-    expect(body).toContain('Für den Inhalt verantwortlich: Test Person')
     expect(body).not.toContain('Hochschoberstraße 12, Top 16')
 
     /* The address lines, one block-level span each. */
@@ -159,6 +132,6 @@ describe('the contact block', () => {
     /* The contact links, from the configuration, with the schemes resolved. */
     const tel = doc.querySelector('a[href^="tel:"]')
     expect(tel?.textContent).toBe('0123 456')
-    expect(doc.querySelectorAll('a[href="mailto:test@example.at"]')).toHaveLength(2)
+    expect(doc.querySelectorAll('a[href="mailto:test@example.at"]')).toHaveLength(1)
   })
 })

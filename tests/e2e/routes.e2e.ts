@@ -57,8 +57,8 @@ test('the menu entry lands on the works section', async ({ page }) => {
 test('the footer line closes the one-scroll document', async ({ page }) => {
   await page.goto('/de/')
   const footer = page.locator('footer')
-  await expect(footer.getByText(/© Lukas Federbusch \d{4}/)).toBeVisible()
-  await expect(footer.getByText('Website von')).toBeVisible()
+  await expect(footer.getByText(/© \d{4} Lukas Federbusch/)).toBeVisible()
+  await expect(footer.getByText('Made with care & love by')).toBeVisible()
 
   // Plain link, plain navigation — no transition.
   const legalLink = footer.getByRole('link', { name: 'Impressum & Datenschutz' })

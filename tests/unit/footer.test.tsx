@@ -8,7 +8,7 @@ import { site } from '@/config/site.config'
 import { resolveCopyrightHolder } from '@/lib/config/resolve'
 
 /* The footer is a server component — async, because it reads its one
-   structural label ("Website von") through the locale messages. The harness
+   structural label ("Made with care & love by") through the locale messages. The harness
    supplies those from the real `de.json` (the component must not carry the
    label itself) and renders through the server renderer's stream, which is
    what awaits it — the same path the static export takes, so the assertion
@@ -32,7 +32,7 @@ vi.mock('next-intl/server', async () => {
 /* ══════════════════════════════════════════════════════════════════════════════
    THE FOOTER
 
-   The line at the end of the one-scroll document, pinned to the contract a
+   The single line at the end of the one-scroll document, pinned to the contract a
    visitor's browser sees:
 
      • the holder renders from `resolveCopyrightHolder()` and the year is
@@ -67,7 +67,7 @@ describe('the footer', () => {
     const holder = resolveCopyrightHolder()
     expect(holder).toBe(site.contact.name)
     const copyright = doc.querySelector('.site-footer__copyright')
-    expect(copyright?.textContent).toMatch(new RegExp(`^© ${holder} \\d{4}$`))
+    expect(copyright?.textContent).toMatch(new RegExp(`^© \\d{4} ${holder}$`))
   })
 
   it('links to the legal page with plain navigation — no data-transition', async () => {
@@ -95,7 +95,7 @@ describe('the footer', () => {
     expect(creditLink?.getAttribute('rel')).toBe('noreferrer')
     expect(creditLink?.textContent).toBe(site.footer.credit)
     /* The structural label renders from the messages, not from the component. */
-    expect(doc.querySelector('.site-footer__credit')?.textContent).toMatch(/Website von/)
+    expect(doc.querySelector('.site-footer__credit')?.textContent).toMatch(/Made with care & love by/)
   })
 
   it('is a `<footer>` and carries no contact links — contact is menu-only', async () => {

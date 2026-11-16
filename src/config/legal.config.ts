@@ -10,8 +10,6 @@ import type { LegalConfig } from '@/lib/config/schema/legal.schema'
    • The impressum block. It reads `site.contact.*` at render time — name,
      address, telephone and email live in exactly one place, and the legal
      page and the menu cannot disagree.
-   • "Für den Inhalt verantwortlich" (→ `contact.name`) and the
-     exercise-of-rights address (→ `contact.email`), resolved the same way.
 
    The professional review is still outstanding when the last field is filled
    — it is a launch gate on the finished text, and no build can discharge it.
@@ -22,58 +20,16 @@ export const legal: LegalConfig = {
   lastChanged: '16. November 2026',
 
   /* ── 2. Datenschutzerklärung ──────────────────────────────────────────────────
-     `responsible` is not a key here: it resolves to `site.contact.name` at
-     render time, and so does the address the rights are exercised through. */
+     The protocol/hosting/retention text as one block; the blank lines are
+     paragraph breaks, rendered verbatim. */
   datenschutz: {
-    /* The web-server-protocol paragraph, verbatim from the spec. */
-    processedData:
-      'Der Webserver protokolliert jeden Abruf mit IP-Adresse, Zeitpunkt,' +
-      'und der vom Browser übermittelten Programmkennung. Die Protokolle dienen ' +
-      'ausschließlich dem sicheren Betrieb der Webseite und der Fehlersuche.',
-
-    /* IONOS GmbH, Germany, our Auftrag. `note` is the disclosure sentence
-       verbatim; `provider` and `country` are the structured halves of the same
-       fact, and validation keeps the sentence naming both of them. */
-    hosting: {
-      provider: 'IONOS GmbH',
-      country: 'Deutschland',
-      note: 'Diese Webseite wird auf einem Server von IONOS GmbH in Deutschland bereitstellt. Dabei werden die oben genannten Protokolldaten verarbeitet.',
-    },
-
-    /* "Speicherdauer in Tagen". */
-    retentionDays: 60,
-
-    /* The five GDPR rights, in the order the page renders them, exercised
-       through `site.contact.email`. German working translation — the wording is
-       confirmed before ship (01-open-questions.md), which is why the text is
-       data here and not prose in a component: one edit per right, in one file. */
-    rights: [
-      {
-        id: 'zugang',
-        label: 'Auskunft',
-        text: 'Sie können eine Kopie der personenbezogenen Daten, die wir über Sie führen, anfordern.',
-      },
-      {
-        id: 'berichtigung',
-        label: 'Berichtigung',
-        text: 'Sie können unrichtige oder unvollständige Daten berichtigen lassen.',
-      },
-      {
-        id: 'loeschung',
-        label: 'Löschung',
-        text: 'Sie können die Löschung Ihrer Daten verlangen.',
-      },
-      {
-        id: 'widerspruch',
-        label: 'Widerspruch',
-        text: 'Sie können sich der Verarbeitung Ihrer Daten widersprechen.',
-      },
-      {
-        id: 'widerruf',
-        label: 'Widerruf der Einwilligung',
-        text: 'Sie können eine erteilte Einwilligung jederzeit widerrufen.',
-      },
-    ],
+    protocolText:
+      'Der Webserver protokolliert jeden Abruf mit IP-Adresse, Zeitpunkt, und der vom ' +
+      'Browser übermittelten Programmkennung. Die Protokolle dienen ausschließlich ' +
+      'dem sicheren Betrieb der Webseite und der Fehlersuche.\n\n' +
+      'Diese Webseite wird auf einem Server von IONOS GmbH in Deutschland bereitstellt. ' +
+      'Dabei werden die oben genannten Protokolldaten verarbeitet.\n\n' +
+      'Protokolldaten werden 60 Tage lang gespeichert.',
   },
 
   /* ── 3. Urheberrecht ──────────────────────────────────────────────────────────

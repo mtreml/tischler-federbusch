@@ -1,6 +1,6 @@
 import { setRequestLocale } from 'next-intl/server'
 
-import { LandingStage } from '@/components/media/LandingStage'
+import { LandingIntro } from '@/views/LandingIntro'
 import { site } from '@/config/site.config'
 import { media, videoDelivery } from '@/config/media.config'
 import { toLogicalPath } from '@mtreml/portfolio-core/media'
@@ -35,7 +35,7 @@ export default async function LandingView({ params }: { params: Promise<{ locale
   return (
     <section className="landing" aria-label={site.identity.displayName}>
       <h1 className="sr-only">{site.identity.displayName}</h1>
-      <LandingStage
+      <LandingIntro
         video={video}
         label={site.landing.videoLabel}
         objectFit={site.landing.objectFit}

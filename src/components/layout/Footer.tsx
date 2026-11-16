@@ -11,7 +11,7 @@ import { resolveCopyrightHolder } from '@/lib/config/resolve'
    entry and the credit. Every value resolves from the central configuration
    at render — the holder through `resolveCopyrightHolder()` (so there is no
    second name), the credit name and target from `footer.*`, the one
-   structural label ("Website von") from the locale messages. Pure server
+   structural label ("Made with care & love by") from the locale messages. Pure server
    component, no state; the static export prerenders it, and the no-JS
    visitor gets the same line.
 
@@ -34,7 +34,7 @@ export async function Footer() {
     <footer className="site-footer">
       <div className="site-footer__row">
         <p className="site-footer__copyright">
-          © {holder} {year}
+          © {year} {holder}
         </p>
         {/* Plain navigation: no `data-transition`, so the sequence never sees it. */}
         <Link className="site-footer__legal" href="/impressum-datenschutz">

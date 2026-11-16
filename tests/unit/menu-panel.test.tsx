@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { Menu } from '@/components/layout/Menu'
 import { Header } from '@/components/layout/Header'
@@ -109,6 +109,51 @@ describe('the dialog contract', () => {
        beat, not a synchronous unmount. */
     fireEvent.click(within(panel(view)).getByRole('button'))
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), { timeout: 1000 })
+    view.unmount()
+  })
+})
+
+describe('the close morph', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('the panel\'s X tracks the live state while the panel exits — no frozen X', async () => {
+    /* Hold the exit long enough to observe it: the motion tokens resolve to a
+       ten-second close, so the panel stays mounted through the assertion. */
+    const tokens: Record<string, string> = {
+      '--duration-menu': '10s',
+      '--duration-menu-items': '10s',
+      '--menu-item-rise': '10px',
+      '--ease-quiet': 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+    }
+    vi.spyOn(window, 'getComputedStyle').mockImplementation(() =>
+      ({
+        fontSize: '16px',
+        getPropertyValue: (name: string) => tokens[name] ?? '',
+      }) as unknown as CSSStyleDeclaration,
+    )
+
+    const view = renderClosed()
+    openMenu(view)
+    const closeButton = within(panel(view)).getByRole('button')
+    expect(closeButton).toHaveAttribute('aria-expanded', 'true')
+
+    fireEvent.click(closeButton)
+
+    /* While the exit runs, the panel is still mounted — and the X in it must
+       already be morphing back: the same two lines, one continuous movement
+       in both directions. */
+    await waitFor(() => {
+      const node = view.container.querySelector<HTMLElement>(`#${MENU_PANEL_ID}`)
+      expect(node).not.toBeNull()
+      if (node === null) return
+      expect(node.querySelector('button[aria-controls="site-menu"]')).toHaveAttribute(
+        'aria-expanded',
+        'false',
+      )
+    }, { timeout: 1000 })
+
     view.unmount()
   })
 })
