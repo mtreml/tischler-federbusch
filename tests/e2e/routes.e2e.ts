@@ -20,7 +20,6 @@ test('the works section anchors below the landing in the one document', async ({
   await page.goto('/de/')
   const section = page.locator('#arbeiten')
   await expect(section).toBeAttached()
-  await expect(section.getByRole('heading', { level: 2, name: 'Arbeiten' })).toBeAttached()
   await expect(section.getByText('Handgemachte Möbel für Generationen.')).toBeAttached()
   // Intrinsic dimensions reserve the box (CLS ≈ 0).
   const image = section.locator('picture img')

@@ -12,8 +12,8 @@ import { setPrefersReducedMotion } from './match-media'
 
 const TOKENS: Record<string, string> = {
   '--color-background': '#faf7f1',
-  '--duration-transition-cover': '360ms',
-  '--duration-transition-reveal': '420ms',
+  '--duration-transition-cover': '720ms',
+  '--duration-transition-reveal': '840ms',
   '--ease-quiet': 'cubic-bezier(0.3, 0, 0.2, 1)',
   '--spinner-size': '2rem',
 }

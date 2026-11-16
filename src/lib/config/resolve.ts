@@ -34,12 +34,3 @@ export function resolveCanonicalUrl(path: string): string {
   return `${origin}${suffix}`
 }
 
-// The works heading: the label of the menu entry pointing at `arbeiten`, declared once in `navigation.items`.
-export function resolveWorksHeading(): string {
-  for (const item of site.navigation.items) {
-    if (item.type === 'anchor' && item.anchor === 'arbeiten') return item.label
-  }
-  throw new Error(
-    'navigation.items carries no anchor entry for "arbeiten" — the works section has no heading to read',
-  )
-}

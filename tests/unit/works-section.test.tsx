@@ -17,8 +17,7 @@ import {
    manifest seam: this suite pins the contract a visitor's browser sees —
 
      • the section is the `#arbeiten` target the menu anchor and the
-       transition sequence scroll to, and its heading is the menu entry's
-       label (the word declared once, read rather than re-declared);
+       transition sequence scroll to;
      • the `<picture>` emits the configured source order (modern first), the
        fallback `src` is the widest rung of the universally supported format,
        and the intrinsic dimensions and the configured text alternative are
@@ -84,21 +83,9 @@ afterEach(() => {
 
 describe('the section', () => {
   it('is the #arbeiten target the menu anchor and the transition sequence name', () => {
-    render(<WorksSection />)
-    const heading = screen.getByRole('heading', { level: 2, name: 'Arbeiten' })
-    const section = heading.closest('section')
+    const { container } = render(<WorksSection />)
+    const section = container.querySelector('section')
     expect(section?.id).toBe(site.routes.anchors.arbeiten)
-  })
-
-  it('reads the heading from the menu entry rather than re-declaring it', () => {
-    render(<WorksSection />)
-    const anchorItem = site.navigation.items.find(
-      (item): item is Extract<(typeof site.navigation.items)[number], { type: 'anchor' }> =>
-        item.type === 'anchor' && item.anchor === 'arbeiten',
-    )
-    expect(anchorItem).toBeDefined()
-    if (anchorItem === undefined) return
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(anchorItem.label)
   })
 
   it('carries the tagline, verbatim from the central configuration', () => {

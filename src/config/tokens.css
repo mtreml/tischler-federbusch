@@ -27,8 +27,8 @@
   --duration-menu: 1280ms;      /* background fade-in */
   --duration-menu-items: 480ms; /* items' travel; longer than the background — they move a distance */
   --menu-item-rise: 1.25rem;   /* entry i rises `× (i + 1)`; the distance gradient is the stagger */
-  --duration-transition-cover: 360ms;
-  --duration-transition-reveal: 420ms;
+  --duration-transition-cover: 720ms;
+  --duration-transition-reveal: 840ms;
   --duration-intro: 1500ms;  /* JS twin: `site.landing.introDurationMs` */
 
   --intro-blur: 8px;
