@@ -1,14 +1,10 @@
-/* THE MENU BUTTON
-   Two lines, one transform: open translates each line to the pair's centre and
-   rotates it to its diagonal. The ±45° are the X's own geometry, not design
-   values, so they live here; every length, the duration and the curve are tokens.
-   The tap target is the button's padding (padded to `--spacing-touch-target`), not the lines. */
+/* The ±45° are the X's own geometry, not design values, so they live here; every other value is a token.
+   The tap target is the button's padding, not the lines. */
 
 .menu-button {
   display: inline-flex;
   flex-direction: column;
   gap: var(--menu-btn-gap);
-  /* Pad to exactly the touch target; the remainder splits evenly over the four sides. */
   padding: calc(
     (var(--spacing-touch-target) - 2 * var(--menu-btn-line-thickness) - var(--menu-btn-gap)) / 2
   );
@@ -26,7 +22,6 @@
   transition: transform var(--duration-menu) var(--ease-quiet);
 }
 
-/* The open state: each line translates to the pair's centre and rotates to its diagonal. */
 .menu-button[aria-expanded='true'] .menu-button__line--top {
   transform: translateY(calc((var(--menu-btn-line-thickness) + var(--menu-btn-gap)) / 2))
     rotate(45deg);
@@ -37,36 +32,28 @@
     rotate(-45deg);
 }
 
-/* Reduced motion: the state swap still happens, nothing moves. */
 @media (prefers-reduced-motion: reduce) {
   .menu-button__line {
     transition: none;
   }
 }
 
-/* THE MENU PANEL
-   Full-page overlay: the background-color layer, the name top left, the X top
-   right, the entry list. This file carries layering and slots — every value a token.
-   The intro and stagger are the motion library's (resolved from tokens in `Menu.tsx`);
-   this file owes the animation no transition or animation of its own. */
+/* This file carries layering and slots; the intro and stagger are the motion library's (resolved in `Menu.tsx`).
 
-/* The panel: above the header (z 40), below the skip link (z 100). The page below is
-   unreachable — covered and scroll-locked. */
+   The panel: above the header (z 40), below the skip link (z 100). */
 .menu {
   position: fixed;
   inset: 0;
   z-index: 50;
 }
 
-/* Opaque at rest; the motion library fades it in/out — no CSS transition here. */
 .menu__background {
   position: absolute;
   inset: 0;
   background-color: var(--color-background);
 }
 
-/* The name at the name-home geometry — the same tokens the header slot reads, so it is
-   byte-identical on the page and in the menu and never moves on open/close. */
+/* The name reads the same tokens the header slot does, so it never moves on open/close. */
 .menu__name {
   position: absolute;
   top: var(--name-header-top);
@@ -78,7 +65,6 @@
   display: block;
   width: var(--name-width);
   height: auto;
-  /* The wordmark is a sign, not text: never selectable or drag-selectable. */
   user-select: none;
 }
 
@@ -94,7 +80,6 @@
   }
 }
 
-/* The X: the same corner the header's hamburger occupies. */
 .menu__close {
   position: absolute;
   top: var(--name-header-top);
@@ -102,8 +87,6 @@
   display: block;
 }
 
-/* The entries, stacked in configured order toward the bottom — resting layout only;
-   the intro stagger and the close sink are the motion library's. */
 .menu__entries {
   position: absolute;
   inset-inline: 0;
@@ -112,7 +95,6 @@
   flex-direction: column;
 }
 
-/* One row: at least the touch target tall, centred, ink only. */
 .menu__entry {
   display: flex;
   align-items: center;
@@ -126,8 +108,7 @@
   text-align: center;
 }
 
-/* Reduced motion: the library's gate collapses durations and rise to zero; this block
-   is the CSS side — whatever this file styles may not move either. */
+/* Reduced motion: the CSS side — whatever this file styles may not move either. */
 @media (prefers-reduced-motion: reduce) {
   .menu,
   .menu * {

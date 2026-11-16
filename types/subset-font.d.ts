@@ -11,7 +11,6 @@ declare module 'subset-font' {
     variationAxes?: Record<string, number | [number, number]>
   }
 
-  /** Subsets `font` to the glyphs reachable from `text`. */
   export default function subsetFont(
     font: Buffer,
     text: string,

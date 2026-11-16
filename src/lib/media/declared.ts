@@ -2,11 +2,8 @@ import { join } from 'node:path'
 
 import { posterPathFor } from '@mtreml/portfolio-core/media'
 
-// The one list that knows where each original lives; the generation script and the
-// render side both consume it. Fixed list, not a content walk: one video, one image.
-//
-// Logical path: the served path minus `media.basePath`, extension kept.
-// Originals live uniformly at `media-originals/<logical path>`.
+// The one list that knows where each original lives; the generation script and the render side both consume it.
+// Logical path: the served path minus `media.basePath`, extension kept; originals live uniformly at `media-originals/<logical path>`.
 
 export type MediaRole = 'responsive' | 'single' | 'video'
 
@@ -14,13 +11,10 @@ export interface DeclaredMedia {
   logicalPath: string
   originalPath: string
   role: MediaRole
-  /** For `single`: the one width to emit. Ignored otherwise. */
   targetWidth?: number
   /** For `video`: which profile in `media.videoEncode` applies. */
   videoProfile?: string
-  /** For a poster: the `video` path whose opening frame is this asset (its `originalPath` is the master's). */
   derivedFrom?: string
-  /** Verbatim declaration, so a failure names the thing to edit. */
   declaredBy: string
   active: boolean
 }

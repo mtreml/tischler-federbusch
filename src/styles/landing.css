@@ -1,23 +1,16 @@
-/* THE LANDING, ITS CHROME AND THE NAME'S TRAVEL
-   Every value a token; this file carries layout structure only. Z ladder: the film
-   is the backdrop, the lockup above it, the header above the lockup, the skip link (globals)
-   above all of it. */
+/* Every value a token. Z ladder: film < lockup < header < skip link (globals). */
 
 .landing {
   position: relative;
   min-block-size: 100svh;
-  /* The deblur bleeds past the film's edges; clipping keeps that from growing the document. */
   overflow: clip;
 }
 
-/* The stage: the full first screenful, `100svh` (the mobile URL-bar-correct unit), with no
-   subtraction of a bar that does not occupy a row. */
 .landing__stage {
   position: relative;
   block-size: 100svh;
 }
 
-/* The film: the whole stage, the configured fit, centered. The intro's deblur transitions this. */
 .landing__video {
   position: absolute;
   inset: 0;
@@ -27,8 +20,6 @@
   transition: filter var(--duration-intro) var(--ease-quiet);
 }
 
-/* The lockup: mark stacked on the wordmark, centered at the landing position. The name
-   inside is in flow — the scroll animation translates it, and nothing else moves on scroll. */
 .landing__lockup {
   position: absolute;
   top: var(--name-landing-top);
@@ -44,11 +35,9 @@
 .landing__logo {
   width: var(--logo-landing-width);
   height: auto;
-  /* The mark is a sign, not text: never selectable or drag-selectable. */
   user-select: none;
 }
 
-/* The name's box: the shared `--name-width*` family, height derived from the viewBox. */
 .landing__name-scroll {
   display: block;
 }
@@ -57,7 +46,6 @@
   display: block;
   width: var(--name-width);
   height: auto;
-  /* The wordmark is a sign, not text: never selectable or drag-selectable. */
   user-select: none;
 }
 
@@ -81,8 +69,7 @@
   }
 }
 
-/* The intro: pending state blurs the film and hides the lockup; the stage flips
-   `data-intro` to `done` (in `LandingStage`) and both ease to rest over `--duration-intro`. */
+/* The intro: pending blurs the film and hides the lockup; `LandingStage` flips `data-intro` to `done` and both ease to rest. */
 .landing__stage[data-intro='pending'] .landing__video {
   filter: blur(var(--intro-blur));
 }
@@ -91,7 +78,7 @@
   opacity: 0;
 }
 
-/* Reduced motion: the pending state is the final state — no blur, no fade, playback at once. */
+/* Reduced motion: the pending state is the final state — no blur, no fade. */
 @media (prefers-reduced-motion: reduce) {
   .landing__video,
   .landing__lockup,
@@ -112,8 +99,6 @@
   }
 }
 
-/* THE HEADER */
-
 .header {
   position: fixed;
   inset-block: 0 auto;
@@ -123,7 +108,6 @@
   pointer-events: none;
 }
 
-/* The one control the bar carries: the hamburger, top right, at the name's own top coordinate. */
 .header__actions {
   position: absolute;
   top: var(--name-header-top);
@@ -131,8 +115,6 @@
   pointer-events: auto;
 }
 
-/* The hamburger joins the intro: hidden while the lockup fades in, then eases in on the
-   same shared timeline — one figure, one curve, with the mark and the name. */
 .header .menu-button {
   transition: opacity var(--duration-intro) var(--ease-quiet);
 }
@@ -141,8 +123,7 @@
   opacity: 0;
 }
 
-/* The warm background: opacity is the name's travel progress (`src/lib/landing-scroll.ts`).
-   Opacity only — the layer itself never moves. */
+/* The warm background: opacity is the name's travel progress (`src/lib/landing-scroll.ts`); opacity only. */
 .header__background {
   position: absolute;
   inset: 0;

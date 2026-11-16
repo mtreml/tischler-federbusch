@@ -1,9 +1,5 @@
 // Media metadata: nothing a camera or phone recorded reaches a visitor.
-// (Opposite direction from `check-metadata.ts`, which is about what a page declares.)
-// Images: no EXIF/XMP/IPTC at all. Video: a denylist of keys that disclose a person,
-// place or device (an mp4 must keep structural boxes, so it can't be absolute), plus
-// a check that the encode carries no audio stream. Written as a gate because a plausible
-// edit (`withMetadata()`, a dropped ffmpeg flag) has an invisible consequence otherwise.
+// Images: no EXIF/XMP/IPTC at all. Video: a denylist of keys disclosing person, place or device, plus no audio stream.
 
 import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, readFileSync, realpathSync } from 'node:fs'
@@ -15,12 +11,10 @@ import { VARIANTS_DIR, holdsMedia, mediaAbsentNotice } from '@mtreml/portfolio-c
 
 const ROOT = process.cwd()
 
-/** Renditions carry no metadata block of any kind. */
 const IMAGE_EXTENSIONS = new Set(['.avif', '.webp', '.jpeg', '.jpg', '.png'])
 const VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.mov', '.m4v'])
 
-// QuickTime/iTunes user-data atoms that disclose a person, place or device.
-// `©xyz` is an ISO 6709 coordinate string — the shooting location of the work.
+// QuickTime/iTunes user-data atoms disclosing person, place or device (`©xyz` is an ISO 6709 coordinate).
 const DENIED_VIDEO_KEYS = [
   '©xyz', // ISO 6709 location
   'loci', // 3GPP location
@@ -59,16 +53,12 @@ function extensionOf(path: string): string {
   return dot === -1 ? '' : path.slice(dot).toLowerCase()
 }
 
-// A box walk, not a whole-file string search (which would match codes in the picture data),
-// and not `ffprobe` (a gate checking ffmpeg's own `-map_metadata -1` would check a tool
-// against itself). What the walk can't see — whether an audio stream exists — is asked of
-// ffprobe below.
+// A box walk, not a whole-file string search (which would match codes in the picture data) and not `ffprobe` (the gate would check ffmpeg against itself).
 function userDataOf(bytes: Buffer): Buffer[] {
   const found: Buffer[] = []
 
   const walkBoxes = (start: number, end: number, depth: number): void => {
     let offset = start
-    /* Eight bytes is the smallest well-formed box: a 32-bit size and a four-character type. */
     while (offset + 8 <= end) {
       let size = bytes.readUInt32BE(offset)
       const type = bytes.toString('latin1', offset + 4, offset + 8)
@@ -88,7 +78,6 @@ function userDataOf(bytes: Buffer): Buffer[] {
         found.push(bytes.subarray(offset + header, offset + size))
       }
 
-      // Only containers are descended into.
       if (depth < 8 && ['moov', 'trak', 'mdia', 'minf', 'udta', 'meta', 'ilst'].includes(type)) {
         walkBoxes(offset + header, offset + size, depth + 1)
       }

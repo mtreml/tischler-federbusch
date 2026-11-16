@@ -12,8 +12,7 @@ import {
   isTelHref,
 } from './shared'
 
-// Mirrors `site.config.ts` group for group, key for key. Locales are derived in
-// `i18n/routing.ts`; design values live in `tokens.css`.
+// Mirrors `site.config.ts` group for group. Locales are derived in `i18n/routing.ts`; design values live in `tokens.css`.
 
 const routeSegmentPerLocale = z.record(
   z.string(),
@@ -22,7 +21,6 @@ const routeSegmentPerLocale = z.record(
 
 const anchorItem = z.object({
   type: z.literal('anchor'),
-  /** Key into `routes.anchors`. */
   anchor: checkedString(isAnchorId, 'must be a lowercase id, e.g. "arbeiten"'),
   label: z.string(),
 })
@@ -38,9 +36,7 @@ export const siteSchema = z.object({
   identity: z.object({
     displayName: z.string(),
     tagline: z.string(),
-    /** Bare domain (not a URL); 301s to www. */
     domain: z.string(),
-    /** Origin every emitted URL is built from. */
     canonicalOrigin: checkedString(
       isAbsoluteOrigin,
       'must be an absolute origin with no trailing slash, e.g. https://www.example.com',
@@ -55,7 +51,6 @@ export const siteSchema = z.object({
   routes: z.object({
     home: z.literal('/'),
     impressum: routeSegmentPerLocale,
-    /** On-page anchors a menu item may point at. */
     anchors: z.record(z.string(), checkedString(isAnchorId, 'must be a lowercase id')),
   }),
 
@@ -64,9 +59,8 @@ export const siteSchema = z.object({
     name: z.string(),
     addressLines: z.array(z.string()),
     phoneDisplay: z.string(),
-    /** Must name the same number as `phoneDisplay`. */
+    // Must name the same number as `phoneDisplay`.
     phoneHref: checkedString(isTelHref, 'must be an E.164 number, e.g. +436644107272'),
-    /** `mailto:` target and the email menu entry's display text. */
     email: checkedString(isEmail, 'must be an email address'),
   }),
 
@@ -78,9 +72,7 @@ export const siteSchema = z.object({
   }),
 
   seo: z.object({
-    /** The site's own title: the tab title of the landing document. */
     title: z.string(),
-    /** `%s` is replaced with the document's own title. */
     titleTemplate: z.string(),
     defaultDescription: z.string(),
     structuredDataType: z.enum(['Person', 'Organization']),
@@ -89,7 +81,6 @@ export const siteSchema = z.object({
 
   landing: z.object({
     video: checkedString(isAssetPath, 'must be a rooted asset path'),
-    /** Intro (video deblur + logo/name fade-in) in one figure. 1.5 s. */
     introDurationMs: z.number().int().min(100).max(10_000),
     videoLabel: z.string(),
     objectFit: z.enum(['cover', 'contain', 'fill']),

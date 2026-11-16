@@ -1,8 +1,7 @@
 import { z } from 'zod'
 
-// The schema layer checks shape and format; emptiness and cross-key rules are
-// the required-field layer's (`../validate.ts`) business. That's why the
-// predicates below only run on a non-empty value.
+// The schema layer checks shape and format; emptiness and cross-key rules are the required-field layer's (`../validate.ts`) business —
+// the predicates below only run on a non-empty value.
 export function checkedString(
   predicate: (value: string) => boolean,
   message: string,

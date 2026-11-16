@@ -9,55 +9,16 @@ import { LandingVideo } from '@/components/media/LandingVideo'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import type { ResolvedVideo } from '@mtreml/portfolio-core/media'
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE LANDING STAGE
-
-   The full-viewport area: the video as backdrop, the lockup (mark stacked on
-   the wordmark) centered over it, and the 1.5 s intro that deblurs the first
-   frame while the lockup fades in — one shared timeline, one quiet easing,
-   after which playback starts and runs on repeat.
-
-   ── The intro, and why it is CSS-driven ──────────────────────────────────────
-   The stage carries `data-intro`: while `pending`, the video holds
-   `filter: blur(var(--intro-blur))` and the lockup `opacity: 0` (see
-   `styles/landing.css`). The attribute flips to `done` on the second
-   animation frame, from the intro's owner (`LandingIntro`) — the first frame
-   paints the pending state, the second lets the browser commit it, so the
-   transition the flip starts is the one a visitor sees rather than one they
-   miss. Both properties transition on `--duration-intro` with `--ease-quiet`,
-   which is the shared timeline and the shared easing: one figure, one curve,
-   two properties.
-
-   The JavaScript side is `site.landing.introDurationMs` (the same 1500 ms,
-   kept in step by review — the boundary note in `tokens.css`): the timer
-   schedules `play()` on the beat the deblur lands, so the film starts
-   playing exactly when it is sharp. The `<video>` itself never carries
-   `autoplay` — see `LandingVideo` for why the intro, not the browser, owns
-   the first `play()`.
-
-   ── Once per load ────────────────────────────────────────────────────────────
-   The stage is persistent in the page (there is no `template.tsx` in this
-   tree), so a menu round-trip back to the landing does not remount
-   it and does not replay the intro: the attribute is already `done`.
-
-   ── Reduced motion ───────────────────────────────────────────────────────────
-   The choice, recorded here per the plan: under the preference the
-   blur/fade is skipped (the CSS media query shows the final state
-   immediately — no pending state at all) and playback starts at once. The
-   film still plays, muted and ambient; what is removed is the *movement* of
-   the intro, not the backdrop itself.
-   ══════════════════════════════════════════════════════════════════════════════ */
+// Full-viewport area: the video as backdrop, the lockup centered over it, and the 1.5 s intro (deblur + fade) on one shared timeline;
+// `play()` lands on the beat the deblur lands. `data-intro` flips to `done` on the second animation frame, from `LandingIntro`; reduced motion: playback starts at once.
 
 export interface LandingStageProps {
-  /** Resolved on the render side from the configured logical path. */
   video: ResolvedVideo
-  /** `site.landing.videoLabel` — the video's text alternative. */
   label: string
-  /** `site.landing.objectFit`. */
   objectFit: 'cover' | 'contain' | 'fill'
-  /** `site.landing.introDurationMs` — the JS side of `--duration-intro`. */
+  // The JS side of `--duration-intro` (kept in step by review).
   introDurationMs: number
-  /** The intro's state, owned by `LandingIntro` — shared with the header's hamburger. */
+  // The intro's state, owned by `LandingIntro` — shared with the header's hamburger.
   introDone: boolean
 }
 
@@ -67,10 +28,7 @@ export function LandingStage({ video, label, objectFit, introDurationMs, introDo
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
-    /* `play()` on the beat the deblur lands. Reduced motion: at once. A
-       rejected `play()` (a policy refusal, a device under load) is not a
-       defect: the poster is the master's own opening frame, and the backdrop
-       is still there without its movement. */
+    // `play()` on the beat the deblur lands; a rejected `play()` is not a defect — the poster is still there.
     const playTimer = setTimeout(
       () => {
         const attempt: unknown = videoRef.current?.play()
@@ -91,10 +49,7 @@ export function LandingStage({ video, label, objectFit, introDurationMs, introDo
         label={label}
         objectFit={objectFit}
       />
-      {/* Decorative: the section owns the accessible name, and the wordmark
-          next door is the name. The name inside is the one the scroll
-          animation travels — it is in flow here, and the transform is what
-          moves it. */}
+      {/* Decorative: the wordmark is the name; the name inside is the one the scroll animation travels. */}
       <div className="landing__lockup" aria-hidden="true">
         <Logo ref={logoRef} className="landing__logo" />
         <NameScroll logoRef={logoRef}>

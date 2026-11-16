@@ -1,43 +1,18 @@
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE FACE — the one file the font is declared in.
-
-   One face for the whole site: **Biome W04 Light**, self-hosted and subset.
-   Nothing loads a font from anywhere else — no provider request, no second
-   `@font-face` — which is what keeps the site free of third-party requests and
-   the privacy policy free of a font-provider disclosure. `tests/unit/fonts.test.ts`
-   is what keeps it that way: it counts the declarations in `src/` and fails a
-   second one.
-
-   The `woff2` is the subset `npm run fonts:subset` writes from the committed
-   source in `font-sources/` (pinned by content hash), cut to Basic Latin,
-   Latin-1 Supplement and Latin Extended-A — the coverage the configured locale
-   needs. The licence is recorded beside it as the source file's own name table
-   says it is. Neither file is produced by the build.
-
-   The wordmark is not a run of text in this face: it is the `name.svg` vector
-  , so the face owes it nothing and the subset owes it no glyphs.
-   ══════════════════════════════════════════════════════════════════════════════ */
+/* The one file the font is declared in: one face (Biome W04 Light), self-hosted and subset — no provider request,
+   no second `@font-face` (the fonts suite fails one). The woff2 is written by `npm run fonts:subset` from the
+   hash-pinned source; neither file is produced by the build. The wordmark is the `name.svg` vector, not text in this face. */
 
 @font-face {
   font-family: 'Biome';
   src: url('/fonts/biome-light-subset.woff2') format('woff2');
-  /* The source's own weight class — a single static cut, Light. */
   font-weight: 300;
   font-style: normal;
-  /* The subset is small and on the critical path of the first paint; swapping
-     in the fallback for a moment is the cheaper of the two first paints. */
+  /* The subset is small and on the critical path of the first paint; the fallback swap is the cheaper first paint. */
   font-display: swap;
 }
 
-/* The site's text, one stack. Biome first, then the fallbacks — and they are a
-   **genre match**, which is a requirement rather than a courtesy: Biome is a
-   soft, rounded humanist sans, so the substitutes are humanist sans faces
-   rather than whatever the surrounding rule happens to use. A substitute of
-   another genre changes the voice of every line on the page at once, and on a
-   page this quiet that is the whole of what the fallback is for.
-
-   The order is the platform's: Avenir Next on Apple, Trebuchet MS and Segoe UI
-   on Windows, Helvetica Neue as the neutral step, the generic to terminate. */
+/* The fallbacks are a genre match: Biome is a soft, rounded humanist sans, so the substitutes are humanist sans;
+   the order is the platform's — Avenir Next on Apple, Trebuchet MS and Segoe UI on Windows. */
 body {
   font-family: 'Biome', 'Avenir Next', 'Trebuchet MS', 'Segoe UI', 'Helvetica Neue', sans-serif;
 }

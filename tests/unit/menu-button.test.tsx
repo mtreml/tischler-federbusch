@@ -5,19 +5,9 @@ import { describe, expect, it, vi } from 'vitest'
 import { MenuButton } from '@/components/layout/MenuButton'
 import messages from '@/i18n/messages/de.json'
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE MENU BUTTON
+// The invariants the control carries before anything is mounted: the disclosure contract (`aria-expanded`, `aria-controls`, the
+// `aria-label` flip), one press one toggle, exactly two line elements in both states (no SVG, no cross-fade), a real `<button>`.
 
-   The invariants the control carries before anything is mounted:
-
-     • The disclosure contract: `aria-expanded`, `aria-controls` and the
-       `aria-label` flip together with the state, and the label always names
-       the action the press will take — open when closed, close when open.
-     • One press, one toggle: the handler fires exactly once per click.
-     • The morph premise: exactly two line elements inside, the same two in
-       both states — no SVG, no stacked icons, nothing to cross-fade.
-     • Keyboard: a real `<button>`, focusable and receiving focus.
-   ══════════════════════════════════════════════════════════════════════════════ */
 
 const CONTROLS_ID = 'site-menu'
 

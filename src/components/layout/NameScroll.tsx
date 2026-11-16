@@ -5,11 +5,8 @@ import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObjec
 import { setLandingProgress, travelProgress } from '@/lib/landing-scroll'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 
-// The name's travel: transform-driven, no layout shift. The mark triggers it (s0: the
-// mark's bottom edge crosses the viewport top); it ends at s1 (the name scrolled out of
-// the landing fold) and then stays pinned in the header slot. Final position/size read
-// the base tokens, so the menu's name slot and the overlay's never move when the menu toggles.
-// One passive rAF-throttled scroll listener; `will-change` only while travelling.
+// The name's travel: transform-driven, no layout shift. The mark triggers it (s0), it ends at s1 and the name stays pinned in the header slot.
+// Final position/size read the base tokens, so the menu's and the overlay's name slots never move when the menu toggles.
 
 interface TravelMetrics {
   s0: number

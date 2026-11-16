@@ -6,9 +6,7 @@ import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
-// This machine's non-loopback IPv4 addresses, for `allowedDevOrigins`.
-// A phone on WiFi 403s on the Fast Refresh handshake only; its `Origin` is this server's
-// address, so the allowed set is exactly this machine's addresses. Dev-only.
+// This machine's non-loopback IPv4 addresses, for `allowedDevOrigins`: a phone on WiFi 403s on the Fast Refresh handshake. Dev-only.
 function lanDevOrigins(): string[] {
   return Object.values(networkInterfaces())
     .flat()
@@ -32,20 +30,16 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-  // Fail the build on a type error (gate 3); linting is gate 4 and runs as its own step.
   typescript: {
     ignoreBuildErrors: false,
   },
 
   experimental: {
-    // Required by this architecture: multiple root layouts + `[locale]` at the top level, because
-    // `<html lang>` must match the URL locale. The alternatives were measured, not guessed — the
-    // route-group `not-found.tsx` is silently ignored, and a root one nests `<html>` in `<body>`.
+    // Required by this architecture: `[locale]` at the top level, because `<html lang>` must match the URL locale; a root `not-found.tsx` nests `<html>` in `<body>`.
     globalNotFound: true,
   },
 
-  // Security headers deliberately absent: a `headers()` export is not applied under a static export.
-  // They live in the web-server configuration.
+  // Security headers deliberately absent: a `headers()` export is not applied under a static export; they live in the web-server configuration.
 }
 
 export default withNextIntl(nextConfig)

@@ -1,8 +1,5 @@
-/* DESIGN TOKENS — the one file a design review reads.
-   No component may carry a colour, font size, spacing, breakpoint or duration literal.
-   Boundary with site.config.ts: `--duration-intro` is the CSS-side copy of
-   `site.landing.introDurationMs` (the JS side, motion-library driven); the two
-   stay in step by review. Style brief: calm, warm, quiet, mobile-first. */
+/* The one file a design review reads; no component may carry a colour, font size, spacing, breakpoint or duration literal.
+   `--duration-intro` is the CSS-side copy of `site.landing.introDurationMs`; the two stay in step by review. */
 @theme {
   /* The background is defined here and **only** here — the gate fails a second definition. */
   --color-background: #faf7f1;
@@ -13,9 +10,7 @@
 
   --color-rule: #e6e0d4;
 
-  /* ONE token set, read by four surfaces (header, menu, landing scroll, overlay): the name
-     keeps the same size and position on all of them. Aspect from name.svg's viewBox, so the
-     height is derived, not a second decision. */
+  /* ONE token set, read by four surfaces (header, menu, landing scroll, overlay); aspect from name.svg's viewBox. */
   --name-aspect: 3.8548;
   --name-width: 18.5546875rem;  /* width-capped, so a narrow portrait screen keeps a single line */
   --name-width-md: 23.4375rem;
@@ -24,11 +19,9 @@
   --name-header-top: 1.25rem;
   --name-header-left: var(--spacing-gutter);
 
-  /* Dead-centre of the first screenful, anchoring the whole lockup (mark above, name below). */
   --name-landing-top: 50%;
   --name-landing-left: 50%;
 
-  /* One quiet easing family — nothing springy. Reduced motion collapses all of these to instant. */
   --ease-quiet: cubic-bezier(0.3, 0, 0.2, 1);
   --duration-instant: 0ms;
   --duration-menu: 1280ms;      /* background fade-in */
@@ -40,7 +33,6 @@
 
   --intro-blur: 8px;
 
-  /* Quiet modular scale, mobile-first. */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;

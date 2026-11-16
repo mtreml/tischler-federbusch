@@ -4,18 +4,7 @@ import { join } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE FACE
-
-   The invariants this site cannot survive losing:
-
-     • The face is declared **exactly once** — one `@font-face` in `src/`, in
-       the font-face declaration file. A second declaration (or a provider
-       import) would be a second copy this suite exists to fail.
-     • The `woff2` it points at is committed, is a woff2, and is the cut the
-       manifest says it is — generated from the committed, hash-pinned source.
-     • The licence is recorded beside the font, from the source file itself.
-   ══════════════════════════════════════════════════════════════════════════════ */
+// The invariants this site cannot survive losing: the face is declared exactly once, the woff2 is committed and is the cut the manifest says it is, the licence is recorded from the source itself.
 
 const REPO_ROOT = join(__dirname, '..', '..')
 
@@ -33,7 +22,6 @@ function* walk(directory: string): Generator<string> {
   }
 }
 
-/** The family the one `@font-face` declares, and the URL its `src` points at. */
 function parseFontFace(css: string): { family: string; url: string } {
   const family = css.match(/font-family:\s*([^;]+);/)
   const url = css.match(/src:\s*url\(([^)]+)\)/)
@@ -47,8 +35,6 @@ describe('the face', () => {
   it('is declared exactly once, in the font-face declaration file', () => {
     const declarations = new Map<string, number>()
     for (const file of walk(join(REPO_ROOT, 'src'))) {
-      /* The declaration itself, not the name in a comment: the brace is what
-         makes it a rule. */
       const count = (readFileSync(file, 'utf8').match(/@font-face\s*\{/g) ?? []).length
       if (count > 0) declarations.set(file.slice(REPO_ROOT.length + 1), count)
     }
@@ -61,19 +47,16 @@ describe('the face', () => {
     const { url } = parseFontFace(css)
     /* A provider would be a host name in the URL; the subset is a path. */
     expect(url).not.toMatch(/^https?:/)
-    /* A URL under the site root resolves under `public/`. */
     const target = url.replace(/^\//, 'public/')
     const woff2 = readFileSync(join(REPO_ROOT, target))
     expect(woff2.length).toBeGreaterThan(0)
     expect(woff2.subarray(0, 4).toString('ascii')).toBe('wOF2')
-    /* The committed file is the one the declaration names. */
     expect(target).toBe(WOFF2_FILE)
   })
 
   it('stays a subset: the tripwire on the shipped bytes', () => {
     const woff2 = readFileSync(join(REPO_ROOT, WOFF2_FILE))
-    /* 344 characters of a static Light cut ship at ~45 KB. A figure far above
-       that is the subsetter taking a range nothing asked for. */
+    // 344 characters of a static Light cut ship at ~45 KB; far above that is the subsetter taking a range nothing asked for.
     expect(woff2.length).toBeLessThan(64 * 1024)
   })
 
@@ -100,8 +83,7 @@ describe('the face', () => {
         start && end ? `${parseInt(start.slice(2), 16)}-${parseInt(end.slice(2), 16)}` : '',
       )
       .join(';')
-    /* ä ö ü ß sit in the Latin-1 Supplement, the umlauts' neighbours in
-       Basic Latin — the two ranges a German site cannot do without. */
+    // ä ö ü ß sit in the Latin-1 Supplement, the umlauts' neighbours in Basic Latin — the two ranges a German site cannot do without.
     expect(covered).toContain('32-126')
     expect(covered).toContain('160-255')
   })

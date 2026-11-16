@@ -7,12 +7,7 @@ import messages from '@/i18n/messages/de.json'
 import { site } from '@/config/site.config'
 import { resolveCopyrightHolder } from '@/lib/config/resolve'
 
-/* The footer is a server component — async, because it reads its one
-   structural label ("Made with care & love by") through the locale messages. The harness
-   supplies those from the real `de.json` (the component must not carry the
-   label itself) and renders through the server renderer's stream, which is
-   what awaits it — the same path the static export takes, so the assertion
-   is on the emitted static HTML: the no-JS invariant, unit-level. */
+// The footer is a server component (it reads its structural label through the locale messages); the harness renders through the server renderer's stream — the same path the static export takes — and asserts on the emitted HTML.
 vi.mock('next-intl/server', async () => {
   const { default: messages } = await import('@/i18n/messages/de.json')
   const table = messages as unknown as Record<string, Record<string, string>>
@@ -29,27 +24,9 @@ vi.mock('next-intl/server', async () => {
   }
 })
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE FOOTER
+// The single line at the end of the one-scroll document: holder from `resolveCopyrightHolder()`, the year rendered,
+// the legal entry a plain link (no `data-transition`), the credit a new-tab link.
 
-   The single line at the end of the one-scroll document, pinned to the contract a
-   visitor's browser sees:
-
-     • the holder renders from `resolveCopyrightHolder()` and the year is
-       rendered, not configured — a second name or a second year would be a
-       value declared in two places;
-     • the legal entry is a plain link to the localized legal route
-       (trailing slash the export writes) **without** `data-transition` — the
-       plain-navigation invariant the sequence owner's capture interception
-       depends on;
-     • the credit is the configured target, decided: a new tab, with the
-       `rel` the renderer owes it.
-   ══════════════════════════════════════════════════════════════════════════════ */
-
-/** The footer, rendered the way the static export renders it — under the
-   provider the layout mounts, so the next-intl `Link` resolves its locale.
-   The browser server build hands back the stream as a Promise; awaiting
-   covers both shapes. */
 async function renderFooter() {
   const stream = await renderToReadableStream(
     <NextIntlClientProvider locale="de" messages={messages}>
@@ -75,13 +52,10 @@ describe('the footer', () => {
 
     const legal = doc.querySelector('.site-footer__legal')
     expect(legal).not.toBeNull()
-    /* The localized route, as the export writes it — the trailing slash the
-       static host requires (the unit renderer may or may not have appended
-       it, so the assertion tolerates exactly that one beat of difference). */
+    // The unit renderer may or may not have appended the trailing slash, so the assertion tolerates exactly that one beat.
     expect(legal?.getAttribute('href')).toMatch(/^\/de\/impressum-datenschutz\/?$/)
     expect(legal?.textContent).toBe(site.footer.legalLabel)
-    /* The plain-navigation invariant: the capture interception only touches
-       `data-transition` elements, so the overlay never fires for this link. */
+    // The capture interception only touches `data-transition` elements, so the overlay never fires for this link.
     expect(legal?.hasAttribute('data-transition')).toBe(false)
   })
 
@@ -94,7 +68,6 @@ describe('the footer', () => {
     expect(creditLink?.getAttribute('target')).toBe('_blank')
     expect(creditLink?.getAttribute('rel')).toBe('noreferrer')
     expect(creditLink?.textContent).toBe(site.footer.credit)
-    /* The structural label renders from the messages, not from the component. */
     expect(doc.querySelector('.site-footer__credit')?.textContent).toMatch(/Made with care & love by/)
   })
 
@@ -102,7 +75,6 @@ describe('the footer', () => {
     const doc = await renderFooter()
 
     expect(doc.querySelector('footer')).not.toBeNull()
-    /* The contact details live in the menu and the legal page, not here. */
     expect(doc.querySelectorAll('footer a[href^="tel:"]')).toHaveLength(0)
     expect(doc.querySelectorAll('footer a[href^="mailto:"]')).toHaveLength(0)
   })

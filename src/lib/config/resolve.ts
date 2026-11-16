@@ -1,7 +1,6 @@
 import { site } from '@/config/site.config'
 
-// The keys that resolve to *another key* rather than a literal, each once here:
-// a value declared in two places drifts.
+// The keys that resolve to *another key* rather than a literal, each once here: a value declared in two places drifts.
 
 // No language fallback on purpose: a missing segment renders nothing, never the wrong language.
 export function localized(value: Record<string, string>, locale: string): string | undefined {
@@ -35,8 +34,7 @@ export function resolveCanonicalUrl(path: string): string {
   return `${origin}${suffix}`
 }
 
-// The works heading: the label of the menu entry pointing at `arbeiten`. The word is
-// declared once, in `navigation.items`; throws if no entry carries the anchor.
+// The works heading: the label of the menu entry pointing at `arbeiten`, declared once in `navigation.items`.
 export function resolveWorksHeading(): string {
   for (const item of site.navigation.items) {
     if (item.type === 'anchor' && item.anchor === 'arbeiten') return item.label

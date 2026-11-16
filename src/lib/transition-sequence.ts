@@ -14,18 +14,14 @@ import {
   type TransitionTarget,
 } from '@/lib/transition'
 
-// One sequence, one owner: the overlay owns timing (cover → reveal), this hook owns
-// what happens — the close at t0, the action on the beat, the focus return.
-// `transitionTo` fires from the capture interception (normal) or the trigger's `onClick`
-// (reduced motion); the `defaultPrevented` guard keeps them from double-firing.
-// No subscriber → the action and `returnFocus()` run immediately instead.
+// One sequence, one owner: the overlay owns timing (cover → reveal); this hook owns the close at t0, the action on
+// the beat, the focus return. The `defaultPrevented` guard prevents double-firing; no subscriber → run immediately.
 
 function scrollToTarget(target: TransitionTarget): void {
   if (target === 'landing') {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     return
   }
-  // No element → no scroll; the cover still reveals.
   document.getElementById(target)?.scrollIntoView({ behavior: 'auto' })
 }
 
@@ -42,7 +38,6 @@ export function useTransitionSequence(): {
 
   // The pathname at click time — by the beat the route may have moved.
   const fromRef = useRef('')
-  // The target whose commit scroll still has to run.
   const commitScrollRef = useRef<TransitionTarget | null>(null)
 
   const action = useCallback<TransitionAction>(
@@ -53,7 +48,6 @@ export function useTransitionSequence(): {
         requestAnimationFrame(() => scrollToTarget(target))
         return
       }
-      // Otherwise: navigate home under the cover, scroll on commit.
       commitScrollRef.current = target
       router.push(landingPath, { scroll: false })
     },
@@ -78,7 +72,6 @@ export function useTransitionSequence(): {
     (target: TransitionTarget) => {
       fromRef.current = window.location.pathname
 
-      // t0 — close now, under the cover; the focus return is deferred to the end.
       close({ deferFocusReturn: true })
 
       const began = beginTransition({

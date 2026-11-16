@@ -4,9 +4,7 @@ import { legalSchema, type LegalConfig } from './schema/legal.schema'
 import { mediaSchema, type MediaConfig } from './schema/media.schema'
 import { siteSchema, type SiteConfig } from './schema/site.schema'
 
-// Validation entry point for site, legal and media config plus the tokens.css
-// invariant. malformed/contradiction are always errors; unfilled is a warning
-// in development, an error in production.
+// Validation entry point: malformed/contradiction are always errors; unfilled is a warning in development, an error in production.
 
 export type Environment = 'development' | 'production'
 export type FindingKind = 'malformed' | 'contradiction' | 'unfilled'
@@ -29,9 +27,7 @@ export interface Inputs {
   legal: LegalConfig
   media: MediaConfig
   environment?: Environment
-  /** Text of tokens.css, passed in by the caller (CSS is not a module). */
   tokenSource?: string
-  /** Logical paths from `declaredMedia()`; when present, every configured media path must be in it. */
   declaredMediaPaths?: readonly string[]
 }
 
@@ -63,7 +59,6 @@ class FindingCollector {
     this.add(key, 'malformed', message)
   }
 
-  /** Returns false (reporting unfilled) when `value` is blank. */
   require(key: string, value: unknown, message?: string): boolean {
     if (isBlank(value)) {
       this.unfilled(key, message)
@@ -172,7 +167,6 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   f.require('landing.video', site.landing.video)
   f.require('landing.videoLabel', site.landing.videoLabel)
 
-  // `works.image` and `seo.ogImage` name the same file; disagreement is a contradiction.
   f.require('works.image', site.works.image)
   f.require('works.imageAlt', site.works.imageAlt)
   if (
@@ -242,7 +236,6 @@ function checkMedia(media: MediaConfig, f: FindingCollector): void {
   }
 }
 
-/** `/media/landing/…` → `landing/…`: a served path as its declared logical path. */
 function toDeclaredPath(value: string, basePath: string): string | undefined {
   const prefix = `${basePath}/`
   return value.startsWith(prefix) ? value.slice(prefix.length) : undefined
@@ -319,7 +312,6 @@ export function validateConfiguration(inputs: Inputs): ValidationReport {
     checkConfiguredMedia(inputs.site, inputs.media, inputs.declaredMediaPaths, f)
   }
 
-  // Severity matrix: the kind alone decides.
   const errors: Finding[] = []
   const warnings: Finding[] = []
   for (const finding of f.all()) {

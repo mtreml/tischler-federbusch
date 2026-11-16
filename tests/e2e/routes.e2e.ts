@@ -1,19 +1,16 @@
 import { expect, test } from '@playwright/test'
 
-// Gate 6 — the routes, on the export as served: the two documents exist, the root
-// path reaches them, an unmatched path gets a genuine 404.
+// The routes, on the export as served: the documents exist, the root path reaches them, an unmatched path gets a genuine 404.
 
 test('the landing renders at /de/', async ({ page }) => {
   const response = await page.goto('/de/')
   expect(response?.status()).toBe(200)
   // The h1 is structure, not display: present in the DOM, hidden visually.
   await expect(page.getByRole('heading', { level: 1 })).toBeAttached()
-  // The video's accessible name is the configured `landing.videoLabel`.
   await expect(page.getByRole('img', { name: /Endlosschleife/ })).toBeAttached()
   const video = page.locator('video')
   await expect(video).toHaveAttribute('muted', '')
   await expect(video).not.toHaveAttribute('controls')
-  // Manifest-resolved encoded variant as the source, the master's first frame as poster.
   await expect(video.locator('source')).toHaveCount(1)
   await expect(video.locator('source')).toHaveAttribute('src', /VID_20261114_082951-.*\.mp4/)
   await expect(video).toHaveAttribute('poster', /VID_20261114_082951-poster/)
@@ -40,7 +37,6 @@ test('the works section anchors below the landing in the one document', async ({
 
 test('the menu entry lands on the works section', async ({ page }) => {
   await page.goto('/de/')
-  // `#arbeiten` is a real target: the section lands at the viewport top.
   await page.getByRole('button', { name: 'Menü öffnen' }).click()
   const entry = page.getByRole('link', { name: 'Arbeiten' })
   await expect(entry).toBeVisible()
@@ -60,7 +56,6 @@ test('the footer line closes the one-scroll document', async ({ page }) => {
   await expect(footer.getByText(/© \d{4} Lukas Federbusch/)).toBeVisible()
   await expect(footer.getByText('Made with care & love by')).toBeVisible()
 
-  // Plain link, plain navigation — no transition.
   const legalLink = footer.getByRole('link', { name: 'Impressum & Datenschutz' })
   await expect(legalLink).toHaveAttribute('href', /\/de\/impressum-datenschutz\/?$/)
   await expect(legalLink).not.toHaveAttribute('data-transition')
@@ -70,7 +65,6 @@ test('the footer line closes the one-scroll document', async ({ page }) => {
   await expect(credit).toHaveAttribute('target', '_blank')
   await expect(credit).toHaveAttribute('rel', 'noreferrer')
 
-  // Contact is menu-only: the footer carries neither.
   await expect(footer.locator('a[href^="tel:"]')).toHaveCount(0)
   await expect(footer.locator('a[href^="mailto:"]')).toHaveCount(0)
 })
@@ -80,7 +74,6 @@ test('the footer legal entry navigates plainly — no overlay in the DOM', async
   const legalLink = page.locator('footer').getByRole('link', { name: 'Impressum & Datenschutz' })
   await legalLink.click()
   await expect(page).toHaveURL(/\/de\/impressum-datenschutz\/$/)
-  // No `data-transition` here, so the overlay never fires.
   await expect(page.locator('.transition-overlay')).toHaveCount(0)
   await expect(
     page.getByRole('heading', { level: 1, name: 'Impressum & Datenschutz' }),
@@ -109,7 +102,6 @@ test('the legal page renders the configured text, with its header', async ({ pag
 
   await expect(page.getByText('Zuletzt geändert: 16. November 2026')).toBeVisible()
 
-  // The contact details appear exactly once and match the menu's.
   await expect(page.getByText('Hochschoberstraße 12, Top 16')).toBeVisible()
   await expect(page.getByText('9900 Lienz')).toBeVisible()
   await expect(page.getByRole('link', { name: '0664 410 72 72' })).toHaveAttribute(

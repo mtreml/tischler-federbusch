@@ -13,10 +13,8 @@ import {
 } from '@/lib/transition'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 
-// Cover, then reveal: in over the outgoing page, the route/anchor swap beneath the opaque
-// cover, out over the incoming page. Never takes the pointer. The overlay owns timing (from
-// tokens); the action from `transition.ts` owns what the cover completion does.
-// `data-transition-*` attributes are e2e instrumentation. Reduced motion: skipped, not shortened.
+// Cover, then reveal: in over the outgoing page, the route/anchor swap beneath the opaque cover, out over the incoming page.
+// Never takes the pointer; `data-transition-*` attributes are e2e instrumentation. Reduced motion: skipped, not shortened.
 
 interface OverlayMotion {
   coverSeconds: number
@@ -67,14 +65,12 @@ export function TransitionOverlay() {
   const [cover, setCover] = useState<Cover | null>(null)
   // The reveal half in flight: its own state because `cover` is gone by the time the reveal runs.
   const [revealing, setRevealing] = useState(false)
-  // Both halves, counted on the host (as persistent as the layout); each increments only when its animation actually ran.
   const [coverCount, setCoverCount] = useState(0)
   const [revealCount, setRevealCount] = useState(0)
   const [startedFrom, setStartedFrom] = useState('')
 
   // Ids never restart, so a deduplicating reader cannot mistake a later transition for an earlier one.
   const sequence = useRef(0)
-  // The cover whose reveal is running; a ref because the exiting child is frozen.
   const revealingRef = useRef<Cover | null>(null)
 
   const [motionTokens] = useState<OverlayMotion | null>(() => resolveOverlayMotion())
@@ -137,7 +133,6 @@ export function TransitionOverlay() {
             animate={{ opacity: 1, transition: coverTransition }}
             exit={{ opacity: 0, transition: revealTransition }}
             onAnimationComplete={(definition) => {
-              // Fires for both halves; only the cover's definition is fully opaque.
               const isCover =
                 typeof definition === 'object' &&
                 definition !== null &&
@@ -148,8 +143,7 @@ export function TransitionOverlay() {
               setCoverCount((count) => count + 1)
               cover.onCoverOpaque?.()
               runTransitionAction(cover.to)
-              // Two stages, because the reveal's child is frozen: first mark the cover finished
-              // (the spinner's 0 → 1 flip), then remove the child next task, which runs the reveal.
+              // Two stages, because the reveal's child is frozen: mark the cover finished, then remove the child next task, which runs the reveal.
               setCover((current) =>
                 current === null || current.id !== cover.id
                   ? current

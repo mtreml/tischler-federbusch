@@ -2,11 +2,8 @@
 
 import { useSyncExternalStore } from 'react'
 
-// One progress, two readers: the name's travel and the header's background fade are
-// the same movement. The name scroll is the writer (it measures mark and name);
-// the header is the reader. Offsets arrive as data — nothing here hardcodes a position.
-// Linear, not curved: the s0→s1 window is short on a phone.
-// Reduced motion: a step at s1, not a ramp.
+// One progress, two readers: the name's travel and the header's background fade are the same movement.
+// The name scroll is the writer (it measures mark and name); the header is the reader. Linear, not curved; reduced motion: a step at s1.
 
 export function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value))
@@ -19,8 +16,7 @@ export function travelProgress(s: number, s0: number, s1: number, reduced: boole
   return clamp01((s - s0) / (s1 - s0))
 }
 
-// Module-level store (not lifted state): the two readers/writer live in different
-// branches of the tree and neither should be the other's ancestor.
+// Module-level store (not lifted state): the writer and readers live in different branches of the tree.
 type Listener = () => void
 
 let progress = 0

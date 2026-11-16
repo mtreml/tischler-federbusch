@@ -8,13 +8,8 @@ import { legal } from '@/config/legal.config'
 import messages from '@/i18n/messages/de.json'
 import { MenuProvider } from '@/lib/menu'
 
-/* The page is a server component — async, because it reads the structural
-   labels through the locale messages. The harness supplies those from the
-   real `de.json`, stubs `setRequestLocale`, and renders through the server
-   renderer, which is what awaits it — the same path the static export takes,
-   so the assertions run on the emitted static HTML: the no-JS invariant,
-   unit-level. The contact email renders from the resolved contact, not from
-   the messages, so the address stays in `contact.*` in exactly one place. */
+// The page is a server component (it reads the structural labels through the locale messages); the harness renders it
+// through the server renderer — the same path the static export takes — and asserts on the emitted HTML.
 vi.mock('next-intl/server', async () => {
   const { default: messages } = await import('@/i18n/messages/de.json')
   const table = messages as unknown as Record<string, Record<string, string>>
@@ -36,21 +31,8 @@ vi.mock('next-intl/server', async () => {
   }
 })
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE LEGAL PAGE
+// The view reads config, not literals: the heading structure, `lastChanged`, the protocol block and the urheberrecht paragraph render verbatim from `legal.config.ts`; the contact values come from `contact.*`.
 
-   The view reads config, not literals — the invariants the suite pins:
-
-     • the heading structure: the one h1, the three numbered h2 sections in
-       the spec's order;
-     • `lastChanged`, the protocol block and the urheberrecht paragraph
-       render verbatim from `legal.config.ts`;
-     • the contact values come from `contact.*` through `resolveContact()` —
-       asserted by changing the configuration and watching the render follow.
-   ══════════════════════════════════════════════════════════════════════════════ */
-
-/** The page, rendered the way the static export renders it. The browser
-   server build hands back the stream as a Promise; awaiting covers both. */
 async function renderLegal() {
   const stream = await renderToReadableStream(
     <NextIntlClientProvider locale="de" messages={messages}>
@@ -89,8 +71,7 @@ describe('the configured text', () => {
   it('renders the verbatim text from the configuration', async () => {
     const doc = await renderLegal()
     const body = doc.body.textContent
-    /* The protocol block renders as one text node — its newlines are
-       preserved, not collapsed. */
+    // The newlines are preserved, not collapsed.
     expect(doc.querySelector('.legal__protocol')?.textContent).toBe(
       legal.datenschutz.protocolText,
     )
@@ -125,11 +106,9 @@ describe('the contact block', () => {
     expect(body).toContain('Test Person')
     expect(body).not.toContain('Hochschoberstraße 12, Top 16')
 
-    /* The address lines, one block-level span each. */
     expect(doc.querySelector('.legal__impressum')?.textContent).toContain('Teststraße 1')
     expect(doc.querySelector('.legal__impressum')?.textContent).toContain('1234 Testort')
 
-    /* The contact links, from the configuration, with the schemes resolved. */
     const tel = doc.querySelector('a[href^="tel:"]')
     expect(tel?.textContent).toBe('0123 456')
     expect(doc.querySelectorAll('a[href="mailto:test@example.at"]')).toHaveLength(1)

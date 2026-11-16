@@ -1,6 +1,5 @@
 import type { SiteConfig } from '@/lib/config/schema/site.schema'
 
-// Every value specific to this site lives in `src/config` and nowhere else.
 export const site: SiteConfig = {
   identity: {
     displayName: 'Lukas Federbusch',
@@ -10,13 +9,11 @@ export const site: SiteConfig = {
     canonicalOrigin: 'https://www.tischler-federbusch.at',
   },
 
-  // German only, by decision: one locale, no visible switch.
   languages: {
     supported: ['de'],
     default: 'de',
   },
 
-  // `impressum` is a per-locale map; here the segment is untranslated.
   routes: {
     home: '/',
     impressum: {
@@ -51,8 +48,7 @@ export const site: SiteConfig = {
   },
 
   landing: {
-    // The pipeline keeps the original's logical path (content-hash suffix apart), so
-    // this is the original's path, not a `master.mp4`; validate-config cross-checks it.
+    // The pipeline keeps the original's logical path, so this is the original's path, not a `master.mp4`; validate-config cross-checks it.
     video: '/media/landing/VID_20261114_082951.mp4',
     introDurationMs: 1500,
     videoLabel:
@@ -66,7 +62,6 @@ export const site: SiteConfig = {
     imageAlt: 'Handgefertigte Kommode von Lukas Federbusch',
   },
 
-  // The menu renders this list and nothing else; contact entries resolve from `contact`.
   navigation: {
     items: [
       { type: 'anchor', anchor: 'arbeiten', label: 'Arbeiten' },

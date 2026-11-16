@@ -6,10 +6,8 @@ import type { PointerEvent } from 'react'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import type { ImageSourceSet } from '@mtreml/portfolio-core/media'
 
-// Pointer-move parallax: the cursor's offset from the frame centre maps to a small opposite
-// translate on the image (`pointerleave` resets). Transform only (CLS ≈ 0). The travel cap
-// is the `--parallax-travel` token, resolved from the computed style. Reduced motion → the
-// listeners are never attached. Touch never fires a hover `pointermove`, so it is a plain `<img>`.
+// Pointer-move parallax: the cursor's offset from the frame centre maps to a small opposite translate (`pointerleave` resets). Transform only (CLS ≈ 0);
+// the travel cap is the `--parallax-travel` token. Reduced motion → the listeners are never attached. Touch never fires a hover `pointermove`, so it is a plain `<img>`.
 
 export interface ParallaxImageProps {
   sources: ImageSourceSet[]

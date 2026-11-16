@@ -14,12 +14,7 @@ import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import { useTransitionSequence } from '@/lib/transition-sequence'
 import type { TransitionTarget } from '@/lib/transition'
 
-// The full-page menu. State (open/close, Escape, scroll lock, focus) is the provider's
-// (`src/lib/menu.tsx`); this is the surface. Mounted in the persistent `[locale]` layout
-// so `AnimatePresence` can hold the outgoing panel while the exit animations run.
-// The name reads the same tokens the header slot does, so it never moves on open/close.
-// The two `data-transition` elements (name → `landing`, anchor → `arbeiten`) feed
-// `useTransitionSequence`; the `href`s are the no-JS fallback; tel/mailto are native links.
+// Full-page menu; state (open/close, Escape, scroll lock, focus) is the provider's (`src/lib/menu.tsx`). `data-transition` elements feed `useTransitionSequence`; the `href`s are the no-JS fallback.
 
 function menuEntryHref(item: (typeof site.navigation.items)[number]): string {
   const contact = resolveContact()
@@ -38,12 +33,8 @@ function menuEntryLabel(item: (typeof site.navigation.items)[number]): string {
   return contact.email
 }
 
-// Motion values are resolved from the tokens (never literals): background/name fade over
-// `--duration-menu`, entries rise over `--duration-menu-items`; the stagger is distance, not
-// time (entry i travels `--menu-item-rise × (i+1)`). The close is the exact reverse of the
-// open (exit targets = initial values). Reduced motion drops every duration and distance to zero.
-// Resolution is a lazy state initializer: it runs once, before the panel can render, and
-// owes the server no answer (window-guarded; absent tokens → the instant one).
+// Motion values are resolved from tokens (never literals); the stagger is distance, not time (entry i travels `--menu-item-rise × (i+1)`).
+// Close is the exact reverse of open; reduced motion drops everything to zero. Lazy state initializer: window-guarded, absent tokens → the instant one.
 
 type Easing = [number, number, number, number]
 
@@ -98,11 +89,7 @@ function useMenuMotion(): MenuMotion | null {
 
 const MotionNameLink = motion.create(Link)
 
-// The panel's X must not be a frozen prop: `AnimatePresence` keeps the removed panel mounted
-// with the last rendered element, but its subtree still re-renders on context changes. Reading
-// the state here (not at the panel's render) lets the X play the reverse morph while the panel
-// exits — it sits exactly over the header's button, so the two stay in lockstep and the
-// header's morph is never visible through the fading background.
+// The panel's X reads the live state: `AnimatePresence` keeps the removed panel mounted but its subtree still re-renders, so the X morphs back in lockstep.
 function PanelCloseButton() {
   const { isOpen, close } = useMenu()
   return <MenuButton open={isOpen} onToggle={() => close()} controlsId={MENU_PANEL_ID} />

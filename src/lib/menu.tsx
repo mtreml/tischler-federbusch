@@ -11,22 +11,18 @@ import {
   type ReactNode,
 } from 'react'
 
-// Owns everything that follows from the menu being open: open/close, Escape,
-// scroll lock, focus (initial, tab trap, return). Resolved by selector, not refs;
-// no trigger found (e.g. legal page) → focus return is a no-op.
+// Owns everything that follows from the menu being open: open/close, Escape, scroll lock,
+// focus (initial, tab trap, return). Resolved by selector, not refs; no trigger → focus return is a no-op.
 
-/** Single source of the panel's id, matching the tested `aria-controls` value. */
 export const MENU_PANEL_ID = 'site-menu'
 
 export interface CloseOptions {
-  /** Skip the focus return; the caller performs it via `returnFocus()`. */
   deferFocusReturn?: boolean
 }
 
 interface MenuContextValue {
   isOpen: boolean
   open: () => void
-  /** Idempotent; see `CloseOptions.deferFocusReturn`. */
   close: (options?: CloseOptions) => void
   returnFocus: () => void
 }
@@ -50,7 +46,6 @@ function resolvePanelCloseButton(): HTMLElement | null {
   return resolvePanel()?.querySelector(`button[aria-controls="${MENU_PANEL_ID}"]`) ?? null
 }
 
-// The header's trigger, resolved after close.
 function resolveTrigger(): HTMLElement | null {
   return document.querySelector(`button[aria-controls="${MENU_PANEL_ID}"]`)
 }
@@ -82,8 +77,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
     setOpen(true)
   }, [])
 
-  // Open consequences in the effect, close consequences in the cleanup: the cleanup runs
-  // once per open→close transition, so each side effect fires exactly once.
+  // Open consequences in the effect, close consequences in the cleanup: the cleanup runs once per open→close transition.
   useEffect(() => {
     if (!open) return
 

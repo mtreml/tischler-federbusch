@@ -1,19 +1,6 @@
-/* THE PAGE TRANSITION OVERLAY
-   The layering and the spinner. The cover and the reveal are the motion library's (the
-   token-resolved opacities in `TransitionOverlay.tsx`), so this file carries no transition
-   of its own — plus the reduced-motion collapse of whatever could still move on the CSS side.
+/* Layering and the spinner; the cover and reveal are the motion library's, so this file carries no transition of its own. The spinner: a still ring with one linear arc (a bar would read as measured progress; an eased turn reads as stalling). */
 
-   The spinner: a still ring with one arc in ink travelling it at a constant rate, deliberately
-   not a bar (a bar reads as measured progress; there is nothing to measure). Only the arc turns —
-   the ring stays still, so the circle never moves. Without the arc the spin would run and be
-   invisible. Linear, not `--ease-quiet`, because an eased turn decelerates into every revolution
-   and reads as stalling. `role="progressbar"`, the `aria-label` and the `aria-valuenow` flip
-   are the component's business. */
-
-/* The overlay: above the menu (z 50) that launches it, below the skip link (z 100).
-
-   It never takes the pointer: a slow or interrupted animation must not strand the visitor.
-   The opacity is the motion library's, applied inline — no transition of its own here. */
+/* Above the menu (z 50), below the skip link (z 100); never takes the pointer. The opacity is the motion library's. */
 .transition-overlay {
   position: fixed;
   inset: 0;
@@ -21,9 +8,7 @@
   pointer-events: none;
 }
 
-/* The positioned wrapper: the one node the `--name-landing-*` pair anchors — the same pair
-   the landing lockup reads, so the name never moves between the page and the overlay.
-   Its box is the lockup's box: the spinner is out of flow and adds nothing to the height. */
+/* The node the `--name-landing-*` pair anchors — the same pair the landing lockup reads, so the name never moves between the page and the overlay. */
 .transition-overlay__lockup {
   position: absolute;
   top: var(--name-landing-top);
@@ -31,8 +16,6 @@
   transform: translate(-50%, -50%);
 }
 
-/* The spinner: the still ring, above the lockup. `bottom: 100%` is the wrapper's top edge;
-   the margin is the lockup's own gap token — no measurement of the lockup's height is owed. */
 .transition-overlay__spinner {
   position: absolute;
   bottom: 100%;
@@ -45,9 +28,7 @@
   border-radius: 50%;
 }
 
-/* The arc: the ink on the ring — the only part that turns. `inset` minus the border width
-   lands its own border exactly on the ring's, so the spin reads as the arc travelling a
-   still circle. */
+/* The only part that turns; `inset` minus the border width lands its border exactly on the ring's. */
 .transition-overlay__spinner::before {
   content: '';
   position: absolute;
@@ -64,9 +45,6 @@
   }
 }
 
-/* The lockup: the mark stacked on the wordmark — the same pair the landing renders. In flow
-   inside the positioned wrapper; the gap is the lockup's own token, the widths the shared
-   families the landing reads (see `TransitionLockup.tsx`). */
 .transition-lockup {
   display: flex;
   flex-direction: column;
@@ -105,8 +83,6 @@
   }
 }
 
-/* Reduced motion: the overlay never mounts under the preference, so this is the belt on the
-   braces — whatever this side could still move is the arc, and it stops. */
 @media (prefers-reduced-motion: reduce) {
   .transition-overlay__spinner::before {
     animation: none;

@@ -1,8 +1,5 @@
-// Font subsetting — an **authoring** step, not a build step: it writes `public/fonts/*`,
-// those files are committed, and the gate chain never runs this script (a clean clone
-// builds without network or this tool). Re-run when the source font or languages change.
-// One face (Biome W04 Light), committed under `font-sources/` and pinned by content hash.
-// The licence is extracted from the font's own `name` table, not recalled.
+// Font subsetting — an authoring step, not a build step: it writes `public/fonts/*`, those files are committed, and the gate
+// chain never runs this. One face (Biome W04 Light), pinned by content hash; the licence is extracted from the font's own `name` table.
 
 import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
@@ -72,9 +69,7 @@ function nameTableString(font: Buffer, nameId: number): string {
       font.readUInt16BE(record + 8),
       font.readUInt16BE(record + 10),
     ]
-    // The Windows/English record (language 0x0409) is the one this build trusts.
-    // Vendors still deviate (some store UTF-16BE under the Windows platform), so the bytes
-    // decide the decoding: ASCII as-is; a UTF-16 payload's order is the one with nulls in even positions.
+    // The Windows/English record (0x0409) is the one this build trusts; vendors still deviate, so the bytes decide the decoding.
     if (id !== nameId) continue
     if (platformId === 3 && (encodingId === 1 || encodingId === 10) && languageId === 0x0409) {
       const raw = font.subarray(

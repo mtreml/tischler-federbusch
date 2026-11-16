@@ -8,20 +8,8 @@ import sharp from 'sharp'
 import { Logo } from '@/components/brand/Logo'
 import { Name } from '@/components/brand/Name'
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE BRAND LOCKUP AND THE FAVICON SET
-
-   The invariants the wrappers exist to hold:
-
-     • The mark and the wordmark render as the committed public files,
-       decorative — `alt=""` + `aria-hidden` — with the viewBox as their
-       `width`/`height`, so the box holds its aspect before any CSS arrives
-       and the name's travel owes no layout shift.
-     • The apple-touch icon resolves: it is the one file the minimal favicon
-       set adds beyond the SVG, and the layout's `icons` points at it — a
-       PNG that does not exist in `public/` would 404 on every phone's home
-       screen.
-   ══════════════════════════════════════════════════════════════════════════════ */
+// The invariants the wrappers hold: the mark and the wordmark render the committed public files, decorative, with
+// the viewBox as `width`/`height`; the apple-touch icon resolves — a missing PNG would 404 on every phone's home screen.
 
 describe('the mark', () => {
   it('renders the committed file, decorative, with its viewBox as the box', () => {
@@ -47,7 +35,6 @@ describe('the wordmark', () => {
     expect(image.getAttribute('src')).toBe('/name.svg')
     expect(image.getAttribute('alt')).toBe('')
     expect(image).toHaveAttribute('aria-hidden', 'true')
-    /* 334.89453 × 86.875 pt, rounded up: the aspect is the file's own. */
     expect(image.getAttribute('width')).toBe('335')
     expect(image.getAttribute('height')).toBe('87')
   })
@@ -62,12 +49,8 @@ describe('the apple-touch icon', () => {
   })
 
   it('is wired into the layout metadata the layout emits', () => {
-    /* The layout is a server component with i18n in its tree, so the invariant
-       is read off the source rather than rendered: the `icons` entry and the
-       file it names must agree. */
+    // The layout is a server component with i18n in its tree, so the invariant is read off the source, not rendered.
     const layout = readFileSync(join(process.cwd(), 'src', 'app', '[locale]', 'layout.tsx'), 'utf8')
-    /* Both entries, named: the SVG the layout has carried, and the PNG it adds.
-       Tolerant of formatting, strict on the two hrefs. */
     expect(layout).toMatch(/icon:\s*'\/tab-icon\.svg'/)
     expect(layout).toMatch(/apple:\s*'\/apple-touch-icon\.png'/)
   })

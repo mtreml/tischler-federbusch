@@ -14,11 +14,8 @@ vi.mock('@/lib/transition-sequence', () => ({
   useTransitionSequence: () => ({ transitionTo: () => {} }),
 }))
 
-// The menu intro/close, asserted on the transforms the motion library writes — the values,
-// not the class names. OPEN: background fades, name fades without moving, entries rise from
-// `--menu-item-rise × (i+1)` (distance gradient, one shared timeline). CLOSE: the exact
-// reverse; the panel unmounts only after it runs. REDUCED MOTION: zero durations/distances.
-// Tokens are set on the root — the component resolves them from the computed style.
+// The menu intro/close, asserted on the transforms the motion library writes — the values, not the class names.
+// CLOSE is the exact reverse; REDUCED MOTION: zero durations/distances. Tokens are set on the root — the component resolves them from the computed style.
 
 const TOKENS: Record<string, string> = {
   '--menu-item-rise': '1.25rem',

@@ -16,7 +16,6 @@ import type { LegalConfig } from '@/lib/config/schema/legal.schema'
    ══════════════════════════════════════════════════════════════════════════════ */
 
 export const legal: LegalConfig = {
-  /* Display string, German — rendered verbatim as "Zuletzt geändert: …". */
   lastChanged: '16. November 2026',
 
   /* ── 2. Datenschutzerklärung ──────────────────────────────────────────────────
