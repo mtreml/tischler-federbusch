@@ -14,6 +14,9 @@
 @import './menu.css';
 /* The page-transition overlay and its spinner (WP-06c). */
 @import './transition.css';
+/* The content sections: the works section (WP-07a), the footer and the legal
+   page (WP-07b). */
+@import './content.css';
 
 body {
   margin: 0;

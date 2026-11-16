@@ -1,6 +1,8 @@
 import { setRequestLocale } from 'next-intl/server'
 
 import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
+import { WorksSection } from '@/components/content/WorksSection'
 import LandingView from '@/views/LandingView'
 
 /* ══════════════════════════════════════════════════════════════════════════════
@@ -21,6 +23,12 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
     <>
       <Header />
       <LandingView params={params} />
+      {/* The works section (WP-07a): the `#arbeiten` target the menu anchor and
+          the transition sequence scroll to, in this same document. */}
+      <WorksSection />
+      {/* The footer (WP-07b): the last child of `<main>`, below the works
+          section — the one-scroll document ends here. */}
+      <Footer />
     </>
   )
 }

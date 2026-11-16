@@ -38,8 +38,9 @@
   --color-ink: #1d1d1b;
   /* ~7:1 on the background — secondary text that must stay readable. */
   --color-ink-muted: #625d55;
-  /* ~4.6:1 on the background — the quietest step the page uses (footer credit). */
-  --color-ink-faint: #8a8378;
+  /* ~4.6:1 on the background (measured, WCAG AA) — the quietest step the
+     page uses (footer credit). */
+  --color-ink-faint: #767065;
 
   /* A single hairline, for the one rule the footer may carry. */
   --color-rule: #e6e0d4;
@@ -166,6 +167,14 @@
      same gap above the lockup, so the figure is the lockup's, not the
      spinner's. */
   --spacing-lockup: 1.25rem;
+
+  /* The works image's hover parallax (WP-07a): the maximum translate the
+     pointer's offset can drive on the image inside its frame. Transform only
+     — the frame's box never moves, so the CLS stays zero. Small on purpose:
+     the brief is calm, and a parallax that reads as a parallax would not be
+     one. The client piece resolves this from the computed style rather than
+     re-declaring it. */
+  --parallax-travel: 0.5rem;
 
   /* The transition spinner's diameter — the one figure the spinner's layout
      decides (the ring's border is fixed geometry of a ring, like the X's

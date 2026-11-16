@@ -109,6 +109,20 @@ export const site: SiteConfig = {
     objectFit: 'cover',
   },
 
+  /* ── Works ───────────────────────────────────────────────────────────────────
+     The works section (WP-07a) renders this image, and `seo.ogImage` is its
+     social-share copy: the two keys name the same one file, and the
+     `validate-config` cross-check keeps them honest. The heading is not a
+     key here — it resolves to the menu entry's label, so the word is
+     declared once. */
+  works: {
+    /* The responsive Works image (WP-03), as a logical path under `media.basePath` —
+       the same file `seo.ogImage` names. */
+    image: '/media/arbeiten/signal-2026-07-20-20-14-59-447_003.jpg',
+    /* The text alternative of the image, as it renders. */
+    imageAlt: 'Handgefertigte Kommode von Lukas Federbusch',
+  },
+
   /* ── Navigation ─────────────────────────────────────────────────────────────────
      The menu item list, in the order the menu renders it — the menu renders
      this list and nothing else. The two contact entries carry no label of

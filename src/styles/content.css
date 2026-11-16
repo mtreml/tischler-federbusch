@@ -1,0 +1,233 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE CONTENT SECTIONS (WP-07a) AND THE FOOTER AND THE LEGAL PAGE (WP-07b)
+
+   The works section, below the landing in the one-scroll document; the footer
+   closes the document, and the legal page reads from the same sheet. Every
+   value here is a token; this file carries layout structure only. Mobile-first,
+   as the site is.
+
+   The parallax moves the *image inside a clipped frame* — transform only.
+   The frame's box is the one the layout reserved (intrinsic dimensions on the
+   image), and it never moves, which is what keeps the CLS at zero. Under
+   reduced motion the listeners are never attached (the client piece), so this
+   block is the CSS side of the same collapse: the transform settles
+   instantly rather than easing.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.works {
+  padding-inline: var(--spacing-gutter);
+  padding-block: var(--spacing-section);
+}
+
+.works__heading {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-wide);
+  margin-block-start: 0;
+  margin-block-end: calc(var(--spacing) * 2);
+}
+
+/* The tagline, verbatim from `identity.tagline`: one line, the muted step —
+   the works section's quiet voice. */
+.works__tagline {
+  font-size: var(--text-lg);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-muted);
+  margin-block-start: 0;
+  margin-block-end: calc(var(--spacing) * 6);
+}
+
+/* The frame: the one the layout reserves and never moves. It clips, so the
+   parallax's translate reads as depth rather than as overflow past the gutters. */
+.works__frame {
+  overflow: clip;
+}
+
+/* The image: block, full width of the frame, height derived from the intrinsic
+   dimensions (which the element also carries as attributes — the reservation
+   does not wait for the bytes). The transform transition is the parallax's
+   settle: the image eases toward the cursor's offset and back on leave. */
+.works__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform var(--duration-menu) var(--ease-quiet);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .works__image {
+    transition: none;
+  }
+}
+
+@media (min-width: var(--breakpoint-md)) {
+  .works {
+    padding-inline: var(--spacing-gutter-md);
+    padding-block: var(--spacing-section-md);
+  }
+
+  .works__heading {
+    font-size: var(--text-3xl);
+  }
+}
+
+@media (min-width: var(--breakpoint-lg)) {
+  .works {
+    padding-inline: var(--spacing-gutter-lg);
+    padding-block: var(--spacing-section-lg);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE FOOTER (WP-07b)
+
+   The last element of the one-scroll document: one line on `md` and up,
+   stacked on the phone. The one hairline the footer may carry — the token
+   exists for this rule and nothing else — and the two quiet ink steps:
+   the legal label on the muted, the credit on the faintest the page uses.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.site-footer {
+  border-top: 1px solid var(--color-rule);
+  padding-inline: var(--spacing-gutter);
+  padding-block: var(--spacing-section);
+}
+
+/* Stacked on the phone: the three cells, in order, one below the other. */
+.site-footer__row {
+  display: grid;
+  gap: calc(var(--spacing) * 2);
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.site-footer__copyright {
+  margin: 0;
+  color: var(--color-ink-muted);
+}
+
+/* The legal entry: the muted step, a quiet link — no underline at rest. */
+.site-footer__legal {
+  color: var(--color-ink-muted);
+  text-decoration: none;
+}
+
+/* The credit: the quietest step the page uses. The link inherits it — the
+   target opens in a new tab (decided), and that is markup, not style. */
+.site-footer__credit {
+  margin: 0;
+  color: var(--color-ink-faint);
+}
+
+.site-footer__credit a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   THE LEGAL PAGE (WP-07b)
+
+   A plain static document: the h1, "Zuletzt geändert:", the three numbered
+   sections. The header floats over the top of it (transparent at progress 0,
+   the same warm ground), so the top breath is the section's, as on the page.
+   No layout jumps: there is no animation here, and the CLS invariant holds.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.legal {
+  padding-inline: var(--spacing-gutter);
+  padding-block: var(--spacing-section);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+}
+
+.legal__heading {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-wide);
+  margin-block-start: 0;
+  margin-block-end: calc(var(--spacing) * 6);
+}
+
+.legal__last-changed {
+  font-size: var(--text-sm);
+  color: var(--color-ink-muted);
+  margin-block-start: 0;
+  margin-block-end: calc(var(--spacing) * 8);
+}
+
+.legal__section {
+  margin-block-end: calc(var(--spacing) * 8);
+}
+
+.legal__section:last-child {
+  margin-block-end: 0;
+}
+
+.legal__section h2 {
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  margin-block-start: 0;
+  margin-block-end: calc(var(--spacing) * 3);
+}
+
+.legal__section p {
+  margin-block-start: 0;
+  margin-block-end: calc(var(--spacing) * 3);
+}
+
+/* The impressum block: name, the address lines and the contact links as
+   block-level spans — one block, no `<br>`. */
+.legal__line {
+  display: block;
+}
+
+/* The five rights, in configured order: a plain list, the labels the one
+   bold the page carries. */
+.legal__rights {
+  margin-block-start: 0;
+  margin-block-end: calc(var(--spacing) * 3);
+  padding-inline-start: var(--spacing-gutter);
+}
+
+.legal__rights li {
+  margin-block-end: var(--spacing);
+}
+
+.legal__rights li:last-child {
+  margin-block-end: 0;
+}
+
+@media (min-width: var(--breakpoint-md)) {
+  .site-footer {
+    padding-inline: var(--spacing-gutter-md);
+    padding-block: var(--spacing-section-md);
+  }
+
+  /* One line: the three cells spread across it. */
+  .site-footer__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .legal {
+    padding-inline: var(--spacing-gutter-md);
+    padding-block: var(--spacing-section-md);
+  }
+
+  .legal__heading {
+    font-size: var(--text-3xl);
+  }
+}
+
+@media (min-width: var(--breakpoint-lg)) {
+  .site-footer {
+    padding-inline: var(--spacing-gutter-lg);
+    padding-block: var(--spacing-section-lg);
+  }
+
+  .legal {
+    padding-inline: var(--spacing-gutter-lg);
+    padding-block: var(--spacing-section-lg);
+  }
+}

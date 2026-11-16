@@ -18,7 +18,20 @@
     "description": "Diese Adresse existiert nicht.",
     "toLanding": "Zur Startseite"
   },
+  "footer": {
+    "creditPrefix": "Website von"
+  },
   "impressumDatenschutz": {
-    "placeholder": "Impressum & Datenschutz"
+    "heading": "Impressum & Datenschutz",
+    "description": "Impressum und Datenschutzerklärung der Website von Lukas Federbusch, Tischlermeister in Lienz.",
+    "lastChangedLabel": "Zuletzt geändert:",
+    "impressum": "1. Impressum",
+    "datenschutz": "2. Datenschutzerklärung",
+    "urheberrecht": "3. Urheberrecht",
+    "responsible": "Für den Inhalt verantwortlich:",
+    "retention": "Protokolldaten werden {days} Tage lang gespeichert.",
+    "rightsLabel": "Rechte der betroffenen Personen:",
+    "rightsExercisePrefix": "Diese Rechte können Sie über",
+    "rightsExerciseSuffix": "ausüben."
   }
 }

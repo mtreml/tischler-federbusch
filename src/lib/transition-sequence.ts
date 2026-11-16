@@ -82,8 +82,8 @@ function scrollToTarget(target: TransitionTarget): void {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     return
   }
-  /* The `#arbeiten` element does not exist until WP-07 — the optional chain
-     is the degradation: no element, no scroll, the cover still reveals. */
+  /* The works section (WP-07a); the optional chain stays the degradation:
+     no element, no scroll, the cover still reveals. */
   document.getElementById(target)?.scrollIntoView({ behavior: 'auto' })
 }
 
@@ -117,22 +117,25 @@ export function useTransitionSequence(): {
 
   /* The action the overlay runs on its beat — the WP-06c action table as
      one closure. */
-  const action = useCallback<TransitionAction>((target) => {
-    const from = fromRef.current
-    if (from === landingPath) {
-      /* On the landing: no route change — just the scroll. It waits one
+  const action = useCallback<TransitionAction>(
+    (target) => {
+      const from = fromRef.current
+      if (from === landingPath) {
+        /* On the landing: no route change — just the scroll. It waits one
          frame: the close effect (t0) releases the scroll lock after the
          commit, before the next frame, so the page can move by the time
          the frame fires. */
-      requestAnimationFrame(() => scrollToTarget(target))
-      return
-    }
-    /* On another page: navigate home beneath the cover with the browser's
+        requestAnimationFrame(() => scrollToTarget(target))
+        return
+      }
+      /* On another page: navigate home beneath the cover with the browser's
        own scroll suppressed, and let the commit effect scroll once the raw
        pathname has actually changed. */
-    commitScrollRef.current = target
-    router.push(landingPath, { scroll: false })
-  }, [landingPath, router])
+      commitScrollRef.current = target
+      router.push(landingPath, { scroll: false })
+    },
+    [landingPath, router],
+  )
 
   /* The commit: the raw pathname read changed — the destination is really
      mounted, so the deferred scroll runs now. */
@@ -197,9 +200,7 @@ export function useTransitionSequence(): {
       if (event.button !== 0) return
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
       const trigger =
-        event.target instanceof Element
-          ? event.target.closest('[data-transition]')
-          : null
+        event.target instanceof Element ? event.target.closest('[data-transition]') : null
       if (trigger === null) return
       /* Exactly two elements carry the attribute; anything else is a
          pass-through. */

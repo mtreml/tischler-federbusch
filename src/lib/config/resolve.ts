@@ -59,3 +59,20 @@ export function resolveCanonicalUrl(path: string): string {
   const suffix = path.startsWith('/') ? path : `/${path}`
   return `${origin}${suffix}`
 }
+
+/**
+ * The works section's heading (WP-07a): the label of the menu entry that points
+ * at the `routes.anchors.arbeiten` target. The word is declared exactly once —
+ * in `navigation.items`, where the menu reads it — and the section reads the
+ * same key here rather than re-declaring it. Throws when no menu entry carries
+ * the anchor: a section without its heading is not a state this site renders,
+ * so the build fails loudly rather than shipping it.
+ */
+export function resolveWorksHeading(): string {
+  for (const item of site.navigation.items) {
+    if (item.type === 'anchor' && item.anchor === 'arbeiten') return item.label
+  }
+  throw new Error(
+    'navigation.items carries no anchor entry for "arbeiten" — the works section has no heading to read',
+  )
+}

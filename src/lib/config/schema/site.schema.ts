@@ -144,6 +144,18 @@ export const siteSchema = z.object({
     objectFit: z.enum(['cover', 'contain', 'fill']),
   }),
 
+  /* ── Works ────────────────────────────────────────────────────────────────────
+     The works section (WP-07a): one responsive image and its text
+     alternative. `works.image` names the same file as `seo.ogImage` — the
+     cross-check that keeps the pair honest lives in `../validate`, because
+     it is a relation between two keys rather than a shape of one. */
+  works: z.object({
+    /** The responsive Works image (WP-03), as a logical asset path under `media.basePath`. */
+    image: checkedString(isAssetPath, 'must be a rooted asset path'),
+    /** The text alternative of the image, as it renders. */
+    imageAlt: z.string(),
+  }),
+
   /* ── Navigation ─────────────────────────────────────────────────────────────────
      The menu item list, in order. The menu renders this list and nothing else;
      an item is an anchor entry (label here, target in `routes.anchors`) or one

@@ -55,6 +55,36 @@ describe('the production gate', () => {
   })
 })
 
+describe('the works group (WP-07a)', () => {
+  it('names the same works image as seo.ogImage', () => {
+    expect(site.works.image).toBe(site.seo.ogImage)
+  })
+
+  it('fails by name when works.image and seo.ogImage name different files', () => {
+    const broken = { ...site, works: { ...site.works, image: '/media/arbeiten/other.jpg' } }
+    const report = validateConfiguration({
+      site: broken,
+      legal,
+      media,
+      environment: 'production',
+    })
+    expect(report.ok).toBe(false)
+    expect(report.errors.map((finding) => finding.key)).toContain('works.image')
+  })
+
+  it('fails by name when works.imageAlt is missing', () => {
+    const broken = { ...site, works: { ...site.works, imageAlt: '' } }
+    const report = validateConfiguration({
+      site: broken,
+      legal,
+      media,
+      environment: 'production',
+    })
+    expect(report.ok).toBe(false)
+    expect(report.errors.map((finding) => finding.key)).toContain('works.imageAlt')
+  })
+})
+
 describe('the locale set', () => {
   it('is derived from the configuration, not re-declared', () => {
     expect(locales).toEqual(site.languages.supported)

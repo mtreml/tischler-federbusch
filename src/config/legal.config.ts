@@ -19,7 +19,7 @@ import type { LegalConfig } from '@/lib/config/schema/legal.schema'
 
 export const legal: LegalConfig = {
   /* Display string, German — rendered verbatim as "Zuletzt geändert: …". */
-  lastChanged: '13. November 2026',
+  lastChanged: '16. November 2026',
 
   /* ── 2. Datenschutzerklärung ──────────────────────────────────────────────────
      `responsible` is not a key here: it resolves to `site.contact.name` at
@@ -27,9 +27,9 @@ export const legal: LegalConfig = {
   datenschutz: {
     /* The web-server-protocol paragraph, verbatim from the spec. */
     processedData:
-      'Der Webserver protokolliert jeden Abruf mit IP-Adresse, Zeitpunkt, abgerufener ' +
-      'Adresse und der vom Browser übermittelten Programmkennung. Die Protokolle dienen ' +
-      'ausschließlich dem sicheren Betrieb und der Fehlersuche.',
+      'Der Webserver protokolliert jeden Abruf mit IP-Adresse, Zeitpunkt,' +
+      'und der vom Browser übermittelten Programmkennung. Die Protokolle dienen ' +
+      'ausschließlich dem sicheren Betrieb der Webseite und der Fehlersuche.',
 
     /* IONOS GmbH, Germany, our Auftrag. `note` is the disclosure sentence
        verbatim; `provider` and `country` are the structured halves of the same
@@ -37,12 +37,10 @@ export const legal: LegalConfig = {
     hosting: {
       provider: 'IONOS GmbH',
       country: 'Deutschland',
-      note:
-        'Diese Website wird bei IONOS GmbH in Deutschland betrieben, der sie in unserem ' +
-        'Auftrag bereitstellt und dabei die oben genannten Protokolldaten verarbeitet.',
+      note: 'Diese Webseite wird auf einem Server von IONOS GmbH in Deutschland bereitstellt. Dabei werden die oben genannten Protokolldaten verarbeitet.',
     },
 
-    /* "Speicherdauer: 60 Tage". */
+    /* "Speicherdauer in Tagen". */
     retentionDays: 60,
 
     /* The five GDPR rights, in the order the page renders them, exercised
@@ -53,27 +51,27 @@ export const legal: LegalConfig = {
       {
         id: 'zugang',
         label: 'Auskunft',
-        text: 'eine Kopie der personenbezogenen Daten, die wir über Sie führen, anzufordern.',
+        text: 'Sie können eine Kopie der personenbezogenen Daten, die wir über Sie führen, anfordern.',
       },
       {
         id: 'berichtigung',
         label: 'Berichtigung',
-        text: 'unrichtige oder unvollständige Daten berichtigen zu lassen.',
+        text: 'Sie können unrichtige oder unvollständige Daten berichtigen lassen.',
       },
       {
         id: 'loeschung',
         label: 'Löschung',
-        text: 'die Löschung Ihrer Daten zu verlangen.',
+        text: 'Sie können die Löschung Ihrer Daten verlangen.',
       },
       {
         id: 'widerspruch',
         label: 'Widerspruch',
-        text: 'sich gegen die Verarbeitung Ihrer Daten zur Wehr zu setzen.',
+        text: 'Sie können sich der Verarbeitung Ihrer Daten widersprechen.',
       },
       {
         id: 'widerruf',
         label: 'Widerruf der Einwilligung',
-        text: 'eine erteilte Einwilligung jederzeit zu widerrufen.',
+        text: 'Sie können eine erteilte Einwilligung jederzeit widerrufen.',
       },
     ],
   },

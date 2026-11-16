@@ -1,5 +1,10 @@
 import type { MediaConfig } from '@/lib/config/schema/media.schema'
-import { videoDeliveryRegistry, type ImplementedVideoProvider } from '@mtreml/portfolio-core/media'
+import {
+  mediaSourceRegistry,
+  videoDeliveryRegistry,
+  type ImplementedMediaSource,
+  type ImplementedVideoProvider,
+} from '@mtreml/portfolio-core/media'
 
 /* ══════════════════════════════════════════════════════════════════════════════
    MEDIA CONFIGURATION
@@ -84,3 +89,17 @@ export const media: MediaConfig = {
 const VIDEO_PROVIDER = 'local' satisfies ImplementedVideoProvider
 
 export const videoDelivery = videoDeliveryRegistry[VIDEO_PROVIDER]
+
+/* ─────────────────────────────────────────────────────────────────────────
+   THE RENDER-SIDE IMAGE DELIVERY
+
+   The image analogue of the video delivery above, for the one responsive
+   image the site carries (the Works image, WP-07a). The same registry the
+   pipeline writes from, keyed by the source above: the render side names the
+   *logical* path and the adapter resolves it through the committed manifest
+   into the served renditions. Declared as a literal `satisfies`, for the
+   same reason as `VIDEO_PROVIDER`.
+   ───────────────────────────────────────────────────────────────────────── */
+const IMAGE_SOURCE = 'local' satisfies ImplementedMediaSource
+
+export const imageDelivery = mediaSourceRegistry[IMAGE_SOURCE]

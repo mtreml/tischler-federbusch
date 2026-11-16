@@ -225,6 +225,26 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   f.require('landing.video', site.landing.video)
   f.require('landing.videoLabel', site.landing.videoLabel)
 
+  /* ── Works — the one responsive image, named by two keys ────────────────────
+     `works.image` and `seo.ogImage` are the on-page render and the social-share
+     copy of the same file, stated in two places on purpose — and a pair stated
+     in two places is checked against itself, the way the phone forms are: a
+     disagreement is a contradiction (one of the two is the wrong file), not an
+     absence, so it fails in development as well. */
+  f.require('works.image', site.works.image)
+  f.require('works.imageAlt', site.works.imageAlt)
+  if (
+    !isBlank(site.works.image) &&
+    !isBlank(site.seo.ogImage) &&
+    site.works.image !== site.seo.ogImage
+  ) {
+    f.contradiction(
+      'works.image',
+      `is "${site.works.image}", which seo.ogImage names as "${site.seo.ogImage}" — ` +
+        'both keys name the one works image',
+    )
+  }
+
   /* ── Navigation ─────────────────────────────────────────────────────────────────
      The menu renders this list and nothing else, so an empty list is an empty
      menu, and an anchor item whose key names no configured anchor is a dead
@@ -351,6 +371,7 @@ function checkConfiguredMedia(
   const configured: ReadonlyArray<readonly [key: string, value: string]> = [
     ['landing.video', site.landing.video],
     ['seo.ogImage', site.seo.ogImage],
+    ['works.image', site.works.image],
   ]
   for (const [key, value] of configured) {
     const logical = toDeclaredPath(value, media.basePath)

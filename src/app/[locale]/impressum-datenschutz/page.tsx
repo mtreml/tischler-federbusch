@@ -1,16 +1,56 @@
+import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
+import { Header } from '@/components/layout/Header'
+import { legal } from '@/config/legal.config'
 import { routing } from '@/i18n/routing'
+import { pathFor } from '@/i18n/paths'
+import { applyTitleTemplate, resolveCanonicalUrl, resolveContact } from '@/lib/config/resolve'
 
 /* ══════════════════════════════════════════════════════════════════════════════
-   IMPRESSUM & DATENSCHUTZ — WP-01 PLACEHOLDER
+   IMPRESSUM & DATENSCHUTZ (WP-07b) — the only separate page on the site
 
-   The only separate page on the site. WP-07 renders the legal text from the central
-   configuration; the route and its static generation are real already.
+   Replaces the WP-01 placeholder. The legal *prose* is German configuration
+   data (`legal.config.ts`) rendered verbatim; the structural labels (the
+   heading, "Zuletzt geändert:", the section titles, the rights' closing
+   sentence) come from the locale messages — the established split. No
+   portfolio-core pattern is re-used for this view (spec): it is a plain
+   static document that reads config and messages.
+
+   The contact block renders through `resolveContact()` and nowhere else —
+   name, address, telephone and email live in `site.contact`, exactly as in
+   the menu, so the page and the menu cannot disagree.
+
+   The header mounts here, as-is (the spec's "the hamburger is always
+   shown"): on a fresh load `useLandingProgress()` rests at the snapshot 0,
+   and the header's background layer is the same colour as this page's
+   background, so nothing about it betrays its landing provenance.
+
+   Metadata (WP-07b): this document supplies only its own title (through the
+   one template), description and canonical — the canonical via
+   `resolveCanonicalUrl(pathFor(...))`, the trailing-slash helper a plain
+   static host requires — and inherits the layout's OpenGraph set.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations('impressumDatenschutz')
+
+  return {
+    title: applyTitleTemplate(t('heading')),
+    description: t('description'),
+    alternates: {
+      canonical: resolveCanonicalUrl(pathFor({ href: '/impressum-datenschutz', locale })),
+    },
+  }
 }
 
 export default async function ImpressumDatenschutzPage({
@@ -21,11 +61,68 @@ export default async function ImpressumDatenschutzPage({
   const { locale } = await params
   setRequestLocale(locale)
 
-  const t = await getTranslations({ locale })
+  const t = await getTranslations('impressumDatenschutz')
+  const contact = resolveContact()
+  const rights = legal.datenschutz.rights
 
   return (
-    <section className="impressum-datenschutz">
-      <h1>{t('impressumDatenschutz.placeholder')}</h1>
-    </section>
+    <>
+      {/* The header, as-is: the hamburger is always shown, on every document. */}
+      <Header />
+      <section className="legal">
+        <h1 className="legal__heading">{t('heading')}</h1>
+        <p className="legal__last-changed">
+          {t('lastChangedLabel')} {legal.lastChanged}
+        </p>
+
+        <section className="legal__section">
+          <h2>{t('impressum')}</h2>
+          <p className="legal__impressum">
+            {contact.name}
+            {/* One block, no `<br>`: each line is a block-level span. */}
+            {contact.addressLines.map((line) => (
+              <span key={line} className="legal__line">
+                {line}
+              </span>
+            ))}
+            <span className="legal__line">
+              <a href={contact.telHref}>{contact.phoneDisplay}</a> ·{' '}
+              <a href={contact.mailtoHref}>{contact.email}</a>
+            </span>
+          </p>
+        </section>
+
+        <section className="legal__section">
+          <h2>{t('datenschutz')}</h2>
+          {/* The responsible party resolves to `contact.name` — there is no
+              second copy of the name in the configuration. */}
+          <p>
+            {t('responsible')} {contact.name}
+          </p>
+          <p>{legal.datenschutz.processedData}</p>
+          <p>{legal.datenschutz.hosting.note}</p>
+          <p>{t('retention', { days: legal.datenschutz.retentionDays })}</p>
+          <p>{t('rightsLabel')}</p>
+          <ul className="legal__rights">
+            {rights.map((right) => (
+              <li key={right.id} id={right.id}>
+                <strong>{right.label}</strong> — {right.text}
+              </li>
+            ))}
+          </ul>
+          {/* The email renders from the resolved contact, not from the message
+              — the address lives in `contact.*` in exactly one place. */}
+          <p>
+            {t('rightsExercisePrefix')} <a href={contact.mailtoHref}>{contact.email}</a>{' '}
+            {t('rightsExerciseSuffix')}
+          </p>
+        </section>
+
+        <section className="legal__section">
+          <h2>{t('urheberrecht')}</h2>
+          <p>{legal.urheberrecht}</p>
+        </section>
+      </section>
+    </>
   )
 }
