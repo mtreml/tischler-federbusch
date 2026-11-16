@@ -1,5 +1,9 @@
-/* The ±45° are the X's own geometry, not design values, so they live here; every other value is a token.
-   The tap target is the button's padding, not the lines. */
+/* The ±45° and the pivot offsets are the X's own geometry, not design values, so they live here; every length is a token.
+   The tap target is the button's padding, not the lines.
+
+   Each line is a pure rotation about a fixed pivot (identical transform-origin in both states), so the transition
+   interpolates one angle and X → hamburger is the exact reverse of hamburger → X. The pivots are the lines' fixed
+   points, with d = gap + thickness: (±(1+√2)/4 · d, ∓d/4) — 0.6036 is (1+√2)/4; calc() has no sqrt(). */
 
 .menu-button {
   display: inline-flex;
@@ -18,18 +22,29 @@
   width: var(--menu-btn-line-length);
   height: var(--menu-btn-line-thickness);
   background-color: var(--color-ink);
-  transform-origin: center;
   transition: transform var(--duration-menu) var(--ease-quiet);
 }
 
+.menu-button__line--top {
+  transform-origin: calc(
+      50% - 0.6036 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness))
+    )
+    calc(50% + 0.25 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness)));
+}
+
+.menu-button__line--bottom {
+  transform-origin: calc(
+      50% - 0.6036 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness))
+    )
+    calc(50% - 0.25 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness)));
+}
+
 .menu-button[aria-expanded='true'] .menu-button__line--top {
-  transform: translateY(calc((var(--menu-btn-line-thickness) + var(--menu-btn-gap)) / 2))
-    rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .menu-button[aria-expanded='true'] .menu-button__line--bottom {
-  transform: translateY(calc((var(--menu-btn-line-thickness) + var(--menu-btn-gap)) / -2))
-    rotate(-45deg);
+  transform: rotate(-45deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -92,7 +107,8 @@
 .menu__entries {
   position: absolute;
   inset-inline: 0;
-  bottom: var(--spacing-section);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
 }
