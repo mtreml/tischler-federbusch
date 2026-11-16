@@ -4,34 +4,14 @@ import { legalSchema, type LegalConfig } from './schema/legal.schema'
 import { mediaSchema, type MediaConfig } from './schema/media.schema'
 import { siteSchema, type SiteConfig } from './schema/site.schema'
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE CONFIGURATION VALIDATION ENTRY POINT
-
-   One entry point covering all three configuration modules plus the token
-   file's one invariant (the single background definition). Run by
-   `scripts/validate-config.ts` as gate 1:
-
-     config:validate            development severity — warns and lists
-     config:validate:strict     production severity — fails and names (re-run by prebuild)
-
-   Findings carry a *kind*, and the kind decides the severity through the single
-   matrix at the bottom of this file. Nothing here decides severity for itself:
-
-     malformed      wrong shape or format — an error in every environment,
-                    because it is wrong rather than incomplete.
-     contradiction  two values cannot both hold — an error in every environment,
-                    because waiting does not fix it. The config ↔ declared-media
-                    cross-check below is one: a configured path the pipeline never
-                    generates for cannot be fixed by waiting.
-     unfilled       a required value is empty — a warning in development, an
-                    error in production.
-   ══════════════════════════════════════════════════════════════════════════════ */
+// Validation entry point for site, legal and media config plus the tokens.css
+// invariant. malformed/contradiction are always errors; unfilled is a warning
+// in development, an error in production.
 
 export type Environment = 'development' | 'production'
 export type FindingKind = 'malformed' | 'contradiction' | 'unfilled'
 
 export interface Finding {
-  /** Dotted key path, exactly as the configuration names it. */
   key: string
   kind: FindingKind
   message: string
@@ -41,7 +21,6 @@ export interface ValidationReport {
   environment: Environment
   errors: Finding[]
   warnings: Finding[]
-  /** False when any finding resolved to `error`. */
   ok: boolean
 }
 
@@ -50,28 +29,13 @@ export interface Inputs {
   legal: LegalConfig
   media: MediaConfig
   environment?: Environment
-  /**
-   * The text of `src/config/tokens.css`, supplied by the caller rather than read
-   * here: a CSS file is not a module, and the token invariant is checked only
-   * when the text is present rather than reporting the file as missing.
-   */
+  /** Text of tokens.css, passed in by the caller (CSS is not a module). */
   tokenSource?: string
-  /**
-   * The logical paths `declaredMedia()` carries, supplied by the caller for the
-   * same reason: a unit test that walked the drop folder would pass on one
-   * machine and fail on a runner. When present, every configured media path
-   * (`landing.video`, `seo.ogImage`) must resolve in this set — guarding
-   * against a latent misconfiguration.
-   */
+  /** Logical paths from `declaredMedia()`; when present, every configured media path must be in it. */
   declaredMediaPaths?: readonly string[]
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Emptiness — what counts as unfilled, in one place. `0` and `false` are
-   values, not absences: `retentionDays: 0` is a real retention policy and a
-   `false` flag is a real answer, so neither is swept up as "empty".
-   ───────────────────────────────────────────────────────────────────────── */
-
+// `0` and `false` are values, not absences — never treated as "empty".
 function isBlank(value: unknown): boolean {
   if (value === null || value === undefined) return true
   if (typeof value === 'string') return value.trim() === ''
@@ -87,12 +51,10 @@ class FindingCollector {
     this.findings.push({ key, kind, message })
   }
 
-  /** A required value is empty. Warning in development, error in production. */
   unfilled(key: string, message = 'is required and is empty'): void {
     this.add(key, 'unfilled', message)
   }
 
-  /** Two values cannot both hold. Always an error, in every environment. */
   contradiction(key: string, message: string): void {
     this.add(key, 'contradiction', message)
   }
@@ -101,7 +63,7 @@ class FindingCollector {
     this.add(key, 'malformed', message)
   }
 
-  /** Reports `key` as unfilled when blank. Returns whether it was present. */
+  /** Returns false (reporting unfilled) when `value` is blank. */
   require(key: string, value: unknown, message?: string): boolean {
     if (isBlank(value)) {
       this.unfilled(key, message)
@@ -115,17 +77,9 @@ class FindingCollector {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Site cross-key rules
-   ───────────────────────────────────────────────────────────────────────── */
-
 const digits = (value: string) => value.replace(/\D/g, '')
 
-/**
- * The display form and the `tel:` target must name one number. The domestic
- * form trades the leading `0` for the `43` country code — `0664 410 72 72` is
- * `+436644107272` — so the two digit strings differ by exactly that exchange.
- */
+// `0664 410 72 72` and `+436644107272`: domestic `0` trades for the `43` country code.
 function phoneFormsAgree(display: string, href: string): boolean {
   const d = digits(display)
   const h = digits(href)
@@ -135,7 +89,6 @@ function phoneFormsAgree(display: string, href: string): boolean {
 function checkSite(site: SiteConfig, f: FindingCollector): void {
   const locales = site.languages.supported
 
-  /* ── Languages — the locale set is the single source of truth ─────────────── */
   if (f.require('languages.supported', locales, 'is required — the site has no locale')) {
     if (new Set(locales).size !== locales.length) {
       f.contradiction('languages.supported', 'lists the same locale more than once')
@@ -150,9 +103,6 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
     )
   }
 
-  /* ── Routes — every per-locale key must carry a segment for every locale ─────
-     A segment missing for one locale 404s in exactly that locale, and an entry
-     for a locale the site does not configure is a value nothing renders. */
   for (const locale of locales) {
     const segment = site.routes.impressum[locale]
     if (isBlank(segment)) {
@@ -176,7 +126,6 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
     }
   }
 
-  /* ── Contact — the one place contact details exist ─────────────────────────── */
   f.require('contact.name', site.contact.name)
   if (f.require('contact.addressLines', site.contact.addressLines)) {
     site.contact.addressLines.forEach((line, index) => {
@@ -189,9 +138,6 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   f.require('contact.phoneHref', site.contact.phoneHref)
   f.require('contact.email', site.contact.email)
 
-  /* The display form and the href are one fact stated twice, and the pair is
-     checked as a whole: a menu that dials a different number than it prints is
-     a defect, not an incomplete field, so it fails in development as well. */
   if (!isBlank(site.contact.phoneDisplay) && !isBlank(site.contact.phoneHref)) {
     if (!phoneFormsAgree(site.contact.phoneDisplay, site.contact.phoneHref)) {
       const message =
@@ -203,7 +149,6 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
     }
   }
 
-  /* ── Identity, footer, seo, landing ─────────────────────────────────────────── */
   f.require('identity.displayName', site.identity.displayName)
   f.require('identity.tagline', site.identity.tagline)
   f.require('identity.domain', site.identity.domain)
@@ -225,12 +170,7 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   f.require('landing.video', site.landing.video)
   f.require('landing.videoLabel', site.landing.videoLabel)
 
-  /* ── Works — the one responsive image, named by two keys ────────────────────
-     `works.image` and `seo.ogImage` are the on-page render and the social-share
-     copy of the same file, stated in two places on purpose — and a pair stated
-     in two places is checked against itself, the way the phone forms are: a
-     disagreement is a contradiction (one of the two is the wrong file), not an
-     absence, so it fails in development as well. */
+  // `works.image` and `seo.ogImage` name the same file; disagreement is a contradiction.
   f.require('works.image', site.works.image)
   f.require('works.imageAlt', site.works.imageAlt)
   if (
@@ -245,10 +185,6 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
     )
   }
 
-  /* ── Navigation ─────────────────────────────────────────────────────────────────
-     The menu renders this list and nothing else, so an empty list is an empty
-     menu, and an anchor item whose key names no configured anchor is a dead
-     entry — both are contradictions of what the menu is for. */
   if (f.require('navigation.items', site.navigation.items, 'is required — the menu is empty')) {
     site.navigation.items.forEach((item, index) => {
       if (item.type === 'anchor') {
@@ -266,10 +202,6 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Legal cross-key rules
-   ───────────────────────────────────────────────────────────────────────── */
-
 function checkLegal(legal: LegalConfig, f: FindingCollector): void {
   f.require('legal.lastChanged', legal.lastChanged)
 
@@ -280,9 +212,7 @@ function checkLegal(legal: LegalConfig, f: FindingCollector): void {
   f.require('legal.datenschutz.hosting.country', hosting.country)
   f.require('legal.datenschutz.hosting.note', hosting.note)
 
-  /* The sentence and the fields are one fact in two copies, and the sentence
-     is the one that reaches the reader — so the pair is checked against each
-     other rather than trusted. */
+  // hosting.note is the reader-facing copy of the fields — check it against them.
   if (!isBlank(hosting.note)) {
     if (!isBlank(hosting.provider) && !hosting.note.includes(hosting.provider)) {
       f.contradiction(
@@ -309,10 +239,6 @@ function checkLegal(legal: LegalConfig, f: FindingCollector): void {
 
   f.require('legal.urheberrecht', legal.urheberrecht)
 }
-
-/* ─────────────────────────────────────────────────────────────────────────
-   Media cross-key rules
-   ───────────────────────────────────────────────────────────────────────── */
 
 function checkMedia(media: MediaConfig, f: FindingCollector): void {
   f.require('media.basePath', media.basePath)
@@ -344,18 +270,7 @@ function checkMedia(media: MediaConfig, f: FindingCollector): void {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Config ↔ declared media
-
-   The configured media paths are served paths, and the pipeline only ever
-   serves what `declaredMedia()` declares. A value the two disagree on ships as
-   a black video or a broken og image — visible to every visitor, named to
-   nobody. So the pair is checked as a whole: each configured path must sit
-   under `media.basePath` and name a declared logical path, in every
-   environment, because it is a contradiction rather than an absence.
-   ───────────────────────────────────────────────────────────────────────── */
-
-/** A served path as its declared logical path: `/media/landing/…` → `landing/…`. */
+/** `/media/landing/…` → `landing/…`: a served path as its declared logical path. */
 function toDeclaredPath(value: string, basePath: string): string | undefined {
   const prefix = `${basePath}/`
   return value.startsWith(prefix) ? value.slice(prefix.length) : undefined
@@ -391,10 +306,6 @@ function checkConfiguredMedia(
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   The token file's one invariant
-   ───────────────────────────────────────────────────────────────────────── */
-
 function checkTokens(tokenSource: string, f: FindingCollector): void {
   const backgroundDefinitions = tokenSource.match(/^\s*--color-background\s*:/gm) ?? []
   if (backgroundDefinitions.length === 0) {
@@ -407,10 +318,6 @@ function checkTokens(tokenSource: string, f: FindingCollector): void {
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   Schema pass
-   ───────────────────────────────────────────────────────────────────────── */
-
 function runSchema(name: string, schema: z.ZodType, value: unknown, f: FindingCollector): void {
   const result = schema.safeParse(value)
   if (result.success) return
@@ -420,16 +327,10 @@ function runSchema(name: string, schema: z.ZodType, value: unknown, f: FindingCo
   }
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
-   The entry point
-   ───────────────────────────────────────────────────────────────────────── */
-
 export function validateConfiguration(inputs: Inputs): ValidationReport {
   const environment = inputs.environment ?? 'development'
   const f = new FindingCollector()
 
-  /* Shape and format first: a malformed value fails everywhere, so there is no
-     reason to defer it, and the cross-key rules below can then trust the shape. */
   runSchema('site', siteSchema, inputs.site, f)
   runSchema('legal', legalSchema, inputs.legal, f)
   runSchema('media', mediaSchema, inputs.media, f)
@@ -442,14 +343,11 @@ export function validateConfiguration(inputs: Inputs): ValidationReport {
   checkLegal(inputs.legal, f)
   checkMedia(inputs.media, f)
 
-  /* Only when the caller supplies the declared set: a unit test without it is
-     still a full validation of everything else, and the gate always supplies it. */
   if (inputs.declaredMediaPaths !== undefined) {
     checkConfiguredMedia(inputs.site, inputs.media, inputs.declaredMediaPaths, f)
   }
 
-  /* The single severity matrix. Nothing above knows which environment it runs
-     in; the kind alone decides. */
+  // Severity matrix: the kind alone decides.
   const errors: Finding[] = []
   const warnings: Finding[] = []
   for (const finding of f.all()) {
@@ -461,7 +359,6 @@ export function validateConfiguration(inputs: Inputs): ValidationReport {
   return { environment, errors, warnings, ok: errors.length === 0 }
 }
 
-/** Human-readable report. Used by the gate. */
 export function formatReport(report: ValidationReport): string {
   const lines: string[] = []
   const label = `environment = ${report.environment}`

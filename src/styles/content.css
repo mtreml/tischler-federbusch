@@ -1,18 +1,10 @@
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE CONTENT SECTIONS AND THE FOOTER AND THE LEGAL PAGE
+/* THE CONTENT SECTIONS, THE FOOTER AND THE LEGAL PAGE
+   The works section, below the landing; the footer closes the document; the legal page
+   reads from the same sheet. Every value a token; this file carries layout structure only.
 
-   The works section, below the landing in the one-scroll document; the footer
-   closes the document, and the legal page reads from the same sheet. Every
-   value here is a token; this file carries layout structure only. Mobile-first,
-   as the site is.
-
-   The parallax moves the *image inside a clipped frame* — transform only.
-   The frame's box is the one the layout reserved (intrinsic dimensions on the
-   image), and it never moves, which is what keeps the CLS at zero. Under
-   reduced motion the listeners are never attached (the client piece), so this
-   block is the CSS side of the same collapse: the transform settles
-   instantly rather than easing.
-   ══════════════════════════════════════════════════════════════════════════════ */
+   The parallax moves the image inside a clipped frame — transform only. The frame's box is
+   reserved (intrinsic dimensions) and never moves, which keeps the CLS at zero. Under reduced
+   motion the transform settles instantly rather than easing. */
 
 .works {
   padding-inline: var(--spacing-gutter);
@@ -27,8 +19,7 @@
   margin-block-end: calc(var(--spacing) * 2);
 }
 
-/* The tagline, verbatim from `identity.tagline`: one line, the muted step —
-   the works section's quiet voice. */
+/* The tagline, verbatim from `identity.tagline`: one line, the muted step. */
 .works__tagline {
   font-size: var(--text-lg);
   line-height: var(--leading-snug);
@@ -37,16 +28,13 @@
   margin-block-end: calc(var(--spacing) * 6);
 }
 
-/* The frame: the one the layout reserves and never moves. It clips, so the
-   parallax's translate reads as depth rather than as overflow past the gutters. */
+/* The frame: reserved and never moves. It clips, so the parallax's translate reads as depth. */
 .works__frame {
   overflow: clip;
 }
 
-/* The image: block, full width of the frame, height derived from the intrinsic
-   dimensions (which the element also carries as attributes — the reservation
-   does not wait for the bytes). The transform transition is the parallax's
-   settle: the image eases toward the cursor's offset and back on leave. */
+/* The image: height derived from the intrinsic dimensions (carried as attributes — the
+   reservation does not wait for the bytes). The transform transition is the parallax's settle. */
 .works__image {
   display: block;
   width: 100%;
@@ -78,14 +66,10 @@
   }
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE FOOTER
-
-   The last element of the one-scroll document: one line on `md` and up,
-   stacked on the phone. The one hairline the footer may carry — the token
-   exists for this rule and nothing else — and the two quiet ink steps:
-   the legal label on the muted, the credit on the faintest the page uses.
-   ══════════════════════════════════════════════════════════════════════════════ */
+/* THE FOOTER
+   The last element of the one-scroll document: one line on `md` and up, stacked on the phone.
+   The one hairline it may carry, and the two quiet ink steps: legal on the muted, credit
+   on the faintest the page uses. */
 
 .site-footer {
   border-top: 1px solid var(--color-rule);
@@ -93,7 +77,7 @@
   padding-block: var(--spacing-section);
 }
 
-/* Stacked on the phone: the three cells, in order, one below the other. */
+/* Stacked on the phone: the three cells in order, one below the other. */
 .site-footer__row {
   display: grid;
   gap: calc(var(--spacing) * 2);
@@ -106,14 +90,13 @@
   color: var(--color-ink-muted);
 }
 
-/* The legal entry: the muted step, a quiet link — no underline at rest. */
+/* The legal entry: the muted step, no underline at rest. */
 .site-footer__legal {
   color: var(--color-ink-muted);
   text-decoration: none;
 }
 
-/* The credit: the quietest step the page uses. The link inherits it — the
-   target opens in a new tab (decided), and that is markup, not style. */
+/* The credit: the quietest step the page uses; the link inherits it. */
 .site-footer__credit {
   margin: 0;
   color: var(--color-ink-faint);
@@ -124,14 +107,9 @@
   text-decoration: none;
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE LEGAL PAGE
-
-   A plain static document: the h1, "Zuletzt geändert:", the three numbered
-   sections. The header floats over the top of it (transparent at progress 0,
-   the same warm ground), so the top breath is the section's, as on the page.
-   No layout jumps: there is no animation here, and the CLS invariant holds.
-   ══════════════════════════════════════════════════════════════════════════════ */
+/* THE LEGAL PAGE
+   A plain static document: the h1, "Zuletzt geändert:", the three numbered sections.
+   The header floats over the top (transparent at progress 0); no animation here, so the CLS holds. */
 
 .legal {
   padding-inline: var(--spacing-gutter);
@@ -175,14 +153,12 @@
   margin-block-end: calc(var(--spacing) * 3);
 }
 
-/* The impressum block: name, the address lines and the contact links as
-   block-level spans — one block, no `<br>`. */
+/* The impressum block: name, address lines and contact links as block-level spans — no `<br>`. */
 .legal__line {
   display: block;
 }
 
-/* The five rights, in configured order: a plain list, the labels the one
-   bold the page carries. */
+/* The five rights, in configured order: a plain list, the labels the one bold the page carries. */
 .legal__rights {
   margin-block-start: 0;
   margin-block-end: calc(var(--spacing) * 3);

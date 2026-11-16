@@ -1,39 +1,18 @@
-/* ══════════════════════════════════════════════════════════════════════════════
-   THE PAGE TRANSITION OVERLAY
+/* THE PAGE TRANSITION OVERLAY
+   The layering and the spinner. The cover and the reveal are the motion library's (the
+   token-resolved opacities in `TransitionOverlay.tsx`), so this file carries no transition
+   of its own — plus the reduced-motion collapse of whatever could still move on the CSS side.
 
-   The layering and the spinner. The cover and the reveal are driven by the
-   motion library on the overlay node itself (the token-resolved opacities
-   in `TransitionOverlay.tsx`), so this file carries no transition of its
-   own for those — it owes the animation exactly what `menu.css` owes the
-   menu's: nothing of its own, plus the reduced-motion collapse at the end
-   of whatever could still move on the CSS side (the spinner).
+   The spinner: a ring turning at a constant rate, deliberately not a bar (a bar reads as
+   measured progress; there is nothing to measure). One arc in ink on a `--color-rule` ring —
+   without the arc the rotation would run and be invisible. Linear, not `--ease-quiet`, because
+   an eased turn decelerates into every revolution and reads as stalling. `role="progressbar"`,
+   the `aria-label` and the `aria-valuenow` flip are the component's business. */
 
-   ── The spinner ──────────────────────────────────────────────────────────────
-   A ring turning at a constant rate, and deliberately not a bar travelling
-   across a track: a bar invites reading as progress — a measured fraction of
-   something — and there is nothing here to measure. A rotation says
-   "working" and nothing more, which is the whole of what the transition
-   asks of this element. One arc in ink on a `--color-rule` ring: a ring of
-   a single colour is identical at every angle, so without the arc the
-   rotation would be running and invisible.
+/* The overlay: above the menu (z 50) that launches it, below the skip link (z 100).
 
-   Linear, and not `--ease-quiet`: an eased turn decelerates into every
-   revolution, which reads as stalling rather than as working. The period
-   is `--duration-menu-items` — twice the figure is a full revolution in
-   the time of a UI transition, which reads as frantic.
-
-   `role="progressbar"`, the `aria-label` and the `aria-valuenow` flip are
-   the component's business (`common.loading` is the label's string).
-   ══════════════════════════════════════════════════════════════════════════════ */
-
-/* The overlay: the whole viewport, above the menu (z 50) that launches it
-   and below the skip link (z 100) — the rung the z ladder owes it.
-
-   **It never takes the pointer.** A slow or interrupted animation must not
-   strand the visitor, and an overlay that swallows clicks is exactly how
-   that happens; the layering is the only thing this node owes the paint.
-   The opacity is the motion library's, applied inline — no transition or
-   animation of its own here. */
+   It never takes the pointer: a slow or interrupted animation must not strand the visitor.
+   The opacity is the motion library's, applied inline — no transition of its own here. */
 .transition-overlay {
   position: fixed;
   inset: 0;
@@ -41,12 +20,9 @@
   pointer-events: none;
 }
 
-/* The positioned wrapper: the one node the `--name-landing-*` pair anchors —
-   the same pair the landing lockup reads, so the lockup rests in exactly
-   the spot the landing lockup occupies and the name never moves between
-   the page and the overlay. Its box is the lockup's box: the spinner is
-   out of flow, above it, and so adds nothing to the height that
-   `translate(-50%, -50%)` centres. */
+/* The positioned wrapper: the one node the `--name-landing-*` pair anchors — the same pair
+   the landing lockup reads, so the name never moves between the page and the overlay.
+   Its box is the lockup's box: the spinner is out of flow and adds nothing to the height. */
 .transition-overlay__lockup {
   position: absolute;
   top: var(--name-landing-top);
@@ -54,10 +30,8 @@
   transform: translate(-50%, -50%);
 }
 
-/* The spinner: the ring, above the lockup. `bottom: 100%` is the wrapper's
-   top edge and the margin is the lockup's own gap token — no measurement
-   of the lockup's height is owed, at any viewport step. The diameter is
-   the one figure the layout decides; everything else is token. */
+/* The spinner: the ring, above the lockup. `bottom: 100%` is the wrapper's top edge; the
+   margin is the lockup's own gap token — no measurement of the lockup's height is owed. */
 .transition-overlay__spinner {
   position: absolute;
   bottom: 100%;
@@ -67,24 +41,20 @@
   inline-size: var(--spinner-size);
   block-size: var(--spinner-size);
   border: 0.125rem solid var(--color-rule);
-  /* One arc in ink — the part of the ring that is not the rule colour. */
-  border-block-start-color: var(--color-ink);
+  border-block-start-color: var(--color-ink); /* the one arc in ink — the rotation made visible */
   border-radius: 50%;
   animation: transition-spinner var(--duration-menu-items) linear infinite;
 }
 
-/* Linear: an eased turn decelerates into every revolution (see above). */
 @keyframes transition-spinner {
   to {
     rotate: 360deg;
   }
 }
 
-/* ── The lockup ──────────────────────────────────────────────────────────────
-   The mark stacked on the wordmark — the same pair the landing lockup
-   renders. In flow inside the positioned wrapper above, so the wrapper's
-   box is its box. The gap is the lockup's own token; the widths are the
-   shared families the landing reads (see `TransitionLockup.tsx`). */
+/* The lockup: the mark stacked on the wordmark — the same pair the landing renders. In flow
+   inside the positioned wrapper; the gap is the lockup's own token, the widths the shared
+   families the landing reads (see `TransitionLockup.tsx`). */
 .transition-lockup {
   display: flex;
   flex-direction: column;
@@ -123,12 +93,8 @@
   }
 }
 
-/* ── Reduced motion ───────────────────────────────────────────────────────────
-   The overlay never mounts under the preference (the component renders
-   nothing), so this block is the belt on the braces: whatever this side of
-   the surface could still move is the spinner, and it stops. Nothing here
-   moves; the cover and reveal are the library's business and are skipped,
-   not shortened, on the component side. */
+/* Reduced motion: the overlay never mounts under the preference, so this is the belt on the
+   braces — whatever this side could still move is the spinner, and it stops. */
 @media (prefers-reduced-motion: reduce) {
   .transition-overlay__spinner {
     animation: none;

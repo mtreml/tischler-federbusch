@@ -5,35 +5,16 @@ import { pathFor } from '@/i18n/paths'
 
 import '@/styles/globals.css'
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   NOT FOUND
+/* NOT FOUND
+   An unmatched path has no language — no segment to read, and guessing from headers would
+   contradict the locale-fixed-by-URL rule — so the page renders in every configured locale,
+   default first (today: one block). The web server must return this with a genuine 404
+   status, not a 200, or search engines index it.
 
-   **An unmatched path has no language.** There is no language segment to read, and guessing
-   one from request headers would contradict the requirement that the locale is fixed by the
-   URL. The page therefore renders in every configured locale on one page, default locale
-   first — which today means one block.
-
-   Under a static export this emits `out/404.html`, and the web server must be pointed at it
-   so an unknown path returns a genuine 404 status rather than a 200. The serving layer
-   (`portfolio-serve` locally, Caddy on the VPS) does; a static host that serves this
-   document with a success status is the failure mode to watch for, because search engines
-   index it.
-
-   ── Why this file sits at the app root and renders its own document ────────────
-   This is `global-not-found.tsx`, not `not-found.tsx`, and the two are different
-   conventions: `not-found` renders where a segment calls `notFound()`, while this one
-   answers a URL that matches **no route at all**. Next skips rendering entirely and
-   returns this document. It is experimental and needs `experimental.globalNotFound`;
-   next.config.ts holds the flag and why this architecture requires it.
-
-   Because Next bypasses rendering, nothing wraps this page — not a layout, and there is no
-   `app/layout.tsx` in any case. So it renders its own `<html>` and imports the
-   stylesheet itself. Without that it exports as an unstyled document with no `lang`
-   attribute.
-
-   `lang` is the default locale, and each language block carries its own `lang` so a screen
-   reader switches pronunciation rather than reading German with another voice.
-   ══════════════════════════════════════════════════════════════════════════════ */
+   This is `global-not-found.tsx`, not `not-found.tsx`: it answers a URL that matches no route
+   at all. Next bypasses rendering entirely, so nothing wraps this page — it renders its own
+   `<html>` and imports the stylesheet itself, or it exports unstyled with no `lang`.
+   `lang` is the default locale; each block carries its own `lang` for screen-reader pronunciation. */
 
 /** Default locale first, then the others in configured order. */
 function orderedLocales(): string[] {
@@ -60,13 +41,9 @@ export default async function NotFoundPage() {
     <html lang={defaultLocale}>
       <head>
         {/*
-          `global-not-found` bypasses the app's normal rendering, and with it the Metadata
-          API — so nothing supplies a `<title>` unless this file does. Without it the
-          exported 404 document has no title at all, which the accessibility gate reports
-          at serious severity (`document-title`) and which leaves the browser tab showing a
-          bare URL.
-
-          Marked not to be indexed: there is no layout above this page to carry it.
+          Bypassing rendering also bypasses the Metadata API — this file supplies the title,
+          or the exported 404 has none (a11y gate: `document-title`). Noindex: no layout above
+          this page to carry it.
         */}
         <title>{blocks[0]?.title ?? 'Page not found'}</title>
         <meta name="robots" content="noindex, follow" />
@@ -78,17 +55,13 @@ export default async function NotFoundPage() {
         <main id="main-content">
           {blocks.map((block, index) => (
             <section key={block.locale} lang={block.locale}>
-              {/* Exactly one top-level heading per page: the default locale carries the
-                  h1 and the other languages would follow as h2, which is also the reading
-                  order. */}
+              {/* One top-level heading per page: the default locale carries the h1. */}
               {index === 0 ? <h1>{block.title}</h1> : <h2>{block.title}</h2>}
               <p>{block.description}</p>
               {/*
-                Plain anchors, deliberately. This document is reached at an arbitrary
-                unmatched path outside the [locale] segment, so there is no current locale
-                for the locale-aware Link to be relative to. The href comes from `pathFor`,
-                so it is still the localized segment from the map, carrying the trailing
-                slash the export writes.
+                Plain anchors, deliberately: this document sits outside the [locale] segment,
+                so there is no current locale for the locale-aware Link to be relative to.
+                The href comes from `pathFor` — still the localized segment from the map.
               */}
               <nav aria-label={block.title}>
                 <a href={block.landingHref}>{block.toLanding}</a>
