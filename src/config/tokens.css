@@ -59,6 +59,8 @@
 
   --spacing-touch-target: 2.75rem;
 
+  --radius-works: 0.5rem;
+
   --spacing-lockup: 1.25rem;  /* the mark↔name gap; the overlay's spinner rests the same gap above the lockup */
 
   --parallax-travel: 0.5rem;  /* max translate; transform only, CLS stays zero */

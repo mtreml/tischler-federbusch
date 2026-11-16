@@ -14,11 +14,11 @@ import { barVisibleAt, stickOffset } from '@/lib/landing-scroll'
      • past the stick point the translate tracks the scroll exactly, so the
        name rests in the header slot at every further position;
      • the bar is hidden while the fold is on screen, appears exactly at the
-       works section's top, and stays.
+       handover scroll (works top at the name's bottom edge), and stays.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 const S_STICK = 600
-const WORKS_TOP = 900
+const BAR_ON_AT = 900
 
 describe('stickOffset', () => {
   it('is 0 before the stick point, and not one pixel early', () => {
@@ -34,13 +34,13 @@ describe('stickOffset', () => {
 })
 
 describe('barVisibleAt', () => {
-  it('is hidden while the fold is on screen, and not one pixel early', () => {
-    expect(barVisibleAt(0, WORKS_TOP)).toBe(false)
-    expect(barVisibleAt(WORKS_TOP - 1, WORKS_TOP)).toBe(false)
+  it('is hidden before the handover scroll, and not one pixel early', () => {
+    expect(barVisibleAt(0, BAR_ON_AT)).toBe(false)
+    expect(barVisibleAt(BAR_ON_AT - 1, BAR_ON_AT)).toBe(false)
   })
 
-  it('appears at exactly the works section top and stays', () => {
-    expect(barVisibleAt(WORKS_TOP, WORKS_TOP)).toBe(true)
-    expect(barVisibleAt(WORKS_TOP + 5000, WORKS_TOP)).toBe(true)
+  it('appears at exactly the handover scroll and stays', () => {
+    expect(barVisibleAt(BAR_ON_AT, BAR_ON_AT)).toBe(true)
+    expect(barVisibleAt(BAR_ON_AT + 5000, BAR_ON_AT)).toBe(true)
   })
 })

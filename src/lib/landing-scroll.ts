@@ -4,16 +4,16 @@ import { useSyncExternalStore } from 'react'
 
 // One boolean, two readers: the name's stick and the white bar's appearance are the same scroll.
 // The name scroll is the writer (it measures the name and the works section's top); the header is the reader.
-// Instant, not a fade: the bar appears the frame the white part reaches the viewport top.
+// Instant, not a fade: the bar appears the frame the white part reaches the name's bottom edge.
 
 /** The name's y translate at scroll `s`: it scrolls with the page until its top edge reaches the header slot. */
 export function stickOffset(s: number, sStick: number): number {
   return Math.max(0, s - sStick)
 }
 
-/** The bar is visible from the frame the works section's top reaches the viewport top, and stays. */
-export function barVisibleAt(s: number, worksTop: number): boolean {
-  return s >= worksTop
+/** The bar is visible from the frame `s` reaches the handover scroll, and stays. */
+export function barVisibleAt(s: number, barOnAt: number): boolean {
+  return s >= barOnAt
 }
 
 // Module-level store (not lifted state): the writer and readers live in different branches of the tree.

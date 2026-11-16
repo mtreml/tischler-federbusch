@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, type HTMLMotionProps, type Transition } from 'motion/react'
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 
 import { Name } from '@/components/brand/Name'
 import { MenuButton } from '@/components/layout/MenuButton'
@@ -89,10 +89,25 @@ function useMenuMotion(): MenuMotion | null {
 
 const MotionNameLink = motion.create(Link)
 
-// The panel's X reads the live state: `AnimatePresence` keeps the removed panel mounted but its subtree still re-renders, so the X morphs back in lockstep.
+// The button mounts with the panel, so it would be born as the finished X: a CSS transition never runs on first paint.
+// Start closed and arm on the frame after, so the hamburger→X morph plays in lockstep with the panel's fade;
+// on close `AnimatePresence` keeps the panel mounted, so the reverse morph runs on the live state.
 function PanelCloseButton() {
   const { isOpen, close } = useMenu()
-  return <MenuButton open={isOpen} onToggle={() => close()} controlsId={MENU_PANEL_ID} />
+  const [armed, setArmed] = useState(false)
+
+  useLayoutEffect(() => {
+    let inner = 0
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setArmed(true))
+    })
+    return () => {
+      cancelAnimationFrame(outer)
+      cancelAnimationFrame(inner)
+    }
+  }, [])
+
+  return <MenuButton open={armed && isOpen} onToggle={() => close()} controlsId={MENU_PANEL_ID} />
 }
 
 export function Menu() {

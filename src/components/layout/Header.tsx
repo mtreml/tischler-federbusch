@@ -8,9 +8,11 @@ import { MenuButton } from './MenuButton'
 
 // Fixed, transparent over the landing fold — the video runs across the full first screenful, so there is no solid bar.
 // The background is 0/1 from the shared store (`src/lib/landing-scroll.ts`): the white bar appears the frame the
-// works section reaches the viewport top and stays — the bar keeps `pointer-events: none`. `introPending` mirrors
+// works section's top reaches the name's bottom edge and stays — the frame the landing's clip starts to cut the
+// pinned name, so the bar's name never has a gap — the bar keeps `pointer-events: none`. `introPending` mirrors
 // the stage's `data-intro`: name and button arrive together.
-// The `page` variant (impressum) is always opaque and carries its own centered name — there is no landing there.
+// The centered name renders in the bar once it appears (landing) or always (`page` variant, impressum) — it must
+// live here, not in the landing, because the landing clips its descendants the frame the bar appears.
 
 interface HeaderProps {
   variant?: 'landing' | 'page'
@@ -29,7 +31,7 @@ export function Header({ variant = 'landing', introPending = false }: HeaderProp
         style={{ opacity: variant === 'page' || barVisible ? 1 : 0 }}
         aria-hidden="true"
       />
-      {variant === 'page' ? (
+      {variant === 'page' || barVisible ? (
         <div className="header__name" aria-hidden="true">
           <Name className="header__name-image" />
         </div>

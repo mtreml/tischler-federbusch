@@ -7,15 +7,16 @@ import { barVisibleAt, setBarVisible, stickOffset } from '@/lib/landing-scroll'
 
 // The name's stick: transform-driven, no layout shift. The name scrolls up with the page and, the frame its
 // natural top edge reaches `--name-header-top`, pins there — no horizontal travel, it stays centered, so the
-// pinned name is the bar's centered name. The same handler writes the bar's visibility: the white bar appears
-// when the works section reaches the viewport top and stays. Final position/size read the base tokens, so the
-// menu's and the overlay's name slots never move when the menu toggles.
+// pinned name is the bar's centered name. The same handler writes the bar's visibility: the bar's name takes
+// over the moment the works section's top reaches the name's bottom edge — the frame the landing's clip starts
+// to bite the pinned name — so the name is never absent. Final position/size read the base tokens, so the menu's
+// and the overlay's name slots never move when the menu toggles.
 
 interface StickMetrics {
   /** The scrollY at which the name's natural top edge reaches the header slot. */
   sStick: number
-  /** The works section's document top; the bar is visible at and below it. */
-  worksTop: number | null
+  /** The scrollY at which the works section's top reaches the name's bottom edge; the bar is visible at and below it. */
+  barOnAt: number | null
 }
 
 function cssLengthPx(value: string): number {
@@ -52,9 +53,11 @@ export function NameScroll({ children }: NameScrollProps) {
       getComputedStyle(document.documentElement).getPropertyValue('--name-header-top') ?? '',
     )
 
+    const nameBottom = headerTop + nameRect.height
+
     setMetrics({
       sStick: scroll + nameRect.top - headerTop,
-      worksTop: worksRect === undefined ? null : scroll + worksRect.top,
+      barOnAt: worksRect === undefined ? null : scroll + worksRect.top - nameBottom,
     })
   }, [])
 
@@ -81,7 +84,11 @@ export function NameScroll({ children }: NameScrollProps) {
         nameEl.style.transform = `translateY(${ty}px)`
         nameEl.style.willChange = 'transform'
       }
-      setBarVisible(metrics.worksTop !== null && barVisibleAt(s, metrics.worksTop))
+      const barOn = metrics.barOnAt !== null && barVisibleAt(s, metrics.barOnAt)
+      setBarVisible(barOn)
+      // The bar's name (the header's) takes over the same slot; hide this one in the same frame. `visibility`
+      // keeps the layout and the re-measure read intact.
+      nameEl.style.visibility = barOn ? 'hidden' : ''
     }
 
     const onScroll = () => {

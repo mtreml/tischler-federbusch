@@ -17,6 +17,7 @@
 
 .works__frame {
   overflow: clip;
+  border-radius: var(--radius-works);
 }
 
 .works__frame + .works__frame {

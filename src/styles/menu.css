@@ -39,8 +39,10 @@
     calc(50% - 0.25 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness)));
 }
 
+/* Opening eases in: with the shared quiet curve the 45° lands early and the X reads too soon; the slow start holds the lines near horizontal. Closing resolves against the base easing above. */
 .menu-button[aria-expanded='true'] .menu-button__line--top {
   transform: rotate(45deg);
+  transition-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
 }
 
 .menu-button[aria-expanded='true'] .menu-button__line--bottom {

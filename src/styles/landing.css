@@ -124,7 +124,7 @@
 }
 
 /* The white bar: 0/1 from the shared store (`src/lib/landing-scroll.ts`) — the works section's top crossing the
-   viewport top; instant, no fade. */
+   name's bottom edge (the frame the landing's clip starts to cut the pinned name); instant, no fade. */
 .header__background {
   position: absolute;
   inset: 0;
