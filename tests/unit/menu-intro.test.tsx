@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Menu } from '@/components/layout/Menu'
 import { Header } from '@/components/layout/Header'
@@ -8,6 +8,13 @@ import { site } from '@/config/site.config'
 import { MENU_PANEL_ID, MenuProvider } from '@/lib/menu'
 import messages from '@/i18n/messages/de.json'
 import { setPrefersReducedMotion } from './match-media'
+
+/* The sequence owner (WP-06d) reads the raw router and pathname, which need
+   the app router mounted — this suite asserts motion, not the sequence, so
+   the hook is mocked. */
+vi.mock('@/lib/transition-sequence', () => ({
+  useTransitionSequence: () => ({ transitionTo: () => {} }),
+}))
 
 /* ══════════════════════════════════════════════════════════════════════════════
    THE MENU INTRO AND CLOSE (WP-06b3)

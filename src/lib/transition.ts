@@ -42,6 +42,9 @@ export type TransitionAction = (target: TransitionTarget) => void
  * unmounted, or the visitor has asked for reduced motion) → a no-op; the
  * caller's plain fallback is the same decision, made on the caller's side.
  *
+ * @returns whether a subscriber ran the transition — `false` on the no-op
+ *          path, which is how the sequence owner (WP-06d) reaches its
+ *          degraded branch
  * @param options.from             the address the transition starts from — instrumentation
  * @param options.to               the target (`'arbeiten'` or `'landing'`)
  * @param options.onCoverOpaque    called once, at the beat the cover reaches full opacity —
@@ -77,16 +80,19 @@ export function runTransitionAction(target: TransitionTarget): void {
 
 /* ── The imperative entry ──────────────────────────────────────────────────── */
 
-export type BeginTransition = (options: BeginTransitionOptions) => void
+export type BeginTransition = (options: BeginTransitionOptions) => boolean
 
-let begin: BeginTransition = () => {}
+let begin: BeginTransition = () => false
 
 /** The overlay registers its starter; `null` on unmount restores the no-op. */
 export function registerBeginTransition(handler: BeginTransition | null): void {
-  begin = handler ?? (() => {})
+  begin = handler ?? (() => false)
 }
 
-/** The public entry; see `BeginTransitionOptions` for the degradation contract. */
-export function beginTransition(options: BeginTransitionOptions): void {
-  begin(options)
+/**
+ * The public entry; see `BeginTransitionOptions` for the degradation
+ * contract. Returns whether a subscriber ran the transition.
+ */
+export function beginTransition(options: BeginTransitionOptions): boolean {
+  return begin(options)
 }

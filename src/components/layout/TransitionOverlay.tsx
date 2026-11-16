@@ -171,6 +171,9 @@ export function TransitionOverlay() {
       onCoverOpaque: options.onCoverOpaque,
       onRevealComplete: options.onRevealComplete,
     })
+    /* A subscriber ran the transition — the sequence owner's normal path.
+       The no-op registration returns `false` on its own. */
+    return true
   }, [])
 
   /* The imperative entry: the sequence owner (WP-06d) calls

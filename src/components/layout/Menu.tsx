@@ -1,17 +1,18 @@
 'use client'
 
 import { AnimatePresence, motion, type HTMLMotionProps, type Transition } from 'motion/react'
-import { useLocale, useTranslations } from 'next-intl'
-import { useState, type MouseEvent } from 'react'
+import { useTranslations } from 'next-intl'
+import { useState } from 'react'
 
 import { Name } from '@/components/brand/Name'
 import { MenuButton } from '@/components/layout/MenuButton'
 import { site } from '@/config/site.config'
 import { Link } from '@/i18n/navigation'
-import { pathFor } from '@/i18n/paths'
 import { resolveContact } from '@/lib/config/resolve'
 import { MENU_PANEL_ID, useMenu } from '@/lib/menu'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
+import { useTransitionSequence } from '@/lib/transition-sequence'
+import type { TransitionTarget } from '@/lib/transition'
 
 /* ══════════════════════════════════════════════════════════════════════════════
    THE MENU PANEL (WP-06b2)
@@ -36,15 +37,19 @@ import { usePrefersReducedMotion } from '@/lib/reduced-motion'
    header slot does (WP-05), so the name on the page and the name in the menu
    are byte-identical: opening or closing the menu never moves the name.
 
-   ── The fallback actions (WP-06d replaces them) ──────────────────────────────
-   Plain navigation, no transition overlay:
-     • the name link — `close()`, then the landing plus the top of the page;
-     • the anchor entry — `close()`, then a jump to the anchor (the landing is
-       navigated first when the menu was opened elsewhere).
-   Both read the *finished, localized* URL off `window.location` (the raw
-   read `src/i18n/navigation.ts` sanctions), and the landing path is built
-   through `pathFor` — never a second copy of a route. The tel and mailto
-   entries are native links and are never touched.
+   ── The transition triggers (WP-06d) ─────────────────────────────────────────
+   The two, and only two, `data-transition` elements — the name link
+   (`"landing"`) and the anchor entry (`"arbeiten"`) — are the entry points
+   of the sequence owned by `useTransitionSequence` (`src/lib/transition-sequence.ts`):
+     • normal path — the hook's document-level capture-phase `click`
+       interception `preventDefault`s first and hands the click to
+       `transitionTo` with the element's `data-transition` value;
+     • reduced-motion path — the interception is never attached, so each
+       trigger keeps exactly one guarded `onClick`: no-op when
+       `event.defaultPrevented`, otherwise `transitionTo(target)` — the guard
+       is what keeps the two paths from double-firing.
+   The plain `href`s stay the no-JS fallback, and the tel and mailto entries
+   are native links that are never touched.
    ══════════════════════════════════════════════════════════════════════════════ */
 
 /** One row of the entry list, in the order `site.navigation.items` declares it. */
@@ -167,13 +172,12 @@ const MotionNameLink = motion.create(Link)
 
 export function Menu() {
   const { isOpen, close } = useMenu()
-  const locale = useLocale()
   const t = useTranslations('menu')
   const contact = resolveContact()
 
-  /* The landing, as the export writes it — `pathFor` carries the trailing
-     slash a plain static host needs. */
-  const landingPath = pathFor({ href: '/', locale })
+  /* The one sequence with the one owner: the menu closes at t0, the action
+     runs on the overlay's beat, the focus returns at the end (WP-06d1). */
+  const { transitionTo } = useTransitionSequence()
 
   /* The motion, resolved from the tokens and gated on the preference (see the
      section above): the background and the name fade over `--duration-menu`,
@@ -191,36 +195,6 @@ export function Menu() {
   }
   const risePixels = reducedMotion || tokens === null ? 0 : tokens.risePixels
 
-  /* The fallback navigation: a plain read of where the visitor actually is —
-     never a re-localization. WP-06d removes both handlers; the markup they
-     carry (`data-transition`) stays. */
-  const isOnLanding = () => window.location.pathname === landingPath
-
-  const handleLanding = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault()
-    close()
-    if (isOnLanding()) {
-      /* The scroll lock is released by the provider's close effect, which
-         runs before the next frame — the top of the page is reached after
-         the page can move again. */
-      requestAnimationFrame(() => window.scrollTo(0, 0))
-    } else {
-      window.location.assign(landingPath)
-    }
-  }
-
-  const handleAnchor = (event: MouseEvent<HTMLAnchorElement>, anchorId: string) => {
-    event.preventDefault()
-    close()
-    if (isOnLanding()) {
-      requestAnimationFrame(() => document.getElementById(anchorId)?.scrollIntoView())
-    } else {
-      /* Navigating home first: the browser loads the landing and lands on
-         the anchor in one plain navigation. */
-      window.location.assign(`${landingPath}#${anchorId}`)
-    }
-  }
-
   const renderEntry = (item: (typeof site.navigation.items)[number], index: number) => {
     /* The intro and its reverse on this row: it fades while it rises, from
        `--menu-item-rise × (index + 1)` — the shared timeline, the distance
@@ -233,13 +207,23 @@ export function Menu() {
       transition: travel,
     }
     if (item.type === 'anchor') {
+      /* The sequence target — the same value the `data-transition` attribute
+         carries, so the reduced-motion `onClick` hands the sequence exactly
+         what the capture interception would have read off the element. */
+      const anchorTarget = (site.routes.anchors[item.anchor] ?? item.anchor) as TransitionTarget
       return (
         <motion.a
           key={item.anchor}
           className="menu__entry"
           href={menuEntryHref(item)}
-          data-transition={site.routes.anchors[item.anchor] ?? item.anchor}
-          onClick={(event) => handleAnchor(event, site.routes.anchors[item.anchor] ?? item.anchor)}
+          data-transition={anchorTarget}
+          onClick={(event) => {
+            /* The reduced-motion path — the interception is not attached,
+               and on the normal path the capture `preventDefault` has already
+               taken the click: this guard keeps the two paths exclusive. */
+            if (event.defaultPrevented) return
+            transitionTo(anchorTarget)
+          }}
           {...entryMotion}
         >
           {menuEntryLabel(item)}
@@ -289,7 +273,11 @@ export function Menu() {
             className="menu__name"
             href="/"
             data-transition="landing"
-            onClick={handleLanding}
+            onClick={(event) => {
+              /* The reduced-motion path — see the anchor entry's guard. */
+              if (event.defaultPrevented) return
+              transitionTo('landing')
+            }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

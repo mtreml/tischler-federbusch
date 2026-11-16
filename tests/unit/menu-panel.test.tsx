@@ -3,7 +3,7 @@ import { join } from 'node:path'
 
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { NextIntlClientProvider } from 'next-intl'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { Menu } from '@/components/layout/Menu'
 import { Header } from '@/components/layout/Header'
@@ -12,11 +12,19 @@ import { resolveContact } from '@/lib/config/resolve'
 import { MENU_PANEL_ID, MenuProvider } from '@/lib/menu'
 import messages from '@/i18n/messages/de.json'
 
+/* The sequence owner (WP-06d) reads the raw router and pathname, which need
+   the app router mounted — the suite asserts the panel's markup and hands
+   the sequence out through a spy. */
+const mockTransitionTo = vi.fn()
+vi.mock('@/lib/transition-sequence', () => ({
+  useTransitionSequence: () => ({ transitionTo: mockTransitionTo }),
+}))
+
 /* ══════════════════════════════════════════════════════════════════════════════
    THE MENU PANEL AND ITS MOUNTING (WP-06b2)
 
-   The invariants the panel carries before any animation is on it (WP-06b3)
-   and before the overlay sequence replaces the fallbacks (WP-06d):
+   The invariants the panel carries before any animation is on it (WP-06b3),
+   with the overlay sequence in place (WP-06d):
 
      • The dialog contract: `role="dialog"`, `aria-modal="true"`, the label —
        and the panel's `id` is the one string the `MenuButton`s' `aria-controls`
@@ -26,7 +34,9 @@ import messages from '@/i18n/messages/de.json'
        `resolveContact()` — asserted on the strings, so a second copy can never
        drift in — and the name link points at the landing.
      • The hooks: `data-transition` on exactly the name link ("landing") and
-       the first entry ("arbeiten"), the two WP-06d takes over.
+       the first entry ("arbeiten"), and the triggers' guarded `onClick`
+       hands the sequence the element's value — a no-op when the event is
+       already prevented.
      • The mounting: the header carries a `MenuButton` wired to `useMenu()` —
        one press opens — and the `[locale]` layout renders the provider and
        the panel after `<main>`.
@@ -188,33 +198,47 @@ describe('the transition hooks', () => {
   })
 })
 
-describe('the fallback actions (replaced by WP-06d)', () => {
-  /* On the landing (the jsdom URL set to the localized one), the fallbacks
-     close the menu first — the navigation itself is a plain browser move. */
-  it('name link: closes the menu before navigating home', async () => {
-    window.history.replaceState({}, '', '/de/')
+describe('the transition triggers (WP-06d)', () => {
+  /* The triggers' guarded `onClick` is the reduced-motion path: it hands the
+     sequence the element's `data-transition` value, and a no-op when the
+     capture interception has already taken the click. */
+  it('the name link hands the sequence the "landing" target', () => {
+    mockTransitionTo.mockClear()
     const view = renderClosed()
     openMenu(view)
-    expect(panel(view)).not.toBeNull()
 
     const nameLink = panel(view).querySelector('.menu__name')
     expect(nameLink).not.toBeNull()
     if (nameLink === null) return
     fireEvent.click(nameLink)
-    /* The exit runs through the panel's `AnimatePresence` (WP-06b3): the
-       removal is a beat, not a synchronous unmount. */
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), { timeout: 1000 })
+    expect(mockTransitionTo).toHaveBeenCalledTimes(1)
+    expect(mockTransitionTo).toHaveBeenCalledWith('landing')
     view.unmount()
   })
 
-  it('Arbeiten: closes the menu before jumping to the anchor', async () => {
-    window.history.replaceState({}, '', '/de/')
+  it('the anchor entry hands the sequence the "arbeiten" target', () => {
+    mockTransitionTo.mockClear()
     const view = renderClosed()
     openMenu(view)
 
     fireEvent.click(screen.getByRole('link', { name: 'Arbeiten' }))
-    /* The exit runs through the panel's `AnimatePresence` (WP-06b3). */
-    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull(), { timeout: 1000 })
+    expect(mockTransitionTo).toHaveBeenCalledTimes(1)
+    expect(mockTransitionTo).toHaveBeenCalledWith('arbeiten')
+    view.unmount()
+  })
+
+  it('a prevented click is a no-op — the interception already took it', () => {
+    mockTransitionTo.mockClear()
+    const view = renderClosed()
+    openMenu(view)
+
+    const nameLink = panel(view).querySelector('.menu__name')
+    expect(nameLink).not.toBeNull()
+    if (nameLink === null) return
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true })
+    event.preventDefault()
+    fireEvent(nameLink, event)
+    expect(mockTransitionTo).not.toHaveBeenCalled()
     view.unmount()
   })
 })
