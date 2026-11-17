@@ -1,5 +1,6 @@
 /* Every value a token. The parallax moves the image inside a clipped frame — transform only;
-   the frame's box is reserved (intrinsic dimensions) and never moves, which keeps the CLS at zero. */
+   the frame's box is reserved (intrinsic dimensions) and never moves, which keeps the CLS at zero.
+   The image overscans by one travel per side so its square corners never enter the clipped, rounded area. */
 
 .works {
   padding-inline: var(--spacing-gutter);
@@ -28,7 +29,8 @@
 
 .works__image {
   display: block;
-  width: 100%;
+  width: calc(100% + var(--parallax-travel) * 2);
+  margin: calc(var(--parallax-travel) * -1);
   height: auto;
   transition: transform var(--duration-menu) var(--ease-quiet);
 }
@@ -137,6 +139,7 @@
 .legal__section p {
   margin-block-start: 0;
   margin-block-end: calc(var(--spacing) * 3);
+  text-align: justify;
 }
 
 .legal__line {
