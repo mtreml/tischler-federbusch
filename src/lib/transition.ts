@@ -1,7 +1,8 @@
 'use client'
 
-// Two module-level seams (not props): the overlay is layout chrome, the triggers are menu entries.
+// Three module-level seams (not props): the overlay is layout chrome, the triggers are menu entries.
 // The action seam: the route change/scroll at cover completion is a swappable handler; `beginTransition` no-ops with no subscriber.
+// The commit seam: the reveal lifts the cover only once the action has committed — the route really swapped, or the scroll ran.
 
 export type TransitionTarget = 'arbeiten' | 'landing'
 
@@ -25,6 +26,16 @@ export function setTransitionAction(handler: TransitionAction | null): void {
 
 export function runTransitionAction(target: TransitionTarget): void {
   action(target)
+}
+
+let onCommit: (() => void) | null = null
+
+export function setTransitionCommit(handler: (() => void) | null): void {
+  onCommit = handler
+}
+
+export function notifyTransitionCommit(): void {
+  onCommit?.()
 }
 
 export type BeginTransition = (options: BeginTransitionOptions) => boolean

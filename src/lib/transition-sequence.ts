@@ -9,13 +9,14 @@ import { useMenu } from '@/lib/menu'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import {
   beginTransition,
+  notifyTransitionCommit,
   setTransitionAction,
   type TransitionAction,
   type TransitionTarget,
 } from '@/lib/transition'
 
 // One sequence, one owner: the overlay owns timing (cover → reveal); this hook owns the close at t0, the action on
-// the beat, the focus return. The `defaultPrevented` guard prevents double-firing; no subscriber → run immediately.
+// the beat, the commit that releases the reveal, the focus return. The `defaultPrevented` guard prevents double-firing; no subscriber → run immediately.
 
 function scrollToTarget(target: TransitionTarget): void {
   if (target === 'landing') {
@@ -44,8 +45,11 @@ export function useTransitionSequence(): {
     (target) => {
       const from = fromRef.current
       if (from === landingPath) {
-        // On the landing: just the scroll, one frame later (the scroll lock is released first).
-        requestAnimationFrame(() => scrollToTarget(target))
+        // On the landing: just the scroll, one frame later (the scroll lock is released first); that frame is the commit.
+        requestAnimationFrame(() => {
+          scrollToTarget(target)
+          notifyTransitionCommit()
+        })
         return
       }
       commitScrollRef.current = target
@@ -54,13 +58,14 @@ export function useTransitionSequence(): {
     [landingPath, router],
   )
 
-  // Commit: the pathname really changed, so the deferred scroll runs now.
+  // Commit: the pathname really changed — the deferred scroll runs and the overlay's reveal is released.
   useEffect(() => {
     if (pathname !== landingPath) return
     const target = commitScrollRef.current
     if (target === null) return
     commitScrollRef.current = null
     scrollToTarget(target)
+    notifyTransitionCommit()
   }, [pathname, landingPath])
 
   useEffect(() => {

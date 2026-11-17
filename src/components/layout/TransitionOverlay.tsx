@@ -8,12 +8,14 @@ import { TransitionLockup } from '@/components/layout/TransitionLockup'
 import {
   registerBeginTransition,
   runTransitionAction,
+  setTransitionCommit,
   type BeginTransitionOptions,
   type TransitionTarget,
 } from '@/lib/transition'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 
-// Cover, then reveal: in over the outgoing page, the route/anchor swap beneath the opaque cover, out over the incoming page.
+// Cover, then reveal: in over the outgoing page, the route/anchor swap beneath the opaque cover, and the cover lifts
+// only once the swap has committed — revealing the outgoing page would leak its header through the fade.
 // Never takes the pointer; `data-transition-*` attributes are e2e instrumentation. Reduced motion: skipped, not shortened.
 
 interface OverlayMotion {
@@ -72,6 +74,16 @@ export function TransitionOverlay() {
   // Ids never restart, so a deduplicating reader cannot mistake a later transition for an earlier one.
   const sequence = useRef(0)
   const revealingRef = useRef<Cover | null>(null)
+  // The cover awaiting its reveal: the action's route change commits async, so the reveal starts on the commit, not on the next task.
+  const pendingRevealRef = useRef<Cover | null>(null)
+
+  const beginReveal = useCallback((pending: Cover) => {
+    revealingRef.current = pending
+    setRevealing(true)
+    setCover((current) =>
+      current !== null && current.id === pending.id && current.coverFinished ? null : current,
+    )
+  }, [])
 
   const [motionTokens] = useState<OverlayMotion | null>(() => resolveOverlayMotion())
 
@@ -96,6 +108,17 @@ export function TransitionOverlay() {
     registerBeginTransition(begin)
     return () => registerBeginTransition(null)
   }, [enabled, begin])
+
+  useEffect(() => {
+    if (!enabled) return
+    setTransitionCommit(() => {
+      const pending = pendingRevealRef.current
+      if (pending === null || pending.id !== sequence.current) return
+      pendingRevealRef.current = null
+      beginReveal(pending)
+    })
+    return () => setTransitionCommit(null)
+  }, [enabled, beginReveal])
 
   const coverTransition = {
     duration: motionTokens?.coverSeconds ?? 0,
@@ -126,7 +149,7 @@ export function TransitionOverlay() {
       >
         {cover !== null && (
           <motion.div
-            key={cover.id}  // without a key the library animates nothing
+            key={cover.id} // without a key the library animates nothing
             className="transition-overlay"
             style={{ backgroundColor: 'var(--color-background)' }}
             initial={{ opacity: 0 }}
@@ -139,25 +162,17 @@ export function TransitionOverlay() {
                 'opacity' in definition &&
                 definition.opacity === 1
               if (!isCover) return
-              if (cover.id !== sequence.current) return  // a replaced cover reporting late
+              if (cover.id !== sequence.current) return // a replaced cover reporting late
               setCoverCount((count) => count + 1)
               cover.onCoverOpaque?.()
               runTransitionAction(cover.to)
-              // Two stages, because the reveal's child is frozen: mark the cover finished, then remove the child next task, which runs the reveal.
               setCover((current) =>
                 current === null || current.id !== cover.id
                   ? current
                   : { ...current, coverFinished: true },
               )
-              window.setTimeout(() => {
-                revealingRef.current = cover
-                setRevealing(true)
-                setCover((current) =>
-                  current !== null && current.id === cover.id && current.coverFinished
-                    ? null
-                    : current,
-                )
-              }, 0)
+              // The commit seam releases the reveal once the action has committed; `coverFinished` was already painted, so `beginReveal` may drop the child straight away.
+              pendingRevealRef.current = cover
             }}
           >
             <div className="transition-overlay__lockup">

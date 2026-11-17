@@ -103,6 +103,23 @@ describe('the cover', () => {
 })
 
 describe('the reveal', () => {
+  it('holds the cover opaque until the action commits — the outgoing page never shows through the fade', async () => {
+    transition.setTransitionAction(vi.fn())
+    renderOverlay()
+
+    begin({ from: '/de/impressum-datenschutz/', to: 'landing' })
+    await until(() => overlayOpacity() === 1)
+
+    // A beat after the cover is opaque: the action has not committed, so the reveal has not started.
+    await new Promise((resolve) => setTimeout(resolve, 100))
+    expect(overlayOpacity()).toBe(1)
+
+    act(() => {
+      transition.notifyTransitionCommit()
+    })
+    await until(() => (overlayOpacity() ?? 1) < 0.05)
+  })
+
   it('fades the overlay back out, unmounts it only after the reverse has run, and lands the count', async () => {
     const action = vi.fn()
     transition.setTransitionAction(action)
@@ -112,6 +129,9 @@ describe('the reveal', () => {
     await until(() => (overlayOpacity() ?? 0) >= 0.99)
     await until(() => action.mock.calls.length === 1)
 
+    act(() => {
+      transition.notifyTransitionCommit()
+    })
     await until(() => (overlayOpacity() ?? 1) < 0.05)
 
     await until(() => document.querySelector('.transition-overlay') === null)
@@ -180,6 +200,9 @@ describe('the imperative entry', () => {
     await until(() => onCoverOpaque.mock.calls.length === 1)
     expect(overlayOpacity() ?? 0).toBeGreaterThanOrEqual(0.99)
 
+    act(() => {
+      transition.notifyTransitionCommit()
+    })
     await until(() => onRevealComplete.mock.calls.length === 1)
     expect(onRevealComplete).toHaveBeenCalledTimes(1)
     await until(() => document.querySelector('.transition-overlay') === null)
@@ -214,6 +237,9 @@ describe('the seam', () => {
 
     begin({ from: '/de/', to: 'landing' })
     await until(() => action.mock.calls.length === 1)
+    act(() => {
+      transition.notifyTransitionCommit()
+    })
     await until(() => document.querySelector('.transition-overlay') === null)
 
     view.unmount()

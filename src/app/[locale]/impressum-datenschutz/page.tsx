@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { Header } from '@/components/layout/Header'
+import { ScrollToTop } from '@/components/layout/ScrollToTop'
 import { legal } from '@/config/legal.config'
 import { routing } from '@/i18n/routing'
 import { pathFor } from '@/i18n/paths'
@@ -67,6 +68,7 @@ export default async function ImpressumDatenschutzPage({
     <>
       {/* The header's page variant: opaque bar, centered name, hamburger — on every scroll position. */}
       <Header variant="page" />
+      <ScrollToTop />
       <section className="legal">
         <h1 className="legal__heading">{t('heading')}</h1>
         <p className="legal__last-changed">
