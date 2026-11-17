@@ -31,6 +31,8 @@
 
 .works__image {
   display: block;
+  /* Tailwind preflight caps `img` at `max-width: 100%`; without this the overscan below is clamped and the right edge stops one travel short of the frame. */
+  max-width: none;
   width: calc(100% + var(--parallax-travel) * 2);
   margin: calc(var(--parallax-travel) * -1);
   height: auto;
