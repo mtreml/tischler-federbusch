@@ -49,7 +49,7 @@
   user-select: none;
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@media (min-width: 48rem) {
   .landing__logo {
     width: var(--logo-landing-width-md);
   }
@@ -59,7 +59,7 @@
   }
 }
 
-@media (min-width: var(--breakpoint-lg)) {
+@media (min-width: 64rem) {
   .landing__logo {
     width: var(--logo-landing-width-lg);
   }
@@ -139,6 +139,9 @@
   top: var(--name-header-top);
   left: 50%;
   transform: translateX(-50%);
+  /* The bar keeps `pointer-events: none`; the name re-enables it so it can be clicked. */
+  pointer-events: auto;
+  text-decoration: none;
 }
 
 .header__name-image {
@@ -148,13 +151,13 @@
   user-select: none;
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@media (min-width: 48rem) {
   .header__name-image {
     width: var(--name-width-md);
   }
 }
 
-@media (min-width: var(--breakpoint-lg)) {
+@media (min-width: 64rem) {
   .header__name-image {
     width: var(--name-width-lg);
   }

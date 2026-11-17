@@ -1,4 +1,6 @@
 /* The one file a design review reads; no component may carry a colour, font size, spacing, breakpoint or duration literal.
+   The one exception: `@media` conditions cannot use `var()`, so breakpoints appear as literals there — the values below
+   are the source of truth those conditions must mirror.
    `--duration-intro` is the CSS-side copy of `site.landing.introDurationMs`; the two stay in step by review. */
 @theme {
   /* The background is defined here and **only** here — the gate fails a second definition. */
@@ -18,7 +20,9 @@
 
   --name-header-top: 1.25rem;
 
-  --name-landing-top: 50%;
+  /* `50svh`, not `50%`: the landing lockup reads it inside the 100svh stage (identical), the overlay's fixed box can be
+     taller than 100svh when a phone's browser bar is hidden, and `50%` of it would then sit below the landing line. */
+  --name-landing-top: 50svh;
   --name-landing-left: 50%;
 
   --ease-quiet: cubic-bezier(0.3, 0, 0.2, 1);

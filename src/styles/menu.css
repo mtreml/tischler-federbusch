@@ -87,13 +87,13 @@
   user-select: none;
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@media (min-width: 48rem) {
   .menu__name-image {
     width: var(--name-width-md);
   }
 }
 
-@media (min-width: var(--breakpoint-lg)) {
+@media (min-width: 64rem) {
   .menu__name-image {
     width: var(--name-width-lg);
   }

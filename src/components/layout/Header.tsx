@@ -1,6 +1,8 @@
 'use client'
 
 import { Name } from '@/components/brand/Name'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { MENU_PANEL_ID, useMenu } from '@/lib/menu'
 import { useBarVisible } from '@/lib/landing-scroll'
 
@@ -21,6 +23,7 @@ interface HeaderProps {
 }
 
 export function Header({ variant = 'landing', introPending = false }: HeaderProps) {
+  const t = useTranslations('header')
   const barVisible = useBarVisible()
   const menu = useMenu()
 
@@ -32,9 +35,9 @@ export function Header({ variant = 'landing', introPending = false }: HeaderProp
         aria-hidden="true"
       />
       {variant === 'page' || barVisible ? (
-        <div className="header__name" aria-hidden="true">
+        <Link className="header__name" href="/" data-transition="landing" aria-label={t('nameLabel')}>
           <Name className="header__name-image" />
-        </div>
+        </Link>
       ) : null}
       <div className="header__actions">
         <MenuButton

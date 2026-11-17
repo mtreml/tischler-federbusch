@@ -63,7 +63,7 @@
   height: auto;
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@media (min-width: 48rem) {
   .transition-lockup__logo {
     width: var(--logo-landing-width-md);
   }
@@ -73,7 +73,7 @@
   }
 }
 
-@media (min-width: var(--breakpoint-lg)) {
+@media (min-width: 64rem) {
   .transition-lockup__logo {
     width: var(--logo-landing-width-lg);
   }

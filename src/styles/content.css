@@ -4,6 +4,8 @@
 .works {
   padding-inline: var(--spacing-gutter);
   padding-block: var(--spacing-section);
+  /* The anchor's landing spot clears the pinned name bar: same formula as the legal page's top padding. */
+  scroll-margin-top: calc(var(--name-header-top) + var(--name-width) / var(--name-aspect) + var(--spacing));
 }
 
 .works__tagline {
@@ -37,17 +39,19 @@
   }
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@media (min-width: 48rem) {
   .works {
     padding-inline: var(--spacing-gutter-md);
     padding-block: var(--spacing-section-md);
+    scroll-margin-top: calc(var(--name-header-top) + var(--name-width-md) / var(--name-aspect) + var(--spacing));
   }
 }
 
-@media (min-width: var(--breakpoint-lg)) {
+@media (min-width: 64rem) {
   .works {
     padding-inline: var(--spacing-gutter-lg);
     padding-block: var(--spacing-section-lg);
+    scroll-margin-top: calc(var(--name-header-top) + var(--name-width-lg) / var(--name-aspect) + var(--spacing));
   }
 }
 
@@ -91,9 +95,11 @@
 
 /* The legal page: the header floats over the top (transparent at progress 0); no animation here, so the CLS holds. */
 
+/* The top padding clears the fixed header's name: the bar's slot plus the name's height, same tokens as the header. */
 .legal {
   padding-inline: var(--spacing-gutter);
-  padding-block: var(--spacing-section);
+  padding-block-start: calc(var(--name-header-top) + var(--name-width) / var(--name-aspect) + var(--spacing));
+  padding-block-end: var(--spacing-section);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
 }
@@ -142,7 +148,7 @@
   white-space: pre-line;
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@media (min-width: 48rem) {
   .site-footer {
     padding-inline: var(--spacing-gutter-md);
     padding-block-start: var(--spacing-section-md);
@@ -150,7 +156,8 @@
 
   .legal {
     padding-inline: var(--spacing-gutter-md);
-    padding-block: var(--spacing-section-md);
+    padding-block-start: calc(var(--name-header-top) + var(--name-width-md) / var(--name-aspect) + var(--spacing));
+    padding-block-end: var(--spacing-section-md);
   }
 
   .legal__heading {
@@ -158,7 +165,7 @@
   }
 }
 
-@media (min-width: var(--breakpoint-lg)) {
+@media (min-width: 64rem) {
   .site-footer {
     padding-inline: var(--spacing-gutter-lg);
     padding-block-start: var(--spacing-section-lg);
@@ -166,6 +173,7 @@
 
   .legal {
     padding-inline: var(--spacing-gutter-lg);
-    padding-block: var(--spacing-section-lg);
+    padding-block-start: calc(var(--name-header-top) + var(--name-width-lg) / var(--name-aspect) + var(--spacing));
+    padding-block-end: var(--spacing-section-lg);
   }
 }
