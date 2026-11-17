@@ -57,13 +57,13 @@ describe('the pointer parallax', () => {
   it('maps the cursor offset to an opposite translate, capped at the token', () => {
     const { frame, image } = renderReady()
     fireEvent.pointerMove(frame, { clientX: 0.75 * FRAME.width, clientY: (1 / 3) * FRAME.height })
-    expect(image.style.transform).toBe('translate3d(-4.00px, 2.67px, 0)')
+    expect(image.style.transform).toBe('translate3d(-4px, 2.67px, 0px)')
   })
 
   it('writes a transform only — no layout property is touched', () => {
     const { frame, image } = renderReady()
     fireEvent.pointerMove(frame, { clientX: 300, clientY: 100 })
-    expect(image.style.cssText).toBe('transform: translate3d(-4.00px, 2.67px, 0);')
+    expect(image.style.cssText).toBe('transform: translate3d(-4px, 2.67px, 0px);')
     expect(image.style.width).toBe('')
     expect(image.style.height).toBe('')
     expect(image.style.position).toBe('')

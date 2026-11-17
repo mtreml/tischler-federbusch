@@ -18,7 +18,6 @@ vi.mock('@/lib/transition-sequence', () => ({
   useTransitionSequence: () => ({ transitionTo: mockTransitionTo }),
 }))
 
-
 function renderClosed() {
   const view = render(
     <NextIntlClientProvider locale="de" messages={messages}>
@@ -86,36 +85,43 @@ describe('the close morph', () => {
     vi.restoreAllMocks()
   })
 
-  it('the panel\'s X tracks the live state while the panel exits — no frozen X', async () => {
+  it("the panel's X tracks the live state while the panel exits — no frozen X", async () => {
     const tokens: Record<string, string> = {
       '--duration-menu': '10s',
       '--duration-menu-items': '10s',
       '--menu-item-rise': '10px',
       '--ease-quiet': 'cubic-bezier(0.25, 0.1, 0.25, 1)',
     }
-    vi.spyOn(window, 'getComputedStyle').mockImplementation(() =>
-      ({
-        fontSize: '16px',
-        getPropertyValue: (name: string) => tokens[name] ?? '',
-      }) as unknown as CSSStyleDeclaration,
+    vi.spyOn(window, 'getComputedStyle').mockImplementation(
+      () =>
+        ({
+          fontSize: '16px',
+          getPropertyValue: (name: string) => tokens[name] ?? '',
+        }) as unknown as CSSStyleDeclaration,
     )
 
     const view = renderClosed()
     openMenu(view)
     const closeButton = within(panel(view)).getByRole('button')
-    expect(closeButton).toHaveAttribute('aria-expanded', 'true')
+    // `PanelCloseButton` arms on the frame after, so the X only tracks the live state once the double rAF has fired.
+    await waitFor(() => expect(closeButton).toHaveAttribute('aria-expanded', 'true'), {
+      timeout: 1000,
+    })
 
     fireEvent.click(closeButton)
 
-    await waitFor(() => {
-      const node = view.container.querySelector<HTMLElement>(`#${MENU_PANEL_ID}`)
-      expect(node).not.toBeNull()
-      if (node === null) return
-      expect(node.querySelector('button[aria-controls="site-menu"]')).toHaveAttribute(
-        'aria-expanded',
-        'false',
-      )
-    }, { timeout: 1000 })
+    await waitFor(
+      () => {
+        const node = view.container.querySelector<HTMLElement>(`#${MENU_PANEL_ID}`)
+        expect(node).not.toBeNull()
+        if (node === null) return
+        expect(node.querySelector('button[aria-controls="site-menu"]')).toHaveAttribute(
+          'aria-expanded',
+          'false',
+        )
+      },
+      { timeout: 1000 },
+    )
 
     view.unmount()
   })

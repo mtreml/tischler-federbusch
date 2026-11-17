@@ -8,7 +8,6 @@ import messages from '@/i18n/messages/de.json'
 // The invariants the control carries before anything is mounted: the disclosure contract (`aria-expanded`, `aria-controls`, the
 // `aria-label` flip), one press one toggle, exactly two line elements in both states (no SVG, no cross-fade), a real `<button>`.
 
-
 const CONTROLS_ID = 'site-menu'
 
 function renderButton(props: Partial<Parameters<typeof MenuButton>[0]> = {}) {

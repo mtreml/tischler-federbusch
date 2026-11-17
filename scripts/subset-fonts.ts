@@ -153,7 +153,8 @@ async function main(): Promise<void> {
   await writeFile(join(FONT_DIR, OUTPUT), woff2)
   await writeFile(join(FONT_DIR, LICENCE_OUTPUT), licence)
 
-  await writeFile(  // the manifest `tests/unit/fonts.test.ts` reads; no timestamp — the export must stay reproducible
+  await writeFile(
+    // the manifest `tests/unit/fonts.test.ts` reads; no timestamp — the export must stay reproducible
     join(FONT_DIR, MANIFEST_OUTPUT),
     `${JSON.stringify(
       {

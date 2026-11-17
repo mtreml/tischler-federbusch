@@ -25,4 +25,3 @@ export function resolveCanonicalUrl(path: string): string {
   const suffix = path.startsWith('/') ? path : `/${path}`
   return `${origin}${suffix}`
 }
-

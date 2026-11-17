@@ -72,9 +72,7 @@ describe('the configured text', () => {
     const doc = await renderLegal()
     const body = doc.body.textContent
     // The newlines are preserved, not collapsed.
-    expect(doc.querySelector('.legal__protocol')?.textContent).toBe(
-      legal.datenschutz.protocolText,
-    )
+    expect(doc.querySelector('.legal__protocol')?.textContent).toBe(legal.datenschutz.protocolText)
     expect(body).toContain(legal.urheberrecht)
   })
 

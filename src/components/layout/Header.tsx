@@ -35,7 +35,12 @@ export function Header({ variant = 'landing', introPending = false }: HeaderProp
         aria-hidden="true"
       />
       {variant === 'page' || barVisible ? (
-        <Link className="header__name" href="/" data-transition="landing" aria-label={t('nameLabel')}>
+        <Link
+          className="header__name"
+          href="/"
+          data-transition="landing"
+          aria-label={t('nameLabel')}
+        >
           <Name className="header__name-image" />
         </Link>
       ) : null}

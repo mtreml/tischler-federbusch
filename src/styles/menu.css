@@ -26,16 +26,12 @@
 }
 
 .menu-button__line--top {
-  transform-origin: calc(
-      50% - 0.6036 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness))
-    )
+  transform-origin: calc(50% - 0.6036 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness)))
     calc(50% + 0.25 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness)));
 }
 
 .menu-button__line--bottom {
-  transform-origin: calc(
-      50% - 0.6036 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness))
-    )
+  transform-origin: calc(50% - 0.6036 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness)))
     calc(50% - 0.25 * (var(--menu-btn-gap) + var(--menu-btn-line-thickness)));
 }
 

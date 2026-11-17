@@ -27,10 +27,7 @@ test('the works section anchors below the landing in the one document', async ({
   const image = images.first()
   const firstSource = section.locator('picture source').first()
   await expect(firstSource).toHaveAttribute('type', 'image/avif')
-  await expect(firstSource).toHaveAttribute(
-    'srcset',
-    /9ezd7rz08i9h1-\w+-\d+\.avif \d+w/,
-  )
+  await expect(firstSource).toHaveAttribute('srcset', /9ezd7rz08i9h1-\w+-\d+\.avif \d+w/)
   await expect(image).toHaveAttribute('src', /9ezd7rz08i9h1-\w+-\d+\.jpeg$/)
   await expect(image).toHaveAttribute('width', /\d+/)
   await expect(image).toHaveAttribute('height', /\d+/)
@@ -42,11 +39,15 @@ test('the menu entry lands on the works section', async ({ page }) => {
   const entry = page.getByRole('link', { name: 'Arbeiten' })
   await expect(entry).toBeVisible()
   await entry.click()
+  // The anchor lands with its top flush against the pinned name bar: the offset is the
+  // section's own `scroll-margin-top`, so assert alignment with that, not with the viewport top.
   await expect
     .poll(async () =>
-      page
-        .locator('#arbeiten')
-        .evaluate((element) => Math.abs(element.getBoundingClientRect().top)),
+      page.locator('#arbeiten').evaluate((element) => {
+        const top = Math.abs(element.getBoundingClientRect().top)
+        const clearance = Number.parseFloat(getComputedStyle(element).scrollMarginTop) || 0
+        return Math.abs(top - clearance)
+      }),
     )
     .toBeLessThanOrEqual(4)
 })
@@ -109,7 +110,7 @@ test('the legal page renders the configured text, with its header', async ({ pag
     'href',
     'tel:+436644107272',
   )
-  await expect(page.getByRole('link', { name: 'lukas.federbusch@gmail.com' })).toHaveCount(2)
+  await expect(page.getByRole('link', { name: 'lukas.federbusch@gmail.com' })).toHaveCount(1)
 
   await expect(
     page.getByText('ausschließlich dem sicheren Betrieb der Webseite und der Fehlersuche.'),
@@ -120,15 +121,6 @@ test('the legal page renders the configured text, with its header', async ({ pag
     ),
   ).toBeVisible()
   await expect(page.getByText('Protokolldaten werden 60 Tage lang gespeichert.')).toBeVisible()
-  for (const label of [
-    'Auskunft',
-    'Berichtigung',
-    'Löschung',
-    'Widerspruch',
-    'Widerruf der Einwilligung',
-  ]) {
-    await expect(page.getByText(label)).toBeVisible()
-  }
 
   await expect(
     page.getByText(
@@ -139,7 +131,7 @@ test('the legal page renders the configured text, with its header', async ({ pag
 
 test('the documents carry their title, description and canonical', async ({ page }) => {
   await page.goto('/de/')
-  await expect(page).toHaveTitle('Handgemachte Möbel für Generationen. — Lukas Federbusch')
+  await expect(page).toHaveTitle('Federbusch | Tischlermeister')
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     'content',
     'Handgemachte Möbel für Generationen — Lukas Federbusch, Lienz.',

@@ -8,7 +8,6 @@ import '@/styles/globals.css'
 // An unmatched path has no language, so the page renders in every configured locale, default first; the web server must return it with a genuine 404.
 // `global-not-found.tsx`, not `not-found.tsx`: Next bypasses rendering entirely, so this renders its own `<html>` and imports the stylesheet itself.
 
-
 /** Default locale first, then the others in configured order. */
 function orderedLocales(): string[] {
   const others = locales.filter((locale) => locale !== defaultLocale)

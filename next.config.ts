@@ -16,11 +16,11 @@ function lanDevOrigins(): string[] {
 }
 
 const nextConfig: NextConfig = {
-  output: 'export',  // plain HTML/CSS/JS, no Node runtime to operate
+  output: 'export', // plain HTML/CSS/JS, no Node runtime to operate
 
   allowedDevOrigins: lanDevOrigins(),
 
-  generateBuildId: () => generateBuildId(process.cwd()),  // reproducible per revision
+  generateBuildId: () => generateBuildId(process.cwd()), // reproducible per revision
 
   // Without this the export 404s on every internal link (links point at `/<locale>/…/`, files land elsewhere).
   trailingSlash: true,

@@ -7,14 +7,14 @@
   --color-background: #faf7f1;
 
   --color-ink: #1d1d1b;
-  --color-ink-muted: #625d55;   /* ~7:1 on the background */
-  --color-ink-faint: #767065;   /* ~4.6:1 (WCAG AA), the quietest step used */
+  --color-ink-muted: #625d55; /* ~7:1 on the background */
+  --color-ink-faint: #767065; /* ~4.6:1 (WCAG AA), the quietest step used */
 
   --color-rule: #e6e0d4;
 
   /* ONE token set, read by four surfaces (header, menu, landing scroll, overlay); aspect from name.svg's viewBox. */
   --name-aspect: 3.8548;
-  --name-width: 18.5546875rem;  /* width-capped, so a narrow portrait screen keeps a single line */
+  --name-width: 18.5546875rem; /* width-capped, so a narrow portrait screen keeps a single line */
   --name-width-md: 23.4375rem;
   --name-width-lg: 27.34375rem;
 
@@ -27,12 +27,12 @@
 
   --ease-quiet: cubic-bezier(0.3, 0, 0.2, 1);
   --duration-instant: 0ms;
-  --duration-menu: 1280ms;      /* background fade-in */
+  --duration-menu: 1280ms; /* background fade-in */
   --duration-menu-items: 480ms; /* items' travel; longer than the background — they move a distance */
-  --menu-item-rise: 1.25rem;   /* entry i rises `× (i + 1)`; the distance gradient is the stagger */
+  --menu-item-rise: 1.25rem; /* entry i rises `× (i + 1)`; the distance gradient is the stagger */
   --duration-transition-cover: 720ms;
   --duration-transition-reveal: 840ms;
-  --duration-intro: 1500ms;  /* JS twin: `site.landing.introDurationMs` */
+  --duration-intro: 1500ms; /* JS twin: `site.landing.introDurationMs` */
 
   --intro-blur: 8px;
 
@@ -65,13 +65,13 @@
 
   --radius-works: 0.5rem;
 
-  --spacing-lockup: 1.25rem;  /* the mark↔name gap; the overlay's spinner rests the same gap above the lockup */
+  --spacing-lockup: 1.25rem; /* the mark↔name gap; the overlay's spinner rests the same gap above the lockup */
 
-  --parallax-travel: 0.5rem;  /* max translate; transform only, CLS stays zero */
+  --parallax-travel: 0.5rem; /* max translate; transform only, CLS stays zero */
 
   --spinner-size: 2rem;
 
-  --logo-landing-width: 8.30078125rem;  /* height derived from the mark's own viewBox aspect */
+  --logo-landing-width: 8.30078125rem; /* height derived from the mark's own viewBox aspect */
   --logo-landing-width-md: 9.765625rem;
   --logo-landing-width-lg: 11.71875rem;
 

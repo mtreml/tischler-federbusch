@@ -65,11 +65,11 @@ function userDataOf(bytes: Buffer): Buffer[] {
       let header = 8
 
       if (size === 1) {
-        if (offset + 16 > end) return  // 64-bit size, box > 4 GiB
+        if (offset + 16 > end) return // 64-bit size, box > 4 GiB
         size = Number(bytes.readBigUInt64BE(offset + 8))
         header = 16
       } else if (size === 0) {
-        size = end - offset  // "to end of file"
+        size = end - offset // "to end of file"
       }
 
       if (size < header || offset + size > end) return
@@ -124,7 +124,7 @@ async function main(): Promise<void> {
   const served = realpathSync(variants)
 
   const trees: { label: string; path: string }[] = [{ label: VARIANTS_DIR, path: served }]
-  const exported = join(ROOT, 'out', 'media')  // the artifact that ships, checked in its own right
+  const exported = join(ROOT, 'out', 'media') // the artifact that ships, checked in its own right
   if (existsSync(exported)) trees.push({ label: 'out/media', path: realpathSync(exported) })
 
   const failures: Failure[] = []

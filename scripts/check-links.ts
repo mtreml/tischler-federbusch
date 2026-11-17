@@ -15,6 +15,4 @@ if (!existsSync(join(process.cwd(), 'out', 'de', 'index.html'))) {
   process.exit(1)
 }
 
-console.log(
-  'links:check: OK (stub — the exported tree is present; the href walk lands later)',
-)
+console.log('links:check: OK (stub — the exported tree is present; the href walk lands later)')

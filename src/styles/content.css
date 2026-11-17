@@ -6,7 +6,9 @@
   padding-inline: var(--spacing-gutter);
   padding-block: var(--spacing-section);
   /* The anchor's landing spot clears the pinned name bar: same formula as the legal page's top padding. */
-  scroll-margin-top: calc(var(--name-header-top) + var(--name-width) / var(--name-aspect) + var(--spacing));
+  scroll-margin-top: calc(
+    var(--name-header-top) + var(--name-width) / var(--name-aspect) + var(--spacing)
+  );
 }
 
 .works__tagline {
@@ -45,7 +47,9 @@
   .works {
     padding-inline: var(--spacing-gutter-md);
     padding-block: var(--spacing-section-md);
-    scroll-margin-top: calc(var(--name-header-top) + var(--name-width-md) / var(--name-aspect) + var(--spacing));
+    scroll-margin-top: calc(
+      var(--name-header-top) + var(--name-width-md) / var(--name-aspect) + var(--spacing)
+    );
   }
 }
 
@@ -53,7 +57,9 @@
   .works {
     padding-inline: var(--spacing-gutter-lg);
     padding-block: var(--spacing-section-lg);
-    scroll-margin-top: calc(var(--name-header-top) + var(--name-width-lg) / var(--name-aspect) + var(--spacing));
+    scroll-margin-top: calc(
+      var(--name-header-top) + var(--name-width-lg) / var(--name-aspect) + var(--spacing)
+    );
   }
 }
 
@@ -100,7 +106,9 @@
 /* The top padding clears the fixed header's name: the bar's slot plus the name's height, same tokens as the header. */
 .legal {
   padding-inline: var(--spacing-gutter);
-  padding-block-start: calc(var(--name-header-top) + var(--name-width) / var(--name-aspect) + var(--spacing));
+  padding-block-start: calc(
+    var(--name-header-top) + var(--name-width) / var(--name-aspect) + var(--spacing)
+  );
   padding-block-end: var(--spacing-section);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
@@ -159,7 +167,9 @@
 
   .legal {
     padding-inline: var(--spacing-gutter-md);
-    padding-block-start: calc(var(--name-header-top) + var(--name-width-md) / var(--name-aspect) + var(--spacing));
+    padding-block-start: calc(
+      var(--name-header-top) + var(--name-width-md) / var(--name-aspect) + var(--spacing)
+    );
     padding-block-end: var(--spacing-section-md);
   }
 
@@ -176,7 +186,9 @@
 
   .legal {
     padding-inline: var(--spacing-gutter-lg);
-    padding-block-start: calc(var(--name-header-top) + var(--name-width-lg) / var(--name-aspect) + var(--spacing));
+    padding-block-start: calc(
+      var(--name-header-top) + var(--name-width-lg) / var(--name-aspect) + var(--spacing)
+    );
     padding-block-end: var(--spacing-section-lg);
   }
 }

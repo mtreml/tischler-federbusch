@@ -68,7 +68,9 @@ describe('the footer', () => {
     expect(creditLink?.getAttribute('target')).toBe('_blank')
     expect(creditLink?.getAttribute('rel')).toBe('noreferrer')
     expect(creditLink?.textContent).toBe(site.footer.credit)
-    expect(doc.querySelector('.site-footer__credit')?.textContent).toMatch(/Made with care & love by/)
+    expect(doc.querySelector('.site-footer__credit')?.textContent).toMatch(
+      /Made with care & love by/,
+    )
   })
 
   it('is a `<footer>` and carries no contact links — contact is menu-only', async () => {
