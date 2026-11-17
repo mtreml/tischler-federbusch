@@ -77,6 +77,8 @@ export function NameScroll({ children }: NameScrollProps) {
       ticking = false
       const s = window.scrollY
       const ty = stickOffset(s, metrics.sStick)
+      // The name is only clickable once it has stuck into the header slot.
+      nameEl.style.pointerEvents = s >= metrics.sStick ? '' : 'none'
       if (ty === 0) {
         nameEl.style.transform = ''
         nameEl.style.willChange = 'auto'

@@ -7,9 +7,9 @@ import { siteSchema, type SiteConfig } from './schema/site.schema'
 // Validation entry point: malformed/contradiction are always errors; unfilled is a warning in development, an error in production.
 
 export type Environment = 'development' | 'production'
-export type FindingKind = 'malformed' | 'contradiction' | 'unfilled'
+type FindingKind = 'malformed' | 'contradiction' | 'unfilled'
 
-export interface Finding {
+interface Finding {
   key: string
   kind: FindingKind
   message: string

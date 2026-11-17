@@ -28,10 +28,10 @@ import {
    real one would assert whichever branch happens to be checked out.
    ══════════════════════════════════════════════════════════════════════════════ */
 
-const LOGICAL = 'arbeiten/signal-2026-07-20-20-14-59-447_003.jpg'
-const HASH = '3c9ea7d6'
-const WIDTH = 661
-const HEIGHT = 435
+const LOGICAL = 'arbeiten/9ezd7rz08i9h1.jpg'
+const HASH = 'aa11bb22'
+const WIDTH = 3664
+const HEIGHT = 5496
 const SIZES = [320, 480, 640, WIDTH]
 
 /** One entry per configured works image, as the pipeline would have written them. */
@@ -63,11 +63,11 @@ function manifestFixture(): MediaManifest {
     imageFormats: ['avif', 'webp', 'jpeg'],
     entries: {
       [LOGICAL]: responsiveEntry(LOGICAL, HASH, WIDTH, HEIGHT),
-      ['arbeiten/9ezd7rz08i9h1.jpg']: responsiveEntry(
-        'arbeiten/9ezd7rz08i9h1.jpg',
-        'aa11bb22',
-        3664,
-        5496,
+      ['arbeiten/signal-2026-07-20-20-14-59-447_003.jpg']: responsiveEntry(
+        'arbeiten/signal-2026-07-20-20-14-59-447_003.jpg',
+        '3c9ea7d6',
+        661,
+        435,
       ),
       ['arbeiten/yz50v4rlf8be1.jpg']: responsiveEntry(
         'arbeiten/yz50v4rlf8be1.jpg',
@@ -103,10 +103,11 @@ describe('the section', () => {
 })
 
 describe('the pictures', () => {
-  function pictureParts(alt: string) {
-    const image = screen.getByRole('img', { name: alt })
-    const picture = image.closest('picture')
-    if (picture === null) throw new Error('the image is not inside a picture')
+  function pictureParts() {
+    const picture = document.querySelector('section.works picture')
+    if (picture === null) throw new Error('no works picture rendered')
+    const image = picture.querySelector('img')
+    if (image === null) throw new Error('the picture carries no image')
     const sources = Array.from(picture.querySelectorAll('source'))
     return { image, sources }
   }
@@ -118,7 +119,7 @@ describe('the pictures', () => {
 
   it('emits the sources in the configured order, modern first', () => {
     render(<WorksSection />)
-    const { sources } = pictureParts(site.works.images[0]?.imageAlt ?? '')
+    const { sources } = pictureParts()
     expect(sources.map((source) => source.getAttribute('type'))).toEqual([
       'image/avif',
       'image/webp',
@@ -131,7 +132,7 @@ describe('the pictures', () => {
 
   it('uses the widest rung of the universally supported format as the fallback src', () => {
     render(<WorksSection />)
-    const { image, sources } = pictureParts(site.works.images[0]?.imageAlt ?? '')
+    const { image, sources } = pictureParts()
     const jpeg = sources.at(-1)
     expect(jpeg?.getAttribute('type')).toBe('image/jpeg')
     expect(jpeg?.getAttribute('srcset')).toContain(`${LOGICAL}-${HASH}-${WIDTH}.jpeg`)
@@ -140,7 +141,7 @@ describe('the pictures', () => {
 
   it('carries the intrinsic dimensions and the configured text alternative', () => {
     render(<WorksSection />)
-    const { image } = pictureParts(site.works.images[0]?.imageAlt ?? '')
+    const { image } = pictureParts()
     expect(image).toHaveAttribute('width', String(WIDTH))
     expect(image).toHaveAttribute('height', String(HEIGHT))
     expect(image).toHaveAttribute('alt', site.works.images[0]?.imageAlt)

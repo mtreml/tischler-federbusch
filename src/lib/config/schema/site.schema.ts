@@ -103,4 +103,3 @@ export const siteSchema = z.object({
 })
 
 export type SiteConfig = z.infer<typeof siteSchema>
-export type NavigationItem = z.infer<typeof navigationItem>

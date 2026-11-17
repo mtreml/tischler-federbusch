@@ -3,11 +3,11 @@ import { z } from 'zod'
 import { checkedString, isAssetPath } from './shared'
 
 // Mirrors `media.config.ts`. Only `local` is implemented; other sources are not honoured by the pipeline.
-export const MEDIA_SOURCES = ['local', 'objectStorage', 'external'] as const
-export const VIDEO_PROVIDERS = ['local', 'objectStorage', 'external'] as const
+const MEDIA_SOURCES = ['local', 'objectStorage', 'external'] as const
+const VIDEO_PROVIDERS = ['local', 'objectStorage', 'external'] as const
 
 // The last format must stay universally supported: it is the fallback of `<picture>`.
-export const IMAGE_FORMATS = ['avif', 'webp', 'jpeg'] as const
+const IMAGE_FORMATS = ['avif', 'webp', 'jpeg'] as const
 
 // `crf` 0–51 is x264's own range; the right value is a measurement, recorded beside the number in `media.config.ts`.
 const videoEncodeProfile = z.object({
@@ -33,6 +33,3 @@ export const mediaSchema = z.object({
 })
 
 export type MediaConfig = z.infer<typeof mediaSchema>
-export type MediaSource = (typeof MEDIA_SOURCES)[number]
-export type VideoProvider = (typeof VIDEO_PROVIDERS)[number]
-export type ImageFormat = (typeof IMAGE_FORMATS)[number]

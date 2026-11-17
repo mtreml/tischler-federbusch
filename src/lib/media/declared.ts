@@ -5,7 +5,7 @@ import { posterPathFor } from '@mtreml/portfolio-core/media'
 // The one list that knows where each original lives; the generation script and the render side both consume it.
 // Logical path: the served path minus `media.basePath`, extension kept; originals live uniformly at `media-originals/<logical path>`.
 
-export type MediaRole = 'responsive' | 'single' | 'video'
+type MediaRole = 'responsive' | 'single' | 'video'
 
 export interface DeclaredMedia {
   logicalPath: string

@@ -29,9 +29,9 @@ test('the works section anchors below the landing in the one document', async ({
   await expect(firstSource).toHaveAttribute('type', 'image/avif')
   await expect(firstSource).toHaveAttribute(
     'srcset',
-    /signal-2026-07-20-20-14-59-447_003-\w+-\d+\.avif \d+w/,
+    /9ezd7rz08i9h1-\w+-\d+\.avif \d+w/,
   )
-  await expect(image).toHaveAttribute('src', /signal-2026-07-20-20-14-59-447_003-\w+-\d+\.jpeg$/)
+  await expect(image).toHaveAttribute('src', /9ezd7rz08i9h1-\w+-\d+\.jpeg$/)
   await expect(image).toHaveAttribute('width', /\d+/)
   await expect(image).toHaveAttribute('height', /\d+/)
 })

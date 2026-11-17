@@ -45,6 +45,14 @@
 .landing__name {
   display: block;
   width: var(--name-width);
+  text-decoration: none;
+  /* Clickable only once stuck in the header slot; `NameScroll` re-enables it at the stick frame. */
+  pointer-events: none;
+}
+
+.landing__name-image {
+  display: block;
+  width: 100%;
   height: auto;
   user-select: none;
 }

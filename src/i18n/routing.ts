@@ -10,7 +10,7 @@ export const defaultLocale = site.languages.default
 /** Route directory names are internal, not URLs — the map keeps that from becoming a convention. */
 export type AppPathname = '/' | '/impressum-datenschutz'
 
-export const localizedPathnames: Record<AppPathname, string | Record<string, string>> = {
+const localizedPathnames: Record<AppPathname, string | Record<string, string>> = {
   '/': '/',
   '/impressum-datenschutz': site.routes.impressum,
 }

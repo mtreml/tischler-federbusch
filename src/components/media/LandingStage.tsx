@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { useTranslations } from 'next-intl'
 
+import { Link } from '@/i18n/navigation'
 import { Logo } from '@/components/brand/Logo'
 import { Name } from '@/components/brand/Name'
 import { NameScroll } from '@/components/layout/NameScroll'
@@ -24,6 +26,7 @@ export interface LandingStageProps {
 
 export function LandingStage({ video, label, objectFit, introDurationMs, introDone }: LandingStageProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const t = useTranslations('header')
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
@@ -48,11 +51,14 @@ export function LandingStage({ video, label, objectFit, introDurationMs, introDo
         label={label}
         objectFit={objectFit}
       />
-      {/* Decorative: the wordmark is the name; the name inside is the one that sticks to the header slot. */}
-      <div className="landing__lockup" aria-hidden="true">
+      {/* Decorative images; the name link is the one that sticks to the header slot — `NameScroll` makes it
+         clickable the frame it sticks. The header's own name link only mounts once the bar is on. */}
+      <div className="landing__lockup">
         <Logo className="landing__logo" />
         <NameScroll>
-          <Name className="landing__name" />
+          <Link className="landing__name" href="/" data-transition="landing" aria-label={t('nameLabel')}>
+            <Name className="landing__name-image" />
+          </Link>
         </NameScroll>
       </div>
     </div>
