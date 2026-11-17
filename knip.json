@@ -1,7 +1,7 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "tags": ["-lintignore"],
-  "ignoreDependencies": ["@axe-core/playwright"],
+  "ignoreDependencies": ["@axe-core/playwright", "@typescript/typescript6"],
   "ignoreBinaries": ["ffprobe"],
   "ignore": ["tests/e2e/*.a11y.ts", "tests/e2e/*.cross.ts", "tests/e2e/*.e2e.ts"]
 }

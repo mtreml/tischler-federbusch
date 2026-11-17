@@ -5,9 +5,9 @@
   "description": "Single-page site for Lukas Federbusch - Tischlermeister. Configuration plus static views, gated and statically exported.",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=26.0.0"
   },
-  "packageManager": "npm@12.2.2",
+  "packageManager": "npm@11.20.0",
   "browserslist": [
     "chrome >= 111",
     "edge >= 111",
@@ -55,10 +55,10 @@
       "minimatch": "11.0.9"
     },
     "brace-expansion@^1.1.0": "1.1.22",
-    "brace-expansion@^2.0.0": "2.1.4"
+    "brace-expansion@^2.0.0": "2.1.8"
   },
   "dependencies": {
-    "@mtreml/portfolio-core": "git+https://github.com/mtreml/portfolio-core.git#v1.0.0",
+    "@mtreml/portfolio-core": "git+https://github.com/mtreml/portfolio-core.git#v1.2.0",
     "motion": "14.14.0",
     "next": "16.4.6",
     "next-intl": "4.15.1",
@@ -70,13 +70,14 @@
     "@axe-core/playwright": "4.14.0",
     "@playwright/test": "1.65.1",
     "@tailwindcss/postcss": "4.3.5",
+    "@testing-library/dom": "10.4.2",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.0.0",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@vitejs/plugin-react": "6.3.0",
-    "eslint": "9.39.5",
+    "eslint": "10.15.0",
     "eslint-config-next": "16.4.6",
     "eslint-config-prettier": "10.1.8",
     "jsdom": "31.0.1",
@@ -87,6 +88,7 @@
     "tailwindcss": "4.3.5",
     "tsx": "4.23.15",
     "typescript": "6.0.3",
+    "vite": "8.3.8",
     "vitest": "5.1.0"
   },
   "allowScripts": {
