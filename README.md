@@ -7,7 +7,7 @@ German only; `de` is the one configured locale.
 Built on Next 16 static export
 (`output: 'export'`, `trailingSlash: true`), React 19, `next-intl` (locale prefix `/de/`),
 `motion`, Tailwind 4, and the shared package `@mtreml/portfolio-core` pinned at
-`git+https://github.com/mtreml/portfolio-core.git#v1.0.0` (the `deploy-vps` action is
+`git+https://github.com/mtreml/portfolio-core.git#v1.3.0` (the `deploy-vps` action is
 consumed from the same tag). Everything the site shows comes from central configuration —
 there is no content model.
 

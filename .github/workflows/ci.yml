@@ -18,7 +18,7 @@
 # stays the fallback.
 #
 # The `deploy` job below consumes the `deploy-vps` composite action from the core
-# repository AT THE SAME TAG the package is pinned to — `v1.2.0` in both places —
+# repository AT THE SAME TAG the package is pinned to — `v1.3.0` in both places —
 # and deliberately does NOT rebuild. It uploads the exact tree the gate chain produced
 # and gated, because a second build is a second artifact: the thing verified and the
 # thing served would be different objects that are merely expected to match. The
@@ -173,7 +173,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           repository: mtreml/portfolio-core
-          ref: v1.2.0
+          ref: v1.3.0
           path: core-action
           token: ${{ secrets.CORE_GIT_TOKEN }}
 
@@ -190,4 +190,4 @@ jobs:
           # The tag this action is running as. The preflight compares it against the
           # installed @mtreml/portfolio-core version and fails on drift; the
           # package pin in package.json is the same coordinate.
-          action-version: v1.2.0
+          action-version: v1.3.0
