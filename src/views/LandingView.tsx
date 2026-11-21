@@ -4,6 +4,7 @@ import { LandingIntro } from '@/views/LandingIntro'
 import { site } from '@/config/site.config'
 import { media, videoDelivery } from '@/config/media.config'
 import { toLogicalPath } from '@mtreml/portfolio-core/media'
+import { localize } from '@/lib/config/resolve'
 
 /* ══════════════════════════════════════════════════════════════════════════════
    THE LANDING
@@ -37,7 +38,7 @@ export default async function LandingView({ params }: { params: Promise<{ locale
       <h1 className="sr-only">{site.identity.displayName}</h1>
       <LandingIntro
         video={video}
-        label={site.landing.videoLabel}
+        label={localize(site.landing.videoLabel, locale)}
         objectFit={site.landing.objectFit}
         introDurationMs={site.landing.introDurationMs}
       />

@@ -72,9 +72,9 @@ describe('the works group', () => {
     expect(report.errors.map((finding) => finding.key)).toContain('seo.ogImage')
   })
 
-  it('fails by name when a works imageAlt is missing', () => {
+  it('fails by name when a works imageAlt is missing in one locale', () => {
     const images = site.works.images.map((entry, index) =>
-      index === 1 ? { ...entry, imageAlt: '' } : entry,
+      index === 1 ? { ...entry, imageAlt: { ...entry.imageAlt, en: '' } } : entry,
     )
     const broken = { ...site, works: { ...site.works, images } }
     const report = validateConfiguration({
@@ -84,7 +84,7 @@ describe('the works group', () => {
       environment: 'production',
     })
     expect(report.ok).toBe(false)
-    expect(report.errors.map((finding) => finding.key)).toContain('works.images[1].imageAlt')
+    expect(report.errors.map((finding) => finding.key)).toContain('works.images[1].imageAlt.en')
   })
 })
 

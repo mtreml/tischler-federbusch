@@ -12,6 +12,11 @@ import { resolveContact } from '@/lib/config/resolve'
 import { MENU_PANEL_ID, MenuProvider } from '@/lib/menu'
 import messages from '@/i18n/messages/de.json'
 
+vi.mock('next/navigation', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('next/navigation')>()),
+  usePathname: () => '/de/',
+}))
+
 // The sequence owner needs the app router mounted, so the suite hands the sequence out through a spy.
 const mockTransitionTo = vi.fn()
 vi.mock('@/lib/transition-sequence', () => ({
@@ -152,14 +157,15 @@ describe('the entries', () => {
     openMenu(view)
     const node = panel(view)
 
-    const links = within(node).getAllByRole('link')
-    const entries = links.slice(1) as HTMLElement[]
+    const entriesNav = node.querySelector<HTMLElement>('.menu__entries')
+    if (entriesNav === null) throw new Error('no entries nav')
+    const entries = within(entriesNav).getAllByRole('link')
     expect(entries).toHaveLength(site.navigation.items.length)
 
     const contact = resolveContact()
     const expected = site.navigation.items.map((item) => {
       if (item.type === 'anchor') {
-        return { label: item.label, href: `#${item.anchor}` }
+        return { label: item.label.de, href: `#${item.anchor}` }
       }
       if (item.type === 'tel') {
         return { label: contact.phoneDisplay, href: contact.telHref }
@@ -280,5 +286,25 @@ describe('the mounting', () => {
     expect(provider).toBeLessThan(main)
     expect(main).toBeLessThan(endMain)
     expect(endMain).toBeLessThan(menu)
+  })
+})
+
+describe('the language switch', () => {
+  it('marks the current locale and links the other one to the same page', () => {
+    const view = renderClosed()
+    openMenu(view)
+    const switcher = within(panel(view)).getByRole('navigation', {
+      name: messages.menu.languageLabel,
+    })
+
+    expect(switcher).toHaveTextContent('DE|EN')
+    const current = within(switcher).getByText('DE')
+    expect(current).toHaveAttribute('aria-current', 'true')
+    expect(current.tagName).toBe('SPAN')
+
+    const other = within(switcher).getByRole('link', { name: 'EN' })
+    expect(other.getAttribute('href')).toMatch(/^\/en\/?$/)
+    expect(other).toHaveAttribute('hreflang', 'en')
+    view.unmount()
   })
 })

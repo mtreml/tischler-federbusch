@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
+import de from '@/i18n/messages/de.json'
+import en from '@/i18n/messages/en.json'
+
 import { pathFor } from '@/i18n/paths'
 import { defaultLocale, locales, routing } from '@/i18n/routing'
 
@@ -13,8 +16,8 @@ import { defaultLocale, locales, routing } from '@/i18n/routing'
    ══════════════════════════════════════════════════════════════════════════════ */
 
 describe('the locale set', () => {
-  it('is exactly the German locale, by decision', () => {
-    expect(locales).toEqual(['de'])
+  it('is German by default, with English beside it', () => {
+    expect(locales).toEqual(['de', 'en'])
     expect(defaultLocale).toBe('de')
   })
 
@@ -33,5 +36,26 @@ describe('pathFor', () => {
     expect(pathFor({ href: '/impressum-datenschutz', locale: defaultLocale })).toBe(
       '/de/impressum-datenschutz/',
     )
+  })
+
+  // The export writes the route directory's name; a translated segment would 404 without a rewrite.
+  it('keeps the legal page segment untranslated for English', () => {
+    expect(pathFor({ href: '/impressum-datenschutz', locale: 'en' })).toBe(
+      '/en/impressum-datenschutz/',
+    )
+  })
+})
+
+describe('the message files', () => {
+  function keys(messages: object, prefix = ''): string[] {
+    return Object.entries(messages).flatMap(([key, value]) =>
+      typeof value === 'object' && value !== null
+        ? keys(value, `${prefix}${key}.`)
+        : [`${prefix}${key}`],
+    )
+  }
+
+  it('carry the same keys in every locale', () => {
+    expect(keys(en).sort()).toEqual(keys(de).sort())
   })
 })

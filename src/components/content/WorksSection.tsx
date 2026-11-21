@@ -1,4 +1,5 @@
 import { site } from '@/config/site.config'
+import { localize } from '@/lib/config/resolve'
 import { media, imageDelivery } from '@/config/media.config'
 import { ParallaxImage } from '@/components/content/ParallaxImage'
 import { FULL_BLEED_SIZES, toLogicalPath } from '@mtreml/portfolio-core/media'
@@ -15,7 +16,7 @@ import { FULL_BLEED_SIZES, toLogicalPath } from '@mtreml/portfolio-core/media'
    parallax on top of an otherwise plain `<picture>`.
    ══════════════════════════════════════════════════════════════════════════════ */
 
-export function WorksSection() {
+export function WorksSection({ locale }: { locale: string }) {
   /* Each configured value is a served asset path; the delivery adapter speaks
      logical paths — the served path with `media.basePath` removed — and the
      committed manifest is what makes one a set of files. The `validate-config`
@@ -23,7 +24,7 @@ export function WorksSection() {
      that `seo.ogImage` names one of the works images. */
   return (
     <section id={site.routes.anchors.arbeiten} className="works">
-      <p className="works__tagline">{site.identity.tagline}</p>
+      <p className="works__tagline">{localize(site.identity.tagline, locale)}</p>
       {/* The manifest is committed and the gate keeps every `works.images` path declared,
           so the resolutions are defined here; the degenerate renders the section without
           the image rather than a broken one. */}
@@ -38,7 +39,7 @@ export function WorksSection() {
             sizes={FULL_BLEED_SIZES}
             width={resolved.width}
             height={resolved.height}
-            alt={entry.imageAlt}
+            alt={localize(entry.imageAlt, locale)}
           />
         )
       })}

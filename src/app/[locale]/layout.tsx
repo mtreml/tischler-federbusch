@@ -11,7 +11,7 @@ import { site } from '@/config/site.config'
 import { pathFor } from '@/i18n/paths'
 import { routing } from '@/i18n/routing'
 import { MenuProvider } from '@/lib/menu'
-import { resolveCanonicalUrl } from '@/lib/config/resolve'
+import { localize, resolveCanonicalUrl } from '@/lib/config/resolve'
 
 import '@/styles/globals.css'
 
@@ -28,17 +28,18 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
 
-  const title = site.seo.title
+  const title = localize(site.seo.title, locale)
+  const description = localize(site.seo.defaultDescription, locale)
   const canonical = resolveCanonicalUrl(pathFor({ href: '/', locale }))
   const ogImage = resolveCanonicalUrl(site.seo.ogImage)
 
   return {
     title,
-    description: site.seo.defaultDescription,
+    description,
     alternates: { canonical },
     openGraph: {
       title,
-      description: site.seo.defaultDescription,
+      description,
       url: canonical,
       siteName: site.identity.displayName,
       type: 'website',

@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { site } from '@/config/site.config'
 import { Link } from '@/i18n/navigation'
-import { resolveCopyrightHolder } from '@/lib/config/resolve'
+import { localize, resolveCopyrightHolder } from '@/lib/config/resolve'
 
 /* ══════════════════════════════════════════════════════════════════════════════
    THE FOOTER — the last element of the one-scroll landing document
@@ -15,14 +15,11 @@ import { resolveCopyrightHolder } from '@/lib/config/resolve'
    component, no state; the static export prerenders it, and the no-JS
    visitor gets the same line.
 
-   The legal entry is a **plain link with plain navigation** (decided, open
-   question 3): a next-intl `Link` to the legal route **without**
-   `data-transition` — the sequence owner's capture interception only touches
-   `data-transition` elements, so no overlay fires. It is the only navigation
-   on this site to the legal page besides the browser.
+   The legal entry carries `data-transition="impressum"`: the sequence owner's
+   capture interception runs the overlay; without JS it is a plain link.
    ══════════════════════════════════════════════════════════════════════════════ */
 
-export async function Footer() {
+export async function Footer({ locale }: { locale: string }) {
   const t = await getTranslations('footer')
 
   /* The holder resolves to `contact.name` — the year is rendered, not
@@ -36,9 +33,12 @@ export async function Footer() {
         <p className="site-footer__copyright">
           © {year} {holder}
         </p>
-        {/* Plain navigation: no `data-transition`, so the sequence never sees it. */}
-        <Link className="site-footer__legal" href="/impressum-datenschutz">
-          {site.footer.legalLabel}
+        <Link
+          className="site-footer__legal"
+          href="/impressum-datenschutz"
+          data-transition="impressum"
+        >
+          {localize(site.footer.legalLabel, locale)}
         </Link>
         <p className="site-footer__credit">
           {t('creditPrefix')}{' '}

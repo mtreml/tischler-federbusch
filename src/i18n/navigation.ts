@@ -16,7 +16,7 @@ import { routing } from './routing'
    where the localized versions are created.
    ══════════════════════════════════════════════════════════════════════════════ */
 
-export const { Link, getPathname } = createNavigation(routing)
+export const { Link, getPathname, usePathname } = createNavigation(routing)
 
 /* ══════════════════════════════════════════════════════════════════════════════
    THE RAW PATHNAME AND THE RAW ROUTER

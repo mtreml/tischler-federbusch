@@ -22,12 +22,15 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   return (
     <>
       <LandingView params={params} />
+      {/* The header's white bar: sticky, so the compositor moves it with the scroll — it rides the works
+          section's top and pins once the landing is gone, never over the film. */}
+      <div className="header-backdrop" aria-hidden="true" />
       {/* The works section: the `#arbeiten` target the menu anchor and
           the transition sequence scroll to, in this same document. */}
-      <WorksSection />
+      <WorksSection locale={locale} />
       {/* The footer: the last child of `<main>`, below the works
           section — the one-scroll document ends here. */}
-      <Footer />
+      <Footer locale={locale} />
     </>
   )
 }

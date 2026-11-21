@@ -9,6 +9,11 @@ import { MENU_PANEL_ID, MenuProvider } from '@/lib/menu'
 import messages from '@/i18n/messages/de.json'
 import { setPrefersReducedMotion } from './match-media'
 
+vi.mock('next/navigation', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('next/navigation')>()),
+  usePathname: () => '/de/',
+}))
+
 // This suite asserts motion, not the sequence, so the hook is mocked.
 vi.mock('@/lib/transition-sequence', () => ({
   useTransitionSequence: () => ({ transitionTo: () => {} }),
@@ -123,6 +128,19 @@ describe('open: the intro', () => {
         translateYPixels(entries[index - 1]!) ?? 0,
       )
     }
+    view.unmount()
+  })
+
+  it('the language switch rises one step farther than the last entry', () => {
+    const view = renderClosed()
+    openMenu(view)
+    const switcher = panel(view).querySelector<HTMLElement>('.menu__languages')
+    expect(switcher).not.toBeNull()
+    expect(translateYPixels(switcher!)).toBeCloseTo(
+      risePixels() * (site.navigation.items.length + 1),
+      5,
+    )
+    expect(switcher!.style.opacity).toBe('0')
     view.unmount()
   })
 

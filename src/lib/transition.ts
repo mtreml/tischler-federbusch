@@ -4,7 +4,7 @@
 // The action seam: the route change/scroll at cover completion is a swappable handler; `beginTransition` no-ops with no subscriber.
 // The commit seam: the reveal lifts the cover only once the action has committed — the route really swapped, or the scroll ran.
 
-export type TransitionTarget = 'arbeiten' | 'landing'
+export type TransitionTarget = 'arbeiten' | 'landing' | 'impressum'
 
 export type TransitionAction = (target: TransitionTarget) => void
 

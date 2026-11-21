@@ -2,29 +2,27 @@
 
 import { useSyncExternalStore } from 'react'
 
-// One boolean, two readers: the name's stick and the white bar's appearance are the same scroll.
-// The name scroll is the writer (it measures the name and the works section's top); the header is the reader.
-// Instant, not a fade: the bar appears the frame the white part reaches the name's bottom edge.
+// Written by the name scroll and read by the header: `nameHandedOver` is the works section's top reaching the pinned
+// name's bottom edge — the landing's clip starts to cut the name, so the header's own name takes over.
 
-/** The name's y translate at scroll `s`: it scrolls with the page until its top edge reaches the header slot. */
-export function stickOffset(s: number, sStick: number): number {
-  return Math.max(0, s - sStick)
+/** True from the frame the works section's viewport top reaches `edge` (px from the viewport top), and stays. */
+export function worksReached(worksTop: number, edge: number): boolean {
+  return worksTop <= edge
 }
 
-/** The bar is visible from the frame `s` reaches the handover scroll, and stays. */
-export function barVisibleAt(s: number, barOnAt: number): boolean {
-  return s >= barOnAt
+export interface HeaderScrollState {
+  nameHandedOver: boolean
 }
 
-// Module-level store (not lifted state): the writer and readers live in different branches of the tree.
 type Listener = () => void
 
-let barVisible = false
+const initialState: HeaderScrollState = { nameHandedOver: false }
+let state = initialState
 const listeners = new Set<Listener>()
 
-export function setBarVisible(value: boolean): void {
-  if (value === barVisible) return
-  barVisible = value
+export function setHeaderScrollState(next: HeaderScrollState): void {
+  if (next.nameHandedOver === state.nameHandedOver) return
+  state = next
   for (const listener of listeners) listener()
 }
 
@@ -35,14 +33,14 @@ function subscribe(listener: Listener): () => void {
   }
 }
 
-function getSnapshot(): boolean {
-  return barVisible
+function getSnapshot(): HeaderScrollState {
+  return state
 }
 
-function getServerSnapshot(): boolean {
-  return false
+function getServerSnapshot(): HeaderScrollState {
+  return initialState
 }
 
-export function useBarVisible(): boolean {
+export function useHeaderScrollState(): HeaderScrollState {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }

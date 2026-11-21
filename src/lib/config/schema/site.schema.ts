@@ -10,6 +10,7 @@ import {
   isLocaleCode,
   isRouteSegment,
   isTelHref,
+  localizedText,
 } from './shared'
 
 // Mirrors `site.config.ts` group for group. Locales are derived in `i18n/routing.ts`; design values live in `tokens.css`.
@@ -22,7 +23,7 @@ const routeSegmentPerLocale = z.record(
 const anchorItem = z.object({
   type: z.literal('anchor'),
   anchor: checkedString(isAnchorId, 'must be a lowercase id, e.g. "arbeiten"'),
-  label: z.string(),
+  label: localizedText,
 })
 const telItem = z.object({
   type: z.literal('tel'),
@@ -35,7 +36,7 @@ const navigationItem = z.discriminatedUnion('type', [anchorItem, telItem, emailI
 export const siteSchema = z.object({
   identity: z.object({
     displayName: z.string(),
-    tagline: z.string(),
+    tagline: localizedText,
     domain: z.string(),
     canonicalOrigin: checkedString(
       isAbsoluteOrigin,
@@ -66,15 +67,15 @@ export const siteSchema = z.object({
 
   // Copyright holder is not a key: it resolves to `contact.name` at render time.
   footer: z.object({
-    legalLabel: z.string(),
+    legalLabel: localizedText,
     credit: z.string(),
     creditUrl: checkedString(isHttpsUrl, 'must be an https URL'),
   }),
 
   seo: z.object({
-    title: z.string(),
+    title: localizedText,
     titleTemplate: z.string(),
-    defaultDescription: z.string(),
+    defaultDescription: localizedText,
     structuredDataType: z.enum(['Person', 'Organization']),
     ogImage: checkedString(isAssetPath, 'must be a rooted asset path'),
   }),
@@ -82,7 +83,7 @@ export const siteSchema = z.object({
   landing: z.object({
     video: checkedString(isAssetPath, 'must be a rooted asset path'),
     introDurationMs: z.number().int().min(100).max(10_000),
-    videoLabel: z.string(),
+    videoLabel: localizedText,
     objectFit: z.enum(['cover', 'contain', 'fill']),
   }),
 
@@ -91,7 +92,7 @@ export const siteSchema = z.object({
       .array(
         z.object({
           image: checkedString(isAssetPath, 'must be a rooted asset path'),
-          imageAlt: z.string(),
+          imageAlt: localizedText,
         }),
       )
       .min(1),

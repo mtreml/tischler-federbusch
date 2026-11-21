@@ -1,0 +1,36 @@
+{
+  "common": {
+    "skipToContent": "Skip to content",
+    "loading": "Loading"
+  },
+  "menu": {
+    "openLabel": "Open menu",
+    "closeLabel": "Close menu",
+    "dialogLabel": "Menu",
+    "languageLabel": "Language"
+  },
+  "header": {
+    "nameLabel": "Home"
+  },
+  "rootRedirect": {
+    "title": "Lukas Federbusch - Master Cabinetmaker",
+    "description": "Redirecting to the website",
+    "link": "Continue to the website"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "This address does not exist.",
+    "toLanding": "Go to the home page"
+  },
+  "footer": {
+    "creditPrefix": "Made with care & love by"
+  },
+  "impressumDatenschutz": {
+    "heading": "Legal Notice & Privacy",
+    "description": "Legal notice and privacy policy of the website of Lukas Federbusch, master cabinetmaker in Lienz.",
+    "lastChangedLabel": "Last changed:",
+    "impressum": "1. Legal Notice",
+    "datenschutz": "2. Privacy Policy",
+    "urheberrecht": "3. Copyright"
+  }
+}

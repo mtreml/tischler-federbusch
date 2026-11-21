@@ -1,20 +1,20 @@
 'use client'
 
+import { Logo } from '@/components/brand/Logo'
 import { Name } from '@/components/brand/Name'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { MENU_PANEL_ID, useMenu } from '@/lib/menu'
-import { useBarVisible } from '@/lib/landing-scroll'
+import { useHeaderScrollState } from '@/lib/landing-scroll'
 
 import { MenuButton } from './MenuButton'
 
 // Fixed, transparent over the landing fold — the video runs across the full first screenful, so there is no solid bar.
-// The background is 0/1 from the shared store (`src/lib/landing-scroll.ts`): the white bar appears the frame the
-// works section's top reaches the name's bottom edge and stays — the frame the landing's clip starts to cut the
-// pinned name, so the bar's name never has a gap — the bar keeps `pointer-events: none`. `introPending` mirrors
+// Two moments from the shared store (`src/lib/landing-scroll.ts`): the header's name mounts the frame the works
+// section's top reaches the pinned name's bottom edge — the landing's clip starts to cut that name, so it must live
+// here, not in the landing. The landing's white bar is `.header-backdrop`, sticky in the page itself; the `page`
+// variant (impressum) has name and background from the start. The bar keeps `pointer-events: none`. `introPending` mirrors
 // the stage's `data-intro`: name and button arrive together.
-// The centered name renders in the bar once it appears (landing) or always (`page` variant, impressum) — it must
-// live here, not in the landing, because the landing clips its descendants the frame the bar appears.
 
 interface HeaderProps {
   variant?: 'landing' | 'page'
@@ -24,17 +24,17 @@ interface HeaderProps {
 
 export function Header({ variant = 'landing', introPending = false }: HeaderProps) {
   const t = useTranslations('header')
-  const barVisible = useBarVisible()
+  const { nameHandedOver } = useHeaderScrollState()
   const menu = useMenu()
+  const isPage = variant === 'page'
 
   return (
     <header className="header" data-intro={introPending ? 'pending' : undefined}>
-      <div
-        className="header__background"
-        style={{ opacity: variant === 'page' || barVisible ? 1 : 0 }}
-        aria-hidden="true"
-      />
-      {variant === 'page' || barVisible ? (
+      {isPage ? <div className="header__background" aria-hidden="true" /> : null}
+      {isPage || nameHandedOver ? (
+        <Logo className={isPage ? 'header__logo' : 'header__logo header__logo--fade'} />
+      ) : null}
+      {isPage || nameHandedOver ? (
         <Link
           className="header__name"
           href="/"

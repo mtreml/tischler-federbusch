@@ -8,7 +8,7 @@ import { expect, test } from '@playwright/test'
    assertions join this gate as the surfaces land.
    ══════════════════════════════════════════════════════════════════════════════ */
 
-const PAGES = ['/de/', '/de/impressum-datenschutz/']
+const PAGES = ['/de/', '/de/impressum-datenschutz/', '/en/', '/en/impressum-datenschutz/']
 
 for (const path of PAGES) {
   test(`no serious or critical violations on ${path}`, async ({ page }) => {

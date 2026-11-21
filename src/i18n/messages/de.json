@@ -6,7 +6,8 @@
   "menu": {
     "openLabel": "Menü öffnen",
     "closeLabel": "Menü schließen",
-    "dialogLabel": "Menü"
+    "dialogLabel": "Menü",
+    "languageLabel": "Sprache"
   },
   "header": {
     "nameLabel": "Startseite"

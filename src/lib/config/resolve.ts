@@ -1,4 +1,10 @@
 import { site } from '@/config/site.config'
+import type { LocalizedText } from '@/lib/config/schema/shared'
+
+// validate-config guarantees every configured locale is filled; the default locale is the type-level fallback.
+export function localize(text: LocalizedText, locale: string): string {
+  return text[locale] ?? text[site.languages.default] ?? ''
+}
 
 // The contact block, with `tel:`/`mailto:` hrefs built here so a call site cannot miss the scheme.
 export function resolveContact() {

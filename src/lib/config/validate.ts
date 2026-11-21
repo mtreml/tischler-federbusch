@@ -67,6 +67,22 @@ class FindingCollector {
     return true
   }
 
+  requireLocalized(key: string, value: Record<string, string>, locales: readonly string[]): void {
+    for (const locale of locales) {
+      if (isBlank(value[locale])) {
+        this.unfilled(`${key}.${locale}`, `has no text for configured locale "${locale}"`)
+      }
+    }
+    for (const declared of Object.keys(value)) {
+      if (!locales.includes(declared)) {
+        this.contradiction(
+          `${key}.${declared}`,
+          `declares text for "${declared}", which is not a configured locale`,
+        )
+      }
+    }
+  }
+
   all(): Finding[] {
     return this.findings
   }
@@ -145,15 +161,15 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   }
 
   f.require('identity.displayName', site.identity.displayName)
-  f.require('identity.tagline', site.identity.tagline)
+  f.requireLocalized('identity.tagline', site.identity.tagline, locales)
   f.require('identity.domain', site.identity.domain)
   f.require('identity.canonicalOrigin', site.identity.canonicalOrigin)
 
-  f.require('footer.legalLabel', site.footer.legalLabel)
+  f.requireLocalized('footer.legalLabel', site.footer.legalLabel, locales)
   f.require('footer.credit', site.footer.credit)
   f.require('footer.creditUrl', site.footer.creditUrl)
 
-  f.require('seo.title', site.seo.title)
+  f.requireLocalized('seo.title', site.seo.title, locales)
 
   if (
     f.require('seo.titleTemplate', site.seo.titleTemplate) &&
@@ -161,20 +177,18 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   ) {
     f.malformed('seo.titleTemplate', 'must carry the %s placeholder the page titles replace')
   }
-  f.require('seo.defaultDescription', site.seo.defaultDescription)
+  f.requireLocalized('seo.defaultDescription', site.seo.defaultDescription, locales)
   f.require('seo.ogImage', site.seo.ogImage)
 
   f.require('landing.video', site.landing.video)
-  f.require('landing.videoLabel', site.landing.videoLabel)
+  f.requireLocalized('landing.videoLabel', site.landing.videoLabel, locales)
 
   if (f.require('works.images', site.works.images)) {
     site.works.images.forEach((entry, index) => {
       if (isBlank(entry.image)) {
         f.unfilled(`works.images[${index}].image`, 'is required and is empty')
       }
-      if (isBlank(entry.imageAlt)) {
-        f.unfilled(`works.images[${index}].imageAlt`, 'is required and is empty')
-      }
+      f.requireLocalized(`works.images[${index}].imageAlt`, entry.imageAlt, locales)
     })
     const imageSet = new Set(site.works.images.map((entry) => entry.image))
     if (!isBlank(site.seo.ogImage) && !imageSet.has(site.seo.ogImage)) {
@@ -189,9 +203,7 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   if (f.require('navigation.items', site.navigation.items, 'is required — the menu is empty')) {
     site.navigation.items.forEach((item, index) => {
       if (item.type === 'anchor') {
-        if (isBlank(item.label)) {
-          f.unfilled(`navigation.items[${index}].label`, 'is required and is empty')
-        }
+        f.requireLocalized(`navigation.items[${index}].label`, item.label, locales)
         if (item.anchor === '' || site.routes.anchors[item.anchor] === undefined) {
           f.contradiction(
             `navigation.items[${index}].anchor`,
@@ -203,12 +215,10 @@ function checkSite(site: SiteConfig, f: FindingCollector): void {
   }
 }
 
-function checkLegal(legal: LegalConfig, f: FindingCollector): void {
-  f.require('legal.lastChanged', legal.lastChanged)
-
-  f.require('legal.datenschutz.protocolText', legal.datenschutz.protocolText)
-
-  f.require('legal.urheberrecht', legal.urheberrecht)
+function checkLegal(legal: LegalConfig, locales: readonly string[], f: FindingCollector): void {
+  f.requireLocalized('legal.lastChanged', legal.lastChanged, locales)
+  f.requireLocalized('legal.datenschutz.protocolText', legal.datenschutz.protocolText, locales)
+  f.requireLocalized('legal.urheberrecht', legal.urheberrecht, locales)
 }
 
 function checkMedia(media: MediaConfig, f: FindingCollector): void {
@@ -313,7 +323,7 @@ export function validateConfiguration(inputs: Inputs): ValidationReport {
   }
 
   checkSite(inputs.site, f)
-  checkLegal(inputs.legal, f)
+  checkLegal(inputs.legal, inputs.site.languages.supported, f)
   checkMedia(inputs.media, f)
 
   if (inputs.declaredMediaPaths !== undefined) {

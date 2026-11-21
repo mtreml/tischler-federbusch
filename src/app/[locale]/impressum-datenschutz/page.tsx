@@ -6,12 +6,17 @@ import { ScrollToTop } from '@/components/layout/ScrollToTop'
 import { legal } from '@/config/legal.config'
 import { routing } from '@/i18n/routing'
 import { pathFor } from '@/i18n/paths'
-import { applyTitleTemplate, resolveCanonicalUrl, resolveContact } from '@/lib/config/resolve'
+import {
+  applyTitleTemplate,
+  localize,
+  resolveCanonicalUrl,
+  resolveContact,
+} from '@/lib/config/resolve'
 
 /* ══════════════════════════════════════════════════════════════════════════════
    IMPRESSUM & DATENSCHUTZ — the only separate page on the site
 
-   Replaces the original placeholder. The legal *prose* is German configuration
+   Replaces the original placeholder. The legal *prose* is per-locale configuration
    data (`legal.config.ts`) rendered verbatim; the structural labels (the
    heading, "Zuletzt geändert:", the section titles) come from the locale
    messages — the established split. No
@@ -42,7 +47,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations('impressumDatenschutz')
+  const t = await getTranslations({ locale, namespace: 'impressumDatenschutz' })
 
   return {
     title: applyTitleTemplate(t('heading')),
@@ -72,7 +77,7 @@ export default async function ImpressumDatenschutzPage({
       <section className="legal">
         <h1 className="legal__heading">{t('heading')}</h1>
         <p className="legal__last-changed">
-          {t('lastChangedLabel')} {legal.lastChanged}
+          {t('lastChangedLabel')} {localize(legal.lastChanged, locale)}
         </p>
 
         <section className="legal__section">
@@ -96,12 +101,12 @@ export default async function ImpressumDatenschutzPage({
 
         <section className="legal__section">
           <h2>{t('datenschutz')}</h2>
-          <p className="legal__protocol">{legal.datenschutz.protocolText}</p>
+          <p className="legal__protocol">{localize(legal.datenschutz.protocolText, locale)}</p>
         </section>
 
         <section className="legal__section">
           <h2>{t('urheberrecht')}</h2>
-          <p>{legal.urheberrecht}</p>
+          <p>{localize(legal.urheberrecht, locale)}</p>
         </section>
       </section>
     </>

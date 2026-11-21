@@ -79,6 +79,7 @@
 .menu__name-image {
   display: block;
   width: var(--name-width);
+  max-width: none;
   height: auto;
   user-select: none;
 }
@@ -97,9 +98,13 @@
 
 .menu__close {
   position: absolute;
-  top: var(--name-header-top);
-  right: var(--spacing-gutter);
-  display: block;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--header-height);
+  block-size: var(--header-height);
 }
 
 .menu__entries {
@@ -122,6 +127,38 @@
   color: var(--color-ink);
   text-decoration: none;
   text-align: center;
+}
+
+.menu__languages {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(var(--spacing-gutter) + env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  color: var(--color-ink-faint);
+}
+
+.menu__language {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--spacing-touch-target);
+  min-block-size: var(--spacing-touch-target);
+  color: inherit;
+  text-decoration: none;
+  letter-spacing: var(--tracking-wide);
+}
+
+.menu__language[aria-current='true'],
+a.menu__language:hover {
+  color: var(--color-ink);
+}
+
+.menu__language-separator {
+  user-select: none;
 }
 
 /* Reduced motion: the CSS side — whatever this file styles may not move either. */

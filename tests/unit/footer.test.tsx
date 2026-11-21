@@ -25,12 +25,12 @@ vi.mock('next-intl/server', async () => {
 })
 
 // The single line at the end of the one-scroll document: holder from `resolveCopyrightHolder()`, the year rendered,
-// the legal entry a plain link (no `data-transition`), the credit a new-tab link.
+// the legal entry a `data-transition="impressum"` link, the credit a new-tab link.
 
 async function renderFooter() {
   const stream = await renderToReadableStream(
     <NextIntlClientProvider locale="de" messages={messages}>
-      <Footer />
+      <Footer locale="de" />
     </NextIntlClientProvider>,
   )
   const html = await new Response(stream).text()
@@ -47,16 +47,15 @@ describe('the footer', () => {
     expect(copyright?.textContent).toMatch(new RegExp(`^© \\d{4} ${holder}$`))
   })
 
-  it('links to the legal page with plain navigation — no data-transition', async () => {
+  it('links to the legal page through the impressum transition', async () => {
     const doc = await renderFooter()
 
     const legal = doc.querySelector('.site-footer__legal')
     expect(legal).not.toBeNull()
     // The unit renderer may or may not have appended the trailing slash, so the assertion tolerates exactly that one beat.
     expect(legal?.getAttribute('href')).toMatch(/^\/de\/impressum-datenschutz\/?$/)
-    expect(legal?.textContent).toBe(site.footer.legalLabel)
-    // The capture interception only touches `data-transition` elements, so the overlay never fires for this link.
-    expect(legal?.hasAttribute('data-transition')).toBe(false)
+    expect(legal?.textContent).toBe(site.footer.legalLabel.de)
+    expect(legal?.getAttribute('data-transition')).toBe('impressum')
   })
 
   it('renders the credit as a new-tab link with the configured target', async () => {

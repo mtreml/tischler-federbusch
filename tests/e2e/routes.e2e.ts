@@ -39,8 +39,7 @@ test('the menu entry lands on the works section', async ({ page }) => {
   const entry = page.getByRole('link', { name: 'Arbeiten' })
   await expect(entry).toBeVisible()
   await entry.click()
-  // The anchor lands with its top flush against the pinned name bar: the offset is the
-  // section's own `scroll-margin-top`, so assert alignment with that, not with the viewport top.
+  // The anchor lands with the landing fully gone, so the white bar is on.
   await expect
     .poll(async () =>
       page.locator('#arbeiten').evaluate((element) => {
@@ -50,6 +49,63 @@ test('the menu entry lands on the works section', async ({ page }) => {
       }),
     )
     .toBeLessThanOrEqual(4)
+  await expect
+    .poll(() => page.locator('.header-backdrop').evaluate((el) => el.getBoundingClientRect().top))
+    .toBe(0)
+})
+
+for (const viewport of [
+  { width: 375, height: 667 },
+  { width: 390, height: 844 },
+  { width: 820, height: 1180 },
+  { width: 1024, height: 768 },
+  { width: 1920, height: 1080 },
+]) {
+  test(`the white bar turns on only once the landing is gone (${viewport.width}×${viewport.height})`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport)
+    await page.goto('/de/')
+    const backdropTop = () =>
+      page.locator('.header-backdrop').evaluate((el) => el.getBoundingClientRect().top)
+    const landingBottom = await page
+      .locator('#arbeiten')
+      .evaluate((element) => element.getBoundingClientRect().top + window.scrollY)
+
+    await page.evaluate((y) => window.scrollTo(0, y), landingBottom - 20)
+    await expect(page.locator('.header__name')).toBeVisible()
+    await expect.poll(backdropTop).toBeGreaterThanOrEqual(19)
+
+    await page.evaluate((y) => window.scrollTo(0, y), landingBottom)
+    await expect.poll(backdropTop).toBe(0)
+    const bar = await page.locator('.header').boundingBox()
+    const tagline = await page.locator('.works__tagline').boundingBox()
+    expect(bar!.height).toBeGreaterThan(0)
+    expect(tagline!.y).toBeGreaterThanOrEqual(bar!.y + bar!.height)
+
+    await page.evaluate((y) => window.scrollTo(0, y), landingBottom - 20)
+    await expect.poll(backdropTop).toBeGreaterThanOrEqual(19)
+  })
+}
+
+test('the landing name is clickable only once stuck in the header slot', async ({ page }) => {
+  await page.goto('/de/')
+  const name = page.locator('.landing__name')
+  const hitsName = () =>
+    name.evaluate((link) => {
+      const box = link.getBoundingClientRect()
+      const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)
+      return hit !== null && link.contains(hit)
+    })
+
+  await expect.poll(hitsName).toBe(false)
+
+  const nameTop = await name.evaluate((link) => link.getBoundingClientRect().top + window.scrollY)
+  await page.evaluate((y) => window.scrollTo(0, y), nameTop)
+  await expect.poll(hitsName).toBe(true)
+
+  await name.click()
+  await expect(page).toHaveURL(/\/de\/$/)
 })
 
 test('the footer line closes the one-scroll document', async ({ page }) => {
@@ -60,7 +116,7 @@ test('the footer line closes the one-scroll document', async ({ page }) => {
 
   const legalLink = footer.getByRole('link', { name: 'Impressum & Datenschutz' })
   await expect(legalLink).toHaveAttribute('href', /\/de\/impressum-datenschutz\/?$/)
-  await expect(legalLink).not.toHaveAttribute('data-transition')
+  await expect(legalLink).toHaveAttribute('data-transition', 'impressum')
 
   const credit = footer.getByRole('link', { name: 'mtreml' })
   await expect(credit).toHaveAttribute('href', 'https://github.com/mtreml')
@@ -71,11 +127,14 @@ test('the footer line closes the one-scroll document', async ({ page }) => {
   await expect(footer.locator('a[href^="mailto:"]')).toHaveCount(0)
 })
 
-test('the footer legal entry navigates plainly — no overlay in the DOM', async ({ page }) => {
+test('the footer legal entry navigates through the page transition', async ({ page }) => {
   await page.goto('/de/')
   const legalLink = page.locator('footer').getByRole('link', { name: 'Impressum & Datenschutz' })
   await legalLink.click()
   await expect(page).toHaveURL(/\/de\/impressum-datenschutz\/$/)
+  const host = page.locator('[data-transition-host]')
+  await expect(host).toHaveAttribute('data-transition-covers', '1')
+  await expect(host).toHaveAttribute('data-transition-phase', 'idle')
   await expect(page.locator('.transition-overlay')).toHaveCount(0)
   await expect(
     page.getByRole('heading', { level: 1, name: 'Impressum & Datenschutz' }),

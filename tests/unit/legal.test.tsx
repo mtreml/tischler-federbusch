@@ -64,7 +64,7 @@ describe('the configured text', () => {
   it('renders `lastChanged` verbatim, at the top', async () => {
     const doc = await renderLegal()
     expect(doc.querySelector('.legal__last-changed')?.textContent).toBe(
-      `Zuletzt geändert: ${legal.lastChanged}`,
+      `Zuletzt geändert: ${legal.lastChanged.de}`,
     )
   })
 
@@ -72,8 +72,10 @@ describe('the configured text', () => {
     const doc = await renderLegal()
     const body = doc.body.textContent
     // The newlines are preserved, not collapsed.
-    expect(doc.querySelector('.legal__protocol')?.textContent).toBe(legal.datenschutz.protocolText)
-    expect(body).toContain(legal.urheberrecht)
+    expect(doc.querySelector('.legal__protocol')?.textContent).toBe(
+      legal.datenschutz.protocolText.de,
+    )
+    expect(body).toContain(legal.urheberrecht.de)
   })
 
   it('links the contact email, as a mailto', async () => {

@@ -9,6 +9,10 @@ export function checkedString(
   return z.string().refine((value) => value === '' || predicate(value), { message })
 }
 
+// One string per configured locale; completeness against `languages.supported` is checked in `../validate.ts`.
+export const localizedText = z.record(z.string(), z.string())
+export type LocalizedText = z.infer<typeof localizedText>
+
 export function isAnchorId(value: string): boolean {
   return /^[a-z0-9]+(?:[-_][a-z0-9]+)*$/.test(value)
 }

@@ -3,20 +3,19 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { site } from '@/config/site.config'
-import { barVisibleAt, setBarVisible, stickOffset } from '@/lib/landing-scroll'
+import { setHeaderScrollState, worksReached } from '@/lib/landing-scroll'
 
-// The name's stick: transform-driven, no layout shift. The name scrolls up with the page and, the frame its
-// natural top edge reaches `--name-header-top`, pins there — no horizontal travel, it stays centered, so the
-// pinned name is the bar's centered name. The same handler writes the bar's visibility: the bar's name takes
-// over the moment the works section's top reaches the name's bottom edge — the frame the landing's clip starts
-// to bite the pinned name — so the name is never absent. Final position/size read the base tokens, so the menu's
-// and the overlay's name slots never move when the menu toggles.
+// The name's stick is CSS (`position: sticky` in `.landing__name-scroll`), so the compositor moves it with the
+// scroll and it never lags a frame behind. This only writes the switches: the name is clickable once stuck, and
+// the header's state — the bar's name takes over the moment the works section's top reaches the pinned name's
+// bottom edge (the frame sticky lets go and the landing's clip starts to bite). The works section is read live each
+// frame, so a phone's toolbar, zoom or a late layout shift never leave a stale threshold.
 
 interface StickMetrics {
-  /** The scrollY at which the name's natural top edge reaches the header slot. */
-  sStick: number
-  /** The scrollY at which the works section's top reaches the name's bottom edge; the bar is visible at and below it. */
-  barOnAt: number | null
+  /** The header slot's top, px from the viewport top. */
+  headerTop: number
+  /** The pinned name's bottom edge, px from the viewport top. */
+  nameBottom: number
 }
 
 function cssLengthPx(value: string): number {
@@ -40,25 +39,11 @@ export function NameScroll({ children }: NameScrollProps) {
     const nameEl = nameRef.current
     if (nameEl === null) return
 
-    const scroll = window.scrollY
-    // Clear the transform for the read: a re-measure mid-stick must read the resting position.
-    const previous = nameEl.style.transform
-    nameEl.style.transform = 'none'
-    const nameRect = nameEl.getBoundingClientRect()
-    const worksEl = document.getElementById(site.routes.anchors.arbeiten!)
-    const worksRect = worksEl?.getBoundingClientRect()
-    nameEl.style.transform = previous
-
     const headerTop = cssLengthPx(
       getComputedStyle(document.documentElement).getPropertyValue('--name-header-top') ?? '',
     )
 
-    const nameBottom = headerTop + nameRect.height
-
-    setMetrics({
-      sStick: scroll + nameRect.top - headerTop,
-      barOnAt: worksRect === undefined ? null : scroll + worksRect.top - nameBottom,
-    })
+    setMetrics({ headerTop, nameBottom: headerTop + nameEl.getBoundingClientRect().height })
   }, [])
 
   useEffect(() => {
@@ -71,26 +56,19 @@ export function NameScroll({ children }: NameScrollProps) {
     const nameEl = nameRef.current
     if (nameEl === null || metrics === null) return
 
+    const worksEl = document.getElementById(site.routes.anchors.arbeiten!)
     let ticking = false
 
     const update = () => {
       ticking = false
-      const s = window.scrollY
-      const ty = stickOffset(s, metrics.sStick)
-      // The name is only clickable once it has stuck into the header slot.
-      nameEl.style.pointerEvents = s >= metrics.sStick ? '' : 'none'
-      if (ty === 0) {
-        nameEl.style.transform = ''
-        nameEl.style.willChange = 'auto'
-      } else {
-        nameEl.style.transform = `translateY(${ty}px)`
-        nameEl.style.willChange = 'transform'
-      }
-      const barOn = metrics.barOnAt !== null && barVisibleAt(s, metrics.barOnAt)
-      setBarVisible(barOn)
-      // The bar's name (the header's) takes over the same slot; hide this one in the same frame. `visibility`
-      // keeps the layout and the re-measure read intact.
-      nameEl.style.visibility = barOn ? 'hidden' : ''
+      const worksTop = worksEl?.getBoundingClientRect().top ?? Number.POSITIVE_INFINITY
+      // Half a pixel of slack: sticky can rest a subpixel off the slot at fractional scroll positions.
+      const stuck = nameEl.getBoundingClientRect().top <= metrics.headerTop + 0.5
+      nameEl.toggleAttribute('data-stuck', stuck)
+      const nameHandedOver = worksReached(worksTop, metrics.nameBottom)
+      setHeaderScrollState({ nameHandedOver })
+      // The header's name takes over the same slot; hide this one in the same frame.
+      nameEl.style.visibility = nameHandedOver ? 'hidden' : ''
     }
 
     const onScroll = () => {

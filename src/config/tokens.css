@@ -32,6 +32,7 @@
   --menu-item-rise: 1.25rem; /* entry i rises `× (i + 1)`; the distance gradient is the stagger */
   --duration-transition-cover: 720ms;
   --duration-transition-reveal: 840ms;
+  --duration-header-logo: 480ms;
   --duration-intro: 1500ms; /* JS twin: `site.landing.introDurationMs` */
 
   /* The landing lockup's intro, played in this order; each step starts when the previous one ends. */

@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { WorksSection } from '@/components/content/WorksSection'
 import { site } from '@/config/site.config'
+import { localize } from '@/lib/config/resolve'
 import { media } from '@/config/media.config'
 import {
   MANIFEST_VERSION,
@@ -91,14 +92,14 @@ afterEach(() => {
 
 describe('the section', () => {
   it('is the #arbeiten target the menu anchor and the transition sequence name', () => {
-    const { container } = render(<WorksSection />)
+    const { container } = render(<WorksSection locale="de" />)
     const section = container.querySelector('section')
     expect(section?.id).toBe(site.routes.anchors.arbeiten)
   })
 
   it('carries the tagline, verbatim from the central configuration', () => {
-    render(<WorksSection />)
-    expect(screen.getByText(site.identity.tagline)).toBeInTheDocument()
+    render(<WorksSection locale="de" />)
+    expect(screen.getByText(localize(site.identity.tagline, 'de'))).toBeInTheDocument()
   })
 })
 
@@ -113,12 +114,12 @@ describe('the pictures', () => {
   }
 
   it('renders one picture per configured works image', () => {
-    render(<WorksSection />)
+    render(<WorksSection locale="de" />)
     expect(screen.getAllByRole('img')).toHaveLength(site.works.images.length)
   })
 
   it('emits the sources in the configured order, modern first', () => {
-    render(<WorksSection />)
+    render(<WorksSection locale="de" />)
     const { sources } = pictureParts()
     expect(sources.map((source) => source.getAttribute('type'))).toEqual([
       'image/avif',
@@ -131,7 +132,7 @@ describe('the pictures', () => {
   })
 
   it('uses the widest rung of the universally supported format as the fallback src', () => {
-    render(<WorksSection />)
+    render(<WorksSection locale="de" />)
     const { image, sources } = pictureParts()
     const jpeg = sources.at(-1)
     expect(jpeg?.getAttribute('type')).toBe('image/jpeg')
@@ -140,11 +141,11 @@ describe('the pictures', () => {
   })
 
   it('carries the intrinsic dimensions and the configured text alternative', () => {
-    render(<WorksSection />)
+    render(<WorksSection locale="de" />)
     const { image } = pictureParts()
     expect(image).toHaveAttribute('width', String(WIDTH))
     expect(image).toHaveAttribute('height', String(HEIGHT))
-    expect(image).toHaveAttribute('alt', site.works.images[0]?.imageAlt)
+    expect(image).toHaveAttribute('alt', site.works.images[0]?.imageAlt.de)
     expect(image).toHaveAttribute('loading', 'lazy')
     expect(image).toHaveAttribute('decoding', 'async')
   })

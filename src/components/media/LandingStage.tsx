@@ -30,16 +30,38 @@ export function LandingStage({ video, label, objectFit, introDurationMs, introDo
   const reducedMotion = usePrefersReducedMotion()
 
   useEffect(() => {
-    // `play()` on the beat the deblur lands; a rejected `play()` is not a defect — the poster is still there.
+    // iOS in Low Power Mode rejects `play()` without a user activation; retry on the first one. Until then the poster stands.
+    const gestureEvents = ['touchend', 'pointerup', 'keydown'] as const
+    let cancelled = false
+
+    const retryOnGesture = () => {
+      removeGestureListeners()
+      const attempt: unknown = videoRef.current?.play()
+      if (attempt instanceof Promise) attempt.catch(() => {})
+    }
+
+    function removeGestureListeners() {
+      for (const type of gestureEvents) window.removeEventListener(type, retryOnGesture)
+    }
+
     const playTimer = setTimeout(
       () => {
         const attempt: unknown = videoRef.current?.play()
-        if (attempt instanceof Promise) attempt.catch(() => {})
+        if (!(attempt instanceof Promise)) return
+        attempt.catch((error: unknown) => {
+          if (!cancelled && error instanceof DOMException && error.name === 'NotAllowedError') {
+            for (const type of gestureEvents) window.addEventListener(type, retryOnGesture, { passive: true })
+          }
+        })
       },
       reducedMotion ? 0 : introDurationMs,
     )
 
-    return () => clearTimeout(playTimer)
+    return () => {
+      cancelled = true
+      clearTimeout(playTimer)
+      removeGestureListeners()
+    }
   }, [reducedMotion, introDurationMs])
 
   return (

@@ -19,7 +19,7 @@ import {
 // the beat, the commit that releases the reveal, the focus return. The `defaultPrevented` guard prevents double-firing; no subscriber → run immediately.
 
 function scrollToTarget(target: TransitionTarget): void {
-  if (target === 'landing') {
+  if (target === 'landing' || target === 'impressum') {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     return
   }
@@ -36,6 +36,7 @@ export function useTransitionSequence(): {
   const pathname = useUrlPathname()
 
   const landingPath = pathFor({ href: '/', locale })
+  const impressumPath = pathFor({ href: '/impressum-datenschutz', locale })
 
   // The pathname at click time — by the beat the route may have moved.
   const fromRef = useRef('')
@@ -44,7 +45,8 @@ export function useTransitionSequence(): {
   const action = useCallback<TransitionAction>(
     (target) => {
       const from = fromRef.current
-      if (from === landingPath) {
+      const destination = target === 'impressum' ? impressumPath : landingPath
+      if (from === destination) {
         // On the landing: just the scroll, one frame later (the scroll lock is released first); that frame is the commit.
         requestAnimationFrame(() => {
           scrollToTarget(target)
@@ -53,20 +55,21 @@ export function useTransitionSequence(): {
         return
       }
       commitScrollRef.current = target
-      router.push(landingPath, { scroll: false })
+      router.push(destination, { scroll: false })
     },
-    [landingPath, router],
+    [landingPath, impressumPath, router],
   )
 
   // Commit: the pathname really changed — the deferred scroll runs and the overlay's reveal is released.
   useEffect(() => {
-    if (pathname !== landingPath) return
     const target = commitScrollRef.current
     if (target === null) return
+    const destination = target === 'impressum' ? impressumPath : landingPath
+    if (pathname !== destination) return
     commitScrollRef.current = null
     scrollToTarget(target)
     notifyTransitionCommit()
-  }, [pathname, landingPath])
+  }, [pathname, landingPath, impressumPath])
 
   useEffect(() => {
     setTransitionAction(action)
@@ -103,7 +106,7 @@ export function useTransitionSequence(): {
         event.target instanceof Element ? event.target.closest('[data-transition]') : null
       if (trigger === null) return
       const value = trigger.getAttribute('data-transition')
-      if (value !== 'landing' && value !== 'arbeiten') return
+      if (value !== 'landing' && value !== 'arbeiten' && value !== 'impressum') return
       event.preventDefault()
       transitionTo(value)
     }

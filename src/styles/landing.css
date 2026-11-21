@@ -1,5 +1,28 @@
 /* Every value a token. Z ladder: film < lockup < header < skip link (globals). */
 
+/* The white bar's height: the name's slot plus the name plus the same inset below. Read by the header, the works anchor and the legal page. */
+:root {
+  --header-height: calc(
+    var(--name-header-top) + var(--name-width) / var(--name-aspect) + var(--name-header-top)
+  );
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --header-height: calc(
+      var(--name-header-top) + var(--name-width-md) / var(--name-aspect) + var(--name-header-top)
+    );
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --header-height: calc(
+      var(--name-header-top) + var(--name-width-lg) / var(--name-aspect) + var(--name-header-top)
+    );
+  }
+}
+
 .landing {
   position: relative;
   min-block-size: 100svh;
@@ -20,13 +43,15 @@
   transition: filter var(--duration-intro) var(--ease-quiet);
 }
 
+/* Spans the stage so it is the name's sticky range: the name pins at the header slot and lets go the frame the
+   landing's bottom (the works section's top) reaches its bottom edge. Flex centering puts the lockup where
+   `--name-landing-top` / `--name-landing-left` put the overlay's name. */
 .landing__lockup {
   position: absolute;
-  top: var(--name-landing-top);
-  left: var(--name-landing-left);
-  transform: translate(-50%, -50%);
+  inset: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: var(--spacing-lockup);
 
@@ -45,6 +70,8 @@
 }
 
 .landing__name-scroll {
+  position: sticky;
+  top: var(--name-header-top);
   display: block;
 }
 
@@ -52,8 +79,12 @@
   display: block;
   width: var(--name-width);
   text-decoration: none;
-  /* Clickable only once stuck in the header slot; `NameScroll` re-enables it at the stick frame. */
+  /* Clickable only once stuck in the header slot; `NameScroll` flags the stick frame. */
   pointer-events: none;
+}
+
+.landing__name-scroll[data-stuck] .landing__name {
+  pointer-events: auto;
 }
 
 .landing__name-image {
@@ -178,7 +209,8 @@
   .logo-intro__settle,
   .logo-intro__dot,
   .logo-intro__sides,
-  .name-intro__wipe {
+  .name-intro__wipe,
+  .header__logo--fade {
     animation: none;
   }
 
@@ -196,14 +228,21 @@
   inset-block: 0 auto;
   inset-inline: 0;
   z-index: 40;
+  /* Every child is absolutely positioned, so the bar needs an explicit height. */
+  block-size: var(--header-height);
   /* The bar never intercepts the film; only the actions area re-enables pointer events. */
   pointer-events: none;
 }
 
 .header__actions {
   position: absolute;
-  top: var(--name-header-top);
-  right: var(--spacing-gutter);
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--header-height);
+  block-size: var(--header-height);
   pointer-events: auto;
 }
 
@@ -215,13 +254,38 @@
   opacity: 0;
 }
 
-/* The white bar: 0/1 from the shared store (`src/lib/landing-scroll.ts`) — the works section's top crossing the
-   name's bottom edge (the frame the landing's clip starts to cut the pinned name); instant, no fade. */
+/* The page variant's white bar; the landing's is `.header-backdrop`. */
 .header__background {
   position: absolute;
   inset: 0;
   background-color: var(--color-background);
-  opacity: 0;
+}
+
+/* The landing's white bar: sticky at the works section's top, so it pins the frame the landing is fully gone and
+   lets go the frame it returns — moved by the compositor, never a frame behind the scroll. Takes no space. */
+.header-backdrop {
+  position: sticky;
+  top: 0;
+  z-index: 39;
+  block-size: var(--header-height);
+  margin-block-end: calc(var(--header-height) * -1);
+  background-color: var(--color-background);
+  pointer-events: none;
+}
+
+/* Mounts with the bar's name; fills the bar's height minus the name's top inset on both sides. */
+.header__logo {
+  position: absolute;
+  top: var(--name-header-top);
+  left: var(--name-header-top);
+  block-size: calc(var(--header-height) - var(--name-header-top) * 2);
+  inline-size: auto;
+  max-width: none;
+  user-select: none;
+}
+
+.header__logo--fade {
+  animation: intro-appear var(--duration-header-logo) var(--ease-quiet);
 }
 
 /* The page variant's own name: the header slot, horizontally centered — the landing's sticky name rests in the
@@ -239,6 +303,7 @@
 .header__name-image {
   display: block;
   width: var(--name-width);
+  max-width: none;
   height: auto;
   user-select: none;
 }

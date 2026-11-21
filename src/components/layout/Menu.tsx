@@ -1,14 +1,15 @@
 'use client'
 
 import { AnimatePresence, motion, type HTMLMotionProps, type Transition } from 'motion/react'
-import { useTranslations } from 'next-intl'
-import { useLayoutEffect, useState } from 'react'
+import { useLocale, useTranslations } from 'next-intl'
+import { Fragment, useLayoutEffect, useState } from 'react'
 
 import { Name } from '@/components/brand/Name'
 import { MenuButton } from '@/components/layout/MenuButton'
 import { site } from '@/config/site.config'
-import { Link } from '@/i18n/navigation'
-import { resolveContact } from '@/lib/config/resolve'
+import { Link, usePathname } from '@/i18n/navigation'
+import { locales } from '@/i18n/routing'
+import { localize, resolveContact } from '@/lib/config/resolve'
 import { MENU_PANEL_ID, useMenu } from '@/lib/menu'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import { useTransitionSequence } from '@/lib/transition-sequence'
@@ -26,9 +27,9 @@ function menuEntryHref(item: (typeof site.navigation.items)[number]): string {
   return contact.mailtoHref
 }
 
-function menuEntryLabel(item: (typeof site.navigation.items)[number]): string {
+function menuEntryLabel(item: (typeof site.navigation.items)[number], locale: string): string {
   const contact = resolveContact()
-  if (item.type === 'anchor') return item.label
+  if (item.type === 'anchor') return localize(item.label, locale)
   if (item.type === 'tel') return contact.phoneDisplay
   return contact.email
 }
@@ -111,8 +112,10 @@ function PanelCloseButton() {
 }
 
 export function Menu() {
-  const { isOpen } = useMenu()
+  const { isOpen, close } = useMenu()
   const t = useTranslations('menu')
+  const locale = useLocale()
+  const pathname = usePathname()
   const contact = resolveContact()
 
   const { transitionTo } = useTransitionSequence()
@@ -129,13 +132,15 @@ export function Menu() {
   }
   const risePixels = reducedMotion || tokens === null ? 0 : tokens.risePixels
 
+  const riseMotion = (index: number) => ({
+    initial: { opacity: 0, y: risePixels * (index + 1) },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: risePixels * (index + 1) },
+    transition: travel,
+  })
+
   const renderEntry = (item: (typeof site.navigation.items)[number], index: number) => {
-    const entryMotion: HTMLMotionProps<'a'> = {
-      initial: { opacity: 0, y: risePixels * (index + 1) },
-      animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, y: risePixels * (index + 1) },
-      transition: travel,
-    }
+    const entryMotion: HTMLMotionProps<'a'> = riseMotion(index)
     if (item.type === 'anchor') {
       const anchorTarget = (site.routes.anchors[item.anchor] ?? item.anchor) as TransitionTarget
       return (
@@ -150,7 +155,7 @@ export function Menu() {
           }}
           {...entryMotion}
         >
-          {menuEntryLabel(item)}
+          {menuEntryLabel(item, locale)}
         </motion.a>
       )
     }
@@ -208,6 +213,37 @@ export function Menu() {
           <nav className="menu__entries">
             {site.navigation.items.map((item, index) => renderEntry(item, index))}
           </nav>
+          <motion.nav
+            className="menu__languages"
+            aria-label={t('languageLabel')}
+            {...riseMotion(site.navigation.items.length)}
+          >
+            {locales.map((code, index) => (
+              <Fragment key={code}>
+                {index > 0 ? (
+                  <span className="menu__language-separator" aria-hidden="true">
+                    |
+                  </span>
+                ) : null}
+                {code === locale ? (
+                  <span className="menu__language" lang={code} aria-current="true">
+                    {code.toUpperCase()}
+                  </span>
+                ) : (
+                  <Link
+                    className="menu__language"
+                    href={pathname}
+                    locale={code}
+                    lang={code}
+                    hrefLang={code}
+                    onClick={() => close()}
+                  >
+                    {code.toUpperCase()}
+                  </Link>
+                )}
+              </Fragment>
+            ))}
+          </motion.nav>
         </motion.div>
       ) : null}
     </AnimatePresence>

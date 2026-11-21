@@ -60,6 +60,7 @@
 .transition-lockup__name {
   display: block;
   width: var(--name-width);
+  max-width: none;
   height: auto;
 }
 
