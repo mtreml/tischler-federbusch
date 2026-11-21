@@ -1,6 +1,6 @@
 import { namePaths } from './name-paths'
 
-/* The landing's own wordmark: `public/name.svg` inline, so each word can be wiped in by a sliding gradient mask —
+/* The landing's own wordmark, inline, so each word can be wiped in by a sliding gradient mask —
    federbusch left to right, TISCHLERMEISTER top to bottom. Each mask rect rests with its white run over the word and
    its soft edge past it; the intro starts it one rect-length back. Timing lives in `landing.css`. */
 

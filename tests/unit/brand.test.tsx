@@ -29,16 +29,17 @@ describe('the mark', () => {
 })
 
 describe('the wordmark', () => {
-  it('renders the committed file, decorative, with its viewBox as the box', () => {
+  it('renders the committed parts, decorative, in a box with the lockup aspect', () => {
     const { container } = render(<Name className="landing__name" />)
-    const image = container.querySelector('img')
-    expect(image).not.toBeNull()
-    if (image === null) return
-    expect(image.getAttribute('src')).toBe('/name.svg')
-    expect(image.getAttribute('alt')).toBe('')
-    expect(image).toHaveAttribute('aria-hidden', 'true')
-    expect(image.getAttribute('width')).toBe('335')
-    expect(image.getAttribute('height')).toBe('87')
+    const box = container.firstElementChild as HTMLElement
+    expect(box).toHaveAttribute('aria-hidden', 'true')
+    expect(box.style.aspectRatio).toMatch(/^334\.89\d* \/ 86\.875$/)
+    const images = Array.from(box.querySelectorAll('img'))
+    expect(images.map((image) => image.getAttribute('src'))).toEqual([
+      '/federbusch.svg',
+      '/tischlermeister.svg',
+    ])
+    images.forEach((image) => expect(image.getAttribute('alt')).toBe(''))
   })
 })
 

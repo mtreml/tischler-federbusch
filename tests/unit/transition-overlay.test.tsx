@@ -165,7 +165,11 @@ describe('the lockup', () => {
     expect(lockup).not.toBeNull()
     if (lockup === null) return
     const images = Array.from(lockup.querySelectorAll('img'))
-    expect(images.map((image) => image.getAttribute('src'))).toEqual(['/logo.svg', '/name.svg'])
+    expect(images.map((image) => image.getAttribute('src'))).toEqual([
+      '/logo.svg',
+      '/federbusch.svg',
+      '/tischlermeister.svg',
+    ])
   })
 
   it('renders mark and wordmark inside the overlay, above which the spinner rests', () => {
@@ -176,7 +180,11 @@ describe('the lockup', () => {
     expect(overlay).not.toBeNull()
     if (overlay === null) return
     const images = Array.from(overlay.querySelectorAll('img'))
-    expect(images.map((image) => image.getAttribute('src'))).toEqual(['/logo.svg', '/name.svg'])
+    expect(images.map((image) => image.getAttribute('src'))).toEqual([
+      '/logo.svg',
+      '/federbusch.svg',
+      '/tischlermeister.svg',
+    ])
     expect(within(overlay as HTMLElement).getByRole('progressbar')).not.toBeNull()
     images.forEach((image) => {
       expect(image).toHaveAttribute('alt', '')

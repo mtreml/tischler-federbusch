@@ -1,4 +1,4 @@
-// From `public/name.svg`.
+// From `public/federbusch.svg` and `public/tischlermeister.svg`, in the original lockup's coordinates.
 
 export const namePaths = {
   federbusch: [

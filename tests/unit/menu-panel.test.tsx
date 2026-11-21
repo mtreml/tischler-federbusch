@@ -143,10 +143,12 @@ describe('the name', () => {
     if (nameLink === null) return
     expect(nameLink.tagName).toBe('A')
     expect(nameLink.getAttribute('href')).toMatch(/^\/de\/?$/)
-    const image = nameLink.querySelector('img')
-    expect(image).not.toBeNull()
-    expect(image?.getAttribute('src')).toBe('/name.svg')
-    expect(image).toHaveAttribute('aria-hidden', 'true')
+    const images = Array.from(nameLink.querySelectorAll('img'))
+    expect(images.map((image) => image.getAttribute('src'))).toEqual([
+      '/federbusch.svg',
+      '/tischlermeister.svg',
+    ])
+    expect(nameLink.querySelector('.menu__name-image')).toHaveAttribute('aria-hidden', 'true')
     view.unmount()
   })
 })

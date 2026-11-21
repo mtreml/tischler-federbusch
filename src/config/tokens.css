@@ -12,9 +12,9 @@
 
   --color-rule: #e6e0d4;
 
-  /* ONE token set, read by four surfaces (header, menu, landing scroll, overlay); aspect from name.svg's viewBox. */
+  /* ONE token set, read by four surfaces (header, menu, landing scroll, overlay); aspect from the wordmark lockup (334.89453 × 86.875). */
   --name-aspect: 3.8548;
-  --name-width: 18.5546875rem; /* width-capped, so a narrow portrait screen keeps a single line */
+  --name-width: min(18.5546875rem, 60vw); /* vw cap keeps logo, name and menu button clear of each other on narrow phones */
   --name-width-md: 23.4375rem;
   --name-width-lg: 27.34375rem;
 

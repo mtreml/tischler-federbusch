@@ -1,6 +1,6 @@
 /* The one file the font is declared in: one face (Biome W04 Light), self-hosted and subset — no provider request,
    no second `@font-face` (the fonts suite fails one). The woff2 is written by `npm run fonts:subset` from the
-   hash-pinned source; neither file is produced by the build. The wordmark is the `name.svg` vector, not text in this face. */
+   hash-pinned source; neither file is produced by the build. The wordmark is the `federbusch.svg` + `tischlermeister.svg` vectors, not text in this face. */
 
 @font-face {
   font-family: 'Biome';
