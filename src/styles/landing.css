@@ -29,7 +29,13 @@
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-lockup);
-  transition: opacity var(--duration-intro) var(--ease-quiet);
+
+  --intro-delay-dot: var(--duration-intro-line);
+  --intro-delay-sides: calc(var(--intro-delay-dot) + var(--duration-intro-dot));
+  --intro-delay-federbusch: calc(var(--intro-delay-sides) + var(--duration-intro-sides));
+  --intro-delay-tischlermeister: calc(
+    var(--intro-delay-federbusch) + var(--duration-intro-federbusch)
+  );
 }
 
 .landing__logo {
@@ -77,29 +83,107 @@
   }
 }
 
-/* The intro: pending blurs the film and hides the lockup; `LandingStage` flips `data-intro` to `done` and both ease to rest. */
+/* The intro: pending blurs the film and holds the lockup's steps paused at their hidden first frame; `LandingStage`
+   flips `data-intro` to `done`, the film eases to rest and the steps play in sequence. Without animation every step
+   rests drawn. */
 .landing__stage[data-intro='pending'] .landing__video {
   filter: blur(var(--intro-blur));
 }
 
-.landing__stage[data-intro='pending'] .landing__lockup {
-  opacity: 0;
+.logo-intro__pen {
+  stroke-dasharray: 1 2;
+  animation: logo-intro-pen var(--duration-intro-line) var(--ease-pen) both;
 }
 
-/* Reduced motion: the pending state is the final state — no blur, no fade. */
+.logo-intro__settle {
+  animation: intro-appear 0s var(--intro-delay-dot) both;
+}
+
+.logo-intro__dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logo-intro-dot var(--duration-intro-dot) var(--ease-quiet) var(--intro-delay-dot) both;
+}
+
+.logo-intro__sides {
+  animation: intro-appear var(--duration-intro-sides) var(--ease-quiet) var(--intro-delay-sides)
+    both;
+}
+
+.name-intro__wipe--federbusch {
+  animation: name-intro-wipe-x var(--duration-intro-federbusch) var(--ease-quiet)
+    var(--intro-delay-federbusch) both;
+}
+
+.name-intro__wipe--tischlermeister {
+  animation: name-intro-wipe-y var(--duration-intro-tischlermeister) var(--ease-quiet)
+    var(--intro-delay-tischlermeister) both;
+}
+
+.landing__stage[data-intro='pending']
+  :is(
+    .logo-intro__pen,
+    .logo-intro__settle,
+    .logo-intro__dot,
+    .logo-intro__sides,
+    .name-intro__wipe
+  ) {
+  animation-play-state: paused;
+}
+
+/* Starts a hair past the full offset, so no round cap shows at the apex before the pen moves. */
+@keyframes logo-intro-pen {
+  from {
+    stroke-dashoffset: 1.002;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes logo-intro-dot {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes intro-appear {
+  from {
+    opacity: 0;
+  }
+}
+
+/* One rect-length back: the wipe rects' widths in `NameIntro`. */
+@keyframes name-intro-wipe-x {
+  from {
+    transform: translateX(-400px);
+  }
+}
+
+@keyframes name-intro-wipe-y {
+  from {
+    transform: translateY(-25px);
+  }
+}
+
+/* Reduced motion: the pending state is the final state — no blur, no fade, nothing drawn. */
 @media (prefers-reduced-motion: reduce) {
   .landing__video,
-  .landing__lockup,
   .header .menu-button {
     transition: none;
   }
 
-  .landing__stage[data-intro='pending'] .landing__video {
-    filter: none;
+  .logo-intro__pen,
+  .logo-intro__settle,
+  .logo-intro__dot,
+  .logo-intro__sides,
+  .name-intro__wipe {
+    animation: none;
   }
 
-  .landing__stage[data-intro='pending'] .landing__lockup {
-    opacity: 1;
+  .landing__stage[data-intro='pending'] .landing__video {
+    filter: none;
   }
 
   .header[data-intro='pending'] .menu-button {

@@ -34,6 +34,14 @@
   --duration-transition-reveal: 840ms;
   --duration-intro: 1500ms; /* JS twin: `site.landing.introDurationMs` */
 
+  /* The landing lockup's intro, played in this order; each step starts when the previous one ends. */
+  --duration-intro-line: 2600ms; /* the mark's line, drawn by the pen */
+  --duration-intro-dot: 320ms;
+  --duration-intro-sides: 700ms; /* the four side parts, faded in together */
+  --duration-intro-federbusch: 1100ms; /* wiped in left to right */
+  --duration-intro-tischlermeister: 600ms; /* wiped in top to bottom */
+  --ease-pen: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+
   --intro-blur: 8px;
 
   --text-xs: 0.75rem;

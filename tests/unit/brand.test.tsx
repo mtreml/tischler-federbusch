@@ -7,6 +7,8 @@ import sharp from 'sharp'
 
 import { Logo } from '@/components/brand/Logo'
 import { Name } from '@/components/brand/Name'
+import { LogoIntro } from '@/components/brand/LogoIntro'
+import { NameIntro } from '@/components/brand/NameIntro'
 
 // The invariants the wrappers hold: the mark and the wordmark render the committed public files, decorative, with
 // the viewBox as `width`/`height`; the apple-touch icon resolves — a missing PNG would 404 on every phone's home screen.
@@ -37,6 +39,37 @@ describe('the wordmark', () => {
     expect(image).toHaveAttribute('aria-hidden', 'true')
     expect(image.getAttribute('width')).toBe('335')
     expect(image.getAttribute('height')).toBe('87')
+  })
+})
+
+describe('the landing intro', () => {
+  it('draws the mark inline, decorative, the line revealed by a unit-length pen', () => {
+    const { container } = render(<LogoIntro className="landing__logo" />)
+    const svg = container.querySelector('svg')
+    expect(svg).toHaveAttribute('aria-hidden', 'true')
+    expect(svg?.getAttribute('width')).toBe('111')
+    expect(svg?.getAttribute('height')).toBe('246')
+    const pen = container.querySelector('mask .logo-intro__pen')
+    expect(pen?.getAttribute('pathLength')).toBe('1')
+    const maskId = pen?.closest('mask')?.id
+    expect(container.querySelector('.logo-intro__line')?.getAttribute('mask')).toBe(
+      `url(#${maskId})`,
+    )
+    expect(container.querySelectorAll('.logo-intro__sides path')).toHaveLength(4)
+  })
+
+  it('wipes the wordmark inline, each word under its own mask', () => {
+    const { container } = render(<NameIntro className="landing__name-image" />)
+    const svg = container.querySelector('svg')
+    expect(svg).toHaveAttribute('aria-hidden', 'true')
+    expect(svg?.getAttribute('width')).toBe('335')
+    expect(svg?.getAttribute('height')).toBe('87')
+    const masked = Array.from(container.querySelectorAll('svg > g[mask]'))
+    expect(masked).toHaveLength(2)
+    for (const group of masked) {
+      const id = /url\(#(.+)\)/.exec(group.getAttribute('mask') ?? '')?.[1]
+      expect(container.querySelector(`mask[id="${id}"] .name-intro__wipe`)).not.toBeNull()
+    }
   })
 })
 

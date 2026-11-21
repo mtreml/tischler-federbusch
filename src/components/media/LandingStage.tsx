@@ -4,14 +4,14 @@ import { useEffect, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 
 import { Link } from '@/i18n/navigation'
-import { Logo } from '@/components/brand/Logo'
-import { Name } from '@/components/brand/Name'
+import { LogoIntro } from '@/components/brand/LogoIntro'
+import { NameIntro } from '@/components/brand/NameIntro'
 import { NameScroll } from '@/components/layout/NameScroll'
 import { LandingVideo } from '@/components/media/LandingVideo'
 import { usePrefersReducedMotion } from '@/lib/reduced-motion'
 import type { ResolvedVideo } from '@mtreml/portfolio-core/media'
 
-// Full-viewport area: the video as backdrop, the lockup centered over it, and the 1.5 s intro (deblur + fade) on one shared timeline;
+// Full-viewport area: the video as backdrop, the lockup centered over it, and the intro (the film's 1.5 s deblur, the lockup drawn step by step);
 // `play()` lands on the beat the deblur lands. `data-intro` flips to `done` on the second animation frame, from `LandingIntro`; reduced motion: playback starts at once.
 
 export interface LandingStageProps {
@@ -51,13 +51,13 @@ export function LandingStage({ video, label, objectFit, introDurationMs, introDo
         label={label}
         objectFit={objectFit}
       />
-      {/* Decorative images; the name link is the one that sticks to the header slot — `NameScroll` makes it
+      {/* Decorative inline SVGs, so the intro can draw them; the name link is the one that sticks to the header slot — `NameScroll` makes it
          clickable the frame it sticks. The header's own name link only mounts once the bar is on. */}
       <div className="landing__lockup">
-        <Logo className="landing__logo" />
+        <LogoIntro className="landing__logo" />
         <NameScroll>
           <Link className="landing__name" href="/" data-transition="landing" aria-label={t('nameLabel')}>
-            <Name className="landing__name-image" />
+            <NameIntro className="landing__name-image" />
           </Link>
         </NameScroll>
       </div>
