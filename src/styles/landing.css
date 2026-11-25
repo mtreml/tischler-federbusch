@@ -55,8 +55,8 @@
   align-items: center;
   gap: var(--spacing-lockup);
 
-  --intro-delay-dot: var(--duration-intro-line);
-  --intro-delay-sides: calc(var(--intro-delay-dot) + var(--duration-intro-dot));
+  --intro-delay-line: var(--duration-intro-dot);
+  --intro-delay-sides: calc(var(--intro-delay-line) + var(--duration-intro-line));
   --intro-delay-federbusch: calc(var(--intro-delay-sides) + var(--duration-intro-sides));
 }
 
@@ -120,17 +120,17 @@
 
 .logo-intro__pen {
   stroke-dasharray: 1 2;
-  animation: logo-intro-pen var(--duration-intro-line) var(--ease-pen) both;
+  animation: logo-intro-pen var(--duration-intro-line) var(--ease-pen) var(--intro-delay-line) both;
 }
 
 .logo-intro__settle {
-  animation: intro-appear 0s var(--intro-delay-dot) both;
+  animation: intro-appear 0s var(--intro-delay-sides) both;
 }
 
 .logo-intro__dot {
   transform-box: fill-box;
   transform-origin: center;
-  animation: logo-intro-dot var(--duration-intro-dot) var(--ease-quiet) var(--intro-delay-dot) both;
+  animation: logo-intro-dot var(--duration-intro-dot) var(--ease-quiet) both;
 }
 
 .logo-intro__sides,
@@ -156,10 +156,11 @@
   animation-play-state: paused;
 }
 
-/* Starts a hair past the full offset, so no round cap shows at the apex before the pen moves. */
+/* Runs the dash in from the path's end, so the pen climbs from the dot; a hair past the full offset keeps the round
+   cap hidden before the pen moves. */
 @keyframes logo-intro-pen {
   from {
-    stroke-dashoffset: 1.002;
+    stroke-dashoffset: -1.002;
   }
   to {
     stroke-dashoffset: 0;
