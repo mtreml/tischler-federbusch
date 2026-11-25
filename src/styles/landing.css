@@ -58,9 +58,6 @@
   --intro-delay-dot: var(--duration-intro-line);
   --intro-delay-sides: calc(var(--intro-delay-dot) + var(--duration-intro-dot));
   --intro-delay-federbusch: calc(var(--intro-delay-sides) + var(--duration-intro-sides));
-  --intro-delay-tischlermeister: calc(
-    var(--intro-delay-federbusch) + var(--duration-intro-federbusch)
-  );
 }
 
 .landing__logo {
@@ -136,7 +133,8 @@
   animation: logo-intro-dot var(--duration-intro-dot) var(--ease-quiet) var(--intro-delay-dot) both;
 }
 
-.logo-intro__sides {
+.logo-intro__sides,
+.name-intro__tischlermeister {
   animation: intro-appear var(--duration-intro-sides) var(--ease-quiet) var(--intro-delay-sides)
     both;
 }
@@ -146,17 +144,13 @@
     var(--intro-delay-federbusch) both;
 }
 
-.name-intro__wipe--tischlermeister {
-  animation: name-intro-wipe-y var(--duration-intro-tischlermeister) var(--ease-quiet)
-    var(--intro-delay-tischlermeister) both;
-}
-
 .landing__stage[data-intro='pending']
   :is(
     .logo-intro__pen,
     .logo-intro__settle,
     .logo-intro__dot,
     .logo-intro__sides,
+    .name-intro__tischlermeister,
     .name-intro__wipe
   ) {
   animation-play-state: paused;
@@ -185,16 +179,10 @@
   }
 }
 
-/* One rect-length back: the wipe rects' widths in `NameIntro`. */
+/* One rect-length back: the wipe rect's width in `NameIntro`. */
 @keyframes name-intro-wipe-x {
   from {
     transform: translateX(-400px);
-  }
-}
-
-@keyframes name-intro-wipe-y {
-  from {
-    transform: translateY(-25px);
   }
 }
 
@@ -209,6 +197,7 @@
   .logo-intro__settle,
   .logo-intro__dot,
   .logo-intro__sides,
+  .name-intro__tischlermeister,
   .name-intro__wipe,
   .header__logo--fade {
     animation: none;
