@@ -37,11 +37,14 @@
   --duration-intro: 1500ms; /* JS twin: `site.landing.introDurationMs` */
 
   /* The landing lockup's intro, played in this order; each step starts when the previous one ends. */
-  --duration-intro-dot: 320ms;
+  --duration-intro-dot: 2200ms; /* the black field closing in on the dot from the full screen */
   --duration-intro-line: 2600ms; /* the mark's line, drawn by the pen from the dot up */
   --duration-intro-sides: 1100ms; /* the four side parts and TISCHLERMEISTER, faded in together */
   --duration-intro-federbusch: 1100ms; /* wiped in left to right */
   --ease-pen: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  /* fast while the field's edge is past the viewport, slowing into the dot */
+  --ease-iris: cubic-bezier(0.2, 0.75, 0.25, 1);
+  --intro-iris-scale: 1000; /* the dot's start scale; covers a 4K screen at the largest mark */
 
   --intro-blur: 8px;
 

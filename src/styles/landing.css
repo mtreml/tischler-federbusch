@@ -63,6 +63,8 @@
 .landing__logo {
   width: var(--logo-landing-width);
   height: auto;
+  /* The dot starts as the black field over the whole stage. */
+  overflow: visible;
   user-select: none;
 }
 
@@ -130,7 +132,7 @@
 .logo-intro__dot {
   transform-box: fill-box;
   transform-origin: center;
-  animation: logo-intro-dot var(--duration-intro-dot) var(--ease-quiet) both;
+  animation: logo-intro-dot var(--duration-intro-dot) var(--ease-iris) both;
 }
 
 .logo-intro__sides,
@@ -169,8 +171,7 @@
 
 @keyframes logo-intro-dot {
   from {
-    opacity: 0;
-    transform: scale(0.4);
+    transform: scale(var(--intro-iris-scale));
   }
 }
 
@@ -237,7 +238,7 @@
 }
 
 .header .menu-button {
-  transition: opacity var(--duration-intro) var(--ease-quiet);
+  transition: opacity var(--duration-intro) var(--ease-quiet) var(--duration-intro-dot);
 }
 
 .header[data-intro='pending'] .menu-button {
