@@ -55,16 +55,20 @@
   align-items: center;
   gap: var(--spacing-lockup);
 
-  --intro-delay-line: var(--duration-intro-dot);
+  --intro-delay-line: calc(var(--duration-intro-bar) + var(--duration-intro-dot));
   --intro-delay-sides: calc(var(--intro-delay-line) + var(--duration-intro-line));
   --intro-delay-federbusch: calc(var(--intro-delay-sides) + var(--duration-intro-sides));
 }
 
+.logo-intro {
+  position: relative;
+  display: block;
+}
+
 .landing__logo {
+  display: block;
   width: var(--logo-landing-width);
   height: auto;
-  /* The dot starts as the black field over the whole stage. */
-  overflow: visible;
   user-select: none;
 }
 
@@ -125,20 +129,36 @@
   animation: logo-intro-pen var(--duration-intro-line) var(--ease-pen) var(--intro-delay-line) both;
 }
 
+/* Rests as the dot (r 1.63 at 55.71, 244.07); the shrink runs it at the line's thickness (2 units) down to a dot of
+   that size, the grow swells it to the dot. Fractions of the mark's viewBox (110.96 × 245.7). Grow is listed first so
+   the shrink wins while both apply. */
+.logo-intro__bar {
+  position: absolute;
+  bottom: 0;
+  left: 50.207%;
+  width: 2.938%;
+  height: 1.3268%;
+  translate: -50% 0;
+  border-radius: 100vmax;
+  background-color: var(--color-ink);
+  visibility: hidden;
+  animation:
+    logo-intro-bar-grow var(--duration-intro-dot) var(--ease-quiet) var(--duration-intro-bar)
+      backwards,
+    logo-intro-bar-shrink var(--duration-intro-bar) linear backwards;
+}
+
+.logo-intro__dot {
+  animation: intro-appear 0s var(--intro-delay-line) both;
+}
+
 .logo-intro__settle {
   animation: intro-appear 0s var(--intro-delay-sides) both;
 }
 
-.logo-intro__dot {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: logo-intro-dot var(--duration-intro-dot) var(--ease-iris) both;
-}
-
 .logo-intro__sides,
 .name-intro__tischlermeister {
-  animation: intro-appear var(--duration-intro-sides) var(--ease-quiet) var(--intro-delay-sides)
-    both;
+  animation: intro-appear var(--duration-intro-sides) linear var(--intro-delay-sides) both;
 }
 
 .name-intro__wipe--federbusch {
@@ -148,9 +168,10 @@
 
 .landing__stage[data-intro='pending']
   :is(
+    .logo-intro__bar,
+    .logo-intro__dot,
     .logo-intro__pen,
     .logo-intro__settle,
-    .logo-intro__dot,
     .logo-intro__sides,
     .name-intro__tischlermeister,
     .name-intro__wipe
@@ -169,9 +190,30 @@
   }
 }
 
-@keyframes logo-intro-dot {
+@keyframes logo-intro-bar-shrink {
   from {
-    transform: scale(var(--intro-iris-scale));
+    visibility: visible;
+    bottom: 0.2564%;
+    width: 100vw;
+    height: 0.814%;
+  }
+  to {
+    visibility: visible;
+    bottom: 0.2564%;
+    width: 1.8025%;
+    height: 0.814%;
+  }
+}
+
+@keyframes logo-intro-bar-grow {
+  from {
+    visibility: visible;
+    bottom: 0.2564%;
+    width: 1.8025%;
+    height: 0.814%;
+  }
+  to {
+    visibility: visible;
   }
 }
 
@@ -195,9 +237,10 @@
     transition: none;
   }
 
+  .logo-intro__bar,
+  .logo-intro__dot,
   .logo-intro__pen,
   .logo-intro__settle,
-  .logo-intro__dot,
   .logo-intro__sides,
   .name-intro__tischlermeister,
   .name-intro__wipe,
@@ -238,7 +281,7 @@
 }
 
 .header .menu-button {
-  transition: opacity var(--duration-intro) var(--ease-quiet) var(--duration-intro-dot);
+  transition: opacity var(--duration-intro) var(--ease-quiet);
 }
 
 .header[data-intro='pending'] .menu-button {
