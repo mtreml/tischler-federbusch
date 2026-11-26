@@ -59,18 +59,17 @@ describe('the landing intro', () => {
     expect(container.querySelectorAll('.logo-intro__sides path')).toHaveLength(4)
   })
 
-  it('wipes the wordmark inline, each word under its own mask', () => {
+  it('draws the wordmark inline, federbusch under a wipe mask, TISCHLERMEISTER as its own group', () => {
     const { container } = render(<NameIntro className="landing__name-image" />)
     const svg = container.querySelector('svg')
     expect(svg).toHaveAttribute('aria-hidden', 'true')
     expect(svg?.getAttribute('width')).toBe('335')
     expect(svg?.getAttribute('height')).toBe('87')
     const masked = Array.from(container.querySelectorAll('svg > g[mask]'))
-    expect(masked).toHaveLength(2)
-    for (const group of masked) {
-      const id = /url\(#(.+)\)/.exec(group.getAttribute('mask') ?? '')?.[1]
-      expect(container.querySelector(`mask[id="${id}"] .name-intro__wipe`)).not.toBeNull()
-    }
+    expect(masked).toHaveLength(1)
+    const id = /url\(#(.+)\)/.exec(masked[0]?.getAttribute('mask') ?? '')?.[1]
+    expect(container.querySelector(`mask[id="${id}"] .name-intro__wipe--federbusch`)).not.toBeNull()
+    expect(container.querySelector('svg > g.name-intro__tischlermeister')).not.toBeNull()
   })
 })
 
